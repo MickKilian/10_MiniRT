@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 10:55:26 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 07:37:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 // Aspect ratio : 16/9
 # define	ASPECT_RATIO 1.777777778
 # define	EPSILON 1e-8
-# define	IMAGE_WIDTH 400
+# define	IMAGE_WIDTH 1000
 
 typedef struct s_httbl	t_httbl;
 
@@ -413,8 +413,7 @@ t_httbl		*new_httbl(const t_geometry geom, const t_material mat);
 
 //httbl_plane.c
 t_plane		plane(const t_vec3 point, const t_vec3 vec1, const t_vec3 vec2);
-bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
-//bool		is_interior(double a, double b, t_hit_rec *rec);
+bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
 
 //httbl_quad.c
 t_quad		quad(const t_vec3 point, const t_vec3 vec1, const t_vec3 vec2);
@@ -434,7 +433,6 @@ bool		hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec
 
 //httbl_cylinder.c
 t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height);
-bool		hit_cylinder(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 bool		hit_cylinder_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 
 //httbl_quad.c
@@ -495,7 +493,7 @@ bool		diffuse_light(t_vec3 *attenuation, t_ray *scattered);
 
 //geom_operations.c
 void		add_box_quads(t_world *world, t_box *box, t_material mat);
-void		add_cyl_discs(t_world *world, t_cylinder *cyl, t_material mat);
+void		add_cyl_discs(t_world *world, t_geometry *geom, t_material mat);
 t_ray		offset_r(t_ray r, t_vec3 offset);
 t_vec3		offset_p(t_vec3 v, t_vec3 offset);
 t_vec3		rotate_x(t_vec3 vec, double cos_theta, double sin_theta);

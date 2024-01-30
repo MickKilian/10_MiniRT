@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 05:58:34 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:34:28 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ int	world_initialize(t_world *world)
 //	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(5.9, -2, 0.6), 0.6)), difflight));
 
     //t_material difflight = mat_diff_light(diff_light(new_vec3(50, 50, 50)));
-	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 1, -10), new_vec3(5, 0, 0), new_vec3(0, 5, 0))), difflight));
+	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 0, 0), new_vec3(1, 0, 0), new_vec3(0, 1, 0))), mat_lamber(lamber(new_vec3(0.8, 0.8, 0.8)))));
 	////httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(5, 4, 10), 1)), difflight));
 
 	//httbl_addback(world, new_httbl(geom_cylinder(cylinder(new_vec3(0, 0, 0), new_vec3(0, 0, 10), 1, 10)), mat_lamber(lamber(new_vec3(1, 0, 0)))));
@@ -170,10 +170,28 @@ int	world_initialize(t_world *world)
 
 	//httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, -1000), 1000)), mat_lamber(lamber(new_vec3(0.8, 0.8, 0.8)))));
 	//httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 1), 1)), mat_lamber(lamber(new_vec3(1.0, 0.0, 0.3)))));
-	httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3 (0, 0, 0), new_vec3(0, 0, 1), 2, 2.0)), mat_lamber(lamber(new_vec3(1, 0, 0.3)))));
-	//httbl_record(world, new_httbl(geom_box(box(new_vec3( -1, -1, -0), new_vec3( 1, 1, 2))), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8)))));
+	httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0.0, 0.0, 0.0), new_vec3(0.0, 0.0, 1.0), 0.3, 3.0)), mat_lamber(lamber(new_vec3(1, 0, 0.3)))));
+	//httbl_record(world, new_httbl(geom_box(box(new_vec3( 0, 0, -0), new_vec3( 3, 2, 2))), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8)))));
 	return (0);
 }
+
+//tableau de pointeurs sur fonctions
+//typedef bool (*t_hit)(const t_rt *, const t_ray, const t_interval, t_hit_rec *);
+//
+//static void render(t_httbl* httbl)
+//{
+//	static const t_hit _table[LEN_GEOM_TYPES] =
+//	{
+//		&hit_plane,
+//		&hit_quad,
+//		&hit_disc,
+//		NULL,
+//		&hit_sphere,
+//		&hit_cylinder_finite
+//	}
+//
+//	_table[httbl->geom.type](...);
+//}
 
 bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 {
@@ -189,12 +207,19 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 	closest_so_far = tray.max;
 	while (rt->world.httbl)
 	{
+		//printf("theta\n");
+		//display_vec3(rt->world.httbl->geom.theta);
+		//printf("\n");
 		cos_theta = vec3_cos(rt->world.httbl->geom.theta);
 		sin_theta = vec3_sin(rt->world.httbl->geom.theta);
 		transformed_r = offset_r(r, vec3_scale(-1, rt->world.httbl->geom.offset));
 		transformed_r = rotate_rx(transformed_r, cos_theta.x, -sin_theta.x);
 		transformed_r = rotate_ry(transformed_r, cos_theta.y, -sin_theta.y);
 		transformed_r = rotate_rz(transformed_r, cos_theta.z, -sin_theta.z);
+		//display_vec3(r.dir);
+		//printf("\n*");
+		//display_vec3(transformed_r.dir);
+		//printf("\n");
 		if ((rt->world.httbl->geom.type == PLANE && hit_plane(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == QUAD && hit_quad(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == DISC && hit_disc(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
@@ -251,11 +276,11 @@ void	httbl_record(t_world *world, t_httbl *new_httbl)
 {
 	if (new_httbl->geom.type == BOX)
 	{
-		add_box_quads(world, &new_httbl->geom. box, new_httbl->mat);
+		add_box_quads(world, &new_httbl->geom.box, new_httbl->mat);
 		free(new_httbl);
 		return;
 	}
 	httbl_addback(world, new_httbl);
 	if (new_httbl->geom.type == CYLINDER)
-		add_cyl_discs(world, &new_httbl->geom.cyl, new_httbl->mat);
+		add_cyl_discs(world, &new_httbl->geom, new_httbl->mat);
 }

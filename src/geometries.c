@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:39:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 03:10:23 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 07:52:44 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@ t_geometry	geom_cylinder(t_cylinder cyl)
 	t_geometry	geom;
 
 	geom.type = CYLINDER;
-	geom.offset = new_vec3(0.0, 0.0, 0.0);
-	geom.theta = new_vec3(0, 0, 0);
+	geom.offset = cyl.base_center;
+	geom.theta = cyl.generator;
 	geom.cyl = cyl;
+	geom.cyl.base_center = new_vec3(0, 0, 0);
+	geom.cyl.generator = new_vec3(0, 0, 1.0);
 	return (geom);
 }

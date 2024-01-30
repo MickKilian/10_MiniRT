@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httbl_cylinder.c                                   :+:      :+:    :+:   */
+/*   httbl_cylinder_archive.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 04:42:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 04:32:29 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, d
 	t_cylinder	cyl;
 
 	cyl.base_center = base_center;
-	cyl.generator = generator;
+	cyl.generator = vec3_unit(generator);
 	cyl.radius = radius;
 	cyl.height = height;
 	cyl.interval_z = interval(base_center.z, base_center.z + height);

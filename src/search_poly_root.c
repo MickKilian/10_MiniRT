@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 01:59:43 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 05:46:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 04:45:24 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ bool	solve_half_poly(t_half_poly *half_poly)
 	double	discriminant;
 
 	discriminant = half_poly->half_b * half_poly->half_b -
-		half_poly->a * half_poly->c;
+		4 * half_poly->a * half_poly->c;
 	if (discriminant < 0)
 		return (0);
 	half_poly->root_1 = (-half_poly->half_b -
-			sqrt(discriminant)) / half_poly->a;
+			sqrt(discriminant)) / (2 * half_poly->a);
 	half_poly->root_2 = (-half_poly->half_b +
-			sqrt(discriminant)) / half_poly->a;
+			sqrt(discriminant)) / (2 * half_poly->a);
 	return (1);
 }

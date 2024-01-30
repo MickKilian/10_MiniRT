@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 05:29:29 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 07:50:45 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ void	add_box_quads(t_world *world, t_box *box, t_material mat)
 	httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(min.x, min.y, min.z), dx, dz)), mat)); // front
 }
 
-void	add_cyl_discs(t_world *world, t_cylinder *cyl, t_material mat)
+void	add_cyl_discs(t_world *world, t_geometry *geom, t_material mat)
 {
 	t_vec3	end_disc_center;
 
-	printf("We are here\n");
 	// Construct the two opposite discs of a finite cylinder.
-	end_disc_center = vec3_add2(cyl->base_center, vec3_scale(cyl->height, cyl->generator));
-	httbl_addback(world, new_httbl(geom_disc(disc(cyl->base_center, cyl->generator, cyl->radius)), mat)); // begin
-	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, cyl->generator, cyl->radius)), mat)); // end
+	//end_disc_center = vec3_add2(geom->cyl.base_center, vec3_scale(geom->cyl.height, geom->cyl.generator));
+	end_disc_center = vec3_add2(geom->offset, vec3_scale(geom->cyl.height, geom->theta));
+	httbl_addback(world, new_httbl(geom_disc(disc(geom->offset, geom->theta, geom->cyl.radius)), mat)); // begin
+	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, geom->theta, geom->cyl.radius)), mat)); // end
 }
 
 t_ray	offset_r(t_ray r, t_vec3 offset)

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/30 04:45:46 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 02:05:53 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec 
 	// with itself is the length squared of that vector
 	oc = vec3_substract2(r.orig, rt->world.httbl->geom.sph.center);
 	half_poly.a = vec3_length_squared(r.dir);
-	half_poly.half_b = 2 * vec3_dot(oc, r.dir);
+	half_poly.half_b = vec3_dot(oc, r.dir);
 	half_poly.c = vec3_length_squared(oc) - (rt->world.httbl->geom.sph.radius * rt->world.httbl->geom.sph.radius);
 
 	if (!search_poly_root(&half_poly, tray, &root))

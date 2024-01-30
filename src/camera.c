@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 10:50:34 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/01/30 06:23:22 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	render(t_rt *rt)
 			for (int k = 0; k < rt->cam.samples_per_pixel; ++k)
 			{
 				pixel_color = vec3_add2(pixel_color,
-						ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam ,i , j)));
+						ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam, i, j)));
 			}
 			pixel_color = vec3_scale(1.0 / (double)rt->cam.samples_per_pixel, pixel_color);
 			//pixel_color = new_vec3(fmin(pixel_color.x, 1), fmin(pixel_color.y, 1), fmin(pixel_color.z, 1));
