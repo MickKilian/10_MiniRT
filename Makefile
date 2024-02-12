@@ -6,18 +6,19 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2023/12/08 09:48:50 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/02/12 04:22:44 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .DEFAULT_GOAL	= all
 
-PRIM_SRCS	=	main.c ray_tracing.c rt_initialize.c mlx.c \
+PRIM_SRCS	=	main.c mini_rt.c rt_initialize.c mlx.c \
 				color_convert.c vec3_operations.c memory.c tests.c \
-				color_display.c geom_operations.c camera.c utils.c \
+				color_display.c geom_operations.c camera.c \
+				utils_array.c utils_conv.c utils_math.c utils_numbers.c \
 				ray_compute.c hit_record.c httbl_create.c interval.c \
 				world.c random.c ray_color.c search_poly_root.c httbl_quad.c httbl_box.c \
-				httbl_plane.c httbl_sphere.c httbl_cylinder.c httbl_disc.c camera.c \
+				httbl_plane.c httbl_sphere.c httbl_cone.c httbl_cylinder.c httbl_disc.c camera.c \
 				material_scatter.c geometries.c materials.c mat_diff_light.c \
 				mat_dielectric.c mat_lambertian.c mat_metal.c error.c \
 				file.c parsing.c parsing_env.c parsing_geom.c
@@ -29,11 +30,11 @@ PRIM_OBJS	=	$(patsubst $(PRIM_SRCDIR)/%, $(PRIM_OBJDIR)/%, $(PRIM_PATH:.c=.o))
 DEP_DIR		=	dep
 PRIM_DEP	=	$(patsubst $(PRIM_OBJDIR)/%.o, $(DEP_DIR)/%.d, $(PRIM_OBJS))
 
-HEADER_SRCS	=	ray_tracing.h mlx.h
+HEADER_SRCS	=	mini_rt.h mlx.h
 HEADER_DIR	=	inc
 HEADER_PATH	=	$(addprefix $(HEADER_DIR)/, $(HEADER_SRCS))
 
-NAME		=	ray_tracing
+NAME		=	mini_rt
 LIB1_DIR	=	lib/gnl
 LIB1_NAME	=	lib/gnl/libgnl.a
 LIB2_DIR	=	lib/libft

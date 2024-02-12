@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 bool	search_poly_root(t_half_poly *half_poly, const t_interval tray, double *root)
 {

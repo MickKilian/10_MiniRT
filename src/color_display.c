@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 void	write_color(t_vec3 pixel_color)
 {

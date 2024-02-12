@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 t_sphere	sphere(const t_vec3 center, double r)
 {

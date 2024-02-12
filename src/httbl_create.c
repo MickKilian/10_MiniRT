@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 t_httbl	*new_httbl(const t_geometry geom, const t_material mat)
 {

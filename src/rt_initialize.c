@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 void	rt_initialize(t_rt *rt)
 {

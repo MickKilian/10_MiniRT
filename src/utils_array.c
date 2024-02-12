@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mat_diff_light.c                                   :+:      :+:    :+:   */
+/*   utils_array.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/07 00:07:15 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/07 01:34:41 by mbourgeo         ###   ########.fr       */
+/*   Created: 2023/11/30 20:41:26 by mbourgeo          #+#    #+#             */
+/*   Updated: 2024/02/12 03:57:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-t_diff_light	diff_light(t_vec3 color)
+double	array_size(char **params)
 {
-	t_diff_light	diff_light;
+	int	count;
 
-	diff_light.color = color;
-	return (diff_light);
+	count = 0;
+	while (*params && **params) {
+		count++;
+		params++;
+	}
+	return (count);
 }

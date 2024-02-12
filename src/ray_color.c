@@ -6,11 +6,11 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 11:28:30 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/12 05:29:29 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 t_vec3	ray_color(t_rt *rt, int depth, const t_ray r)
 {
@@ -25,7 +25,7 @@ t_vec3	ray_color(t_rt *rt, int depth, const t_ray r)
 	if (depth <= 0)
 		return (new_vec3(0.0, 0.0, 0.0));
 	// If the ray hits nothing, return the background color.
-	// 0.001 prevents bugs from offset calculation of the usrface hit point due to float precision
+	// 0.001 prevents bugs from offset calculation of the surface hit point due to float precision
 	if (!world_hit(rt, r, interval(0.001, INFINITY), &rec))
 		return rt->cam.background;
 		//return ray_color_grad_blue(r);
@@ -43,8 +43,8 @@ t_vec3	ray_color(t_rt *rt, int depth, const t_ray r)
 		else if (rec.mat == DIELECTRIC)
 			dielectric_scatter(r, rec, &attenuation, &scattered);
 		color_from_emission = new_vec3(0., 0., 0.);
-		//color_from_scatter = vec3_prod_comp_by_comp(attenuation, ray_color(rt, depth - 1, scattered));
-		color_from_scatter = vec3_scale(0.5, vec3_add2(rec.normal, new_vec3(1, 1, 1)));
+		color_from_scatter = vec3_prod_comp_by_comp(attenuation, ray_color(rt, depth - 1, scattered));
+		//color_from_scatter = vec3_scale(0.5, vec3_add2(rec.normal, new_vec3(1, 1, 1)));
 	}
 	return (vec3_add2(color_from_emission, color_from_scatter));
 }

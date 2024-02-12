@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 void	set_face_normal(const t_ray r, const t_vec3 outward_normal, t_hit_rec *rec) {
 	// Sets the hit record normal vector

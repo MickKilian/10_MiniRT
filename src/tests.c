@@ -16,7 +16,7 @@
 // https://raytracing.github.io/books/RayTracingInOneWeekend.html             //
 //****************************************************************************//
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 int	test_vec3_operations(void) {
 

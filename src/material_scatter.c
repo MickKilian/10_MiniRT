@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 // Lambertian : We model here Light Scatter and Reflectance
 // Lambertian ditribution (in a manner proportional to cos(phi))

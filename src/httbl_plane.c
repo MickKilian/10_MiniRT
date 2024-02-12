@@ -6,25 +6,26 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 01:06:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/11 21:14:22 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
-t_plane	plane(const t_vec3 q, const t_vec3 u, const t_vec3 v)
+t_plane	plane(const t_vec3 q, const t_vec3 dir)
 {
 	t_plane	pln;
 
 	pln.q = q;
-	pln.u = u;
-	pln.v = v;
+	pln.d = dir;
+	//pln.u = u;
+	//pln.v = v;
 	return (pln);
 }
 
 bool	hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
 {
-	t_vec3	n;
+	//t_vec3	n;
 	t_vec3	normal;
 	double	d;
 	double	t;
@@ -34,8 +35,8 @@ bool	hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *
 	// To determine where the ray r hits the plane we use
 	// equation of a plane x.a + y.b + z.c = d
 
-	n = vec3_cross(rt->world.httbl->geom.pln.u, rt->world.httbl->geom.pln.v);
-	normal = vec3_unit(n);
+	//n = vec3_cross(rt->world.httbl->geom.pln.u, rt->world.httbl->geom.pln.v);
+	normal = vec3_unit(rt->world.httbl->geom.pln.d);
 	d = vec3_dot(normal, rt->world.httbl->geom.pln.q);
 
 	denom = vec3_dot(normal, r.dir);

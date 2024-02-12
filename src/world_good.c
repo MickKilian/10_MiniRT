@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/07 10:00:02 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/09 08:40:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	world_initialize(t_world *world)
 //	httbl_addback(world, new_httbl_sphere(new_sphere(new_vec3(1.0, 0.0, -1.0), 0.5), METAL, new_vec3(0.8, 0.6, 0.2)));
 //
 	// Center sphere
-	//httbl_waddback(world, new_httbl_sphere(new_sphere(new_vec3(0.0, 0.0, -1.0), 0.5), LAMBERTIAN, new_vec3(0.1, 0.2, 0.5)));
+	//httbl_addback(world, new_httbl_sphere(new_sphere(new_vec3(0.0, 0.0, -1.0), 0.5), LAMBERTIAN, new_vec3(0.1, 0.2, 0.5)));
 	//httbl_addback(world, new_httbl(void(*p1), void(*p2)));
 
 //	// Populate world with sphere for ground
@@ -114,7 +114,7 @@ int	world_initialize(t_world *world)
     // Planes
 	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3(-3,-2, 5), new_vec3(0, 0,-4), new_vec3(0, 4, 0))), left_red));
 	///httbl_addback(world, new_httbl(geom_plane(plane(new_vec3(-2,-2, 0), new_vec3(4, 0, 0), new_vec3(0, 4, 0))), back_green));
-	//httbl_addback(world, new_httbl(geomj_plane(plane(new_vec3( 3,-2, 1), new_vec3(0, 0, 4), new_vec3(0, 4, 0))), right_blue));
+	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3( 3,-2, 1), new_vec3(0, 0, 4), new_vec3(0, 4, 0))), right_blue));
 	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3(-2, 3, 1), new_vec3(4, 0, 0), new_vec3(0, 0, 4))), upper_orange));
 	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3(-2,-3, 5), new_vec3(4, 0, 0), new_vec3(0, 0,-4))), lower_teal));
 
@@ -134,30 +134,85 @@ int	world_initialize(t_world *world)
 	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3(0, 0, 0), new_vec3(0, 1, 0), new_vec3(0, 0, 1))), lower_teal));
 	//// Sphere
 	//httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0.0, 0.0, 0.0), 4.0)), mat_dielec(dielec(new_vec3(0.5, 0.5, 0.5), 1.5))));
-	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, -1000), 1000)), mat_lamber(lamber(new_vec3(0.8, 0.8, 0.8)))));
-	//httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 2, 0), 2)), mat_lamber(lamber(new_vec3(1, 0.0, 0.1)))));
-    t_material difflight = mat_diff_light(diff_light(new_vec3(5, 5, 5)));
-	httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(-3.5, -3.5, 0), new_vec3(0, 7, 0), new_vec3(7, 0, 0))), difflight));
-	add_box(world, new_vec3(-3.5, -3.5, 0), new_vec3(-1.5,-1.5, 1.5), mat_dielec(dielec(new_vec3(0.05, 0.0, 0.5), 1.5)));
-	add_box(world, new_vec3(-3.5, -1, 0), new_vec3(-1.5, 1, 1), mat_lamber(lamber(new_vec3(0.5, 0.0, 1.0))));
-	add_box(world, new_vec3(-3.5,  1.5, 0), new_vec3(-1.5, 3.5, 2), mat_lamber(lamber(new_vec3(0.2, 0.0, 0.3))));
-	add_box(world, new_vec3(-1, -3.5, 0), new_vec3( 1,-1.5, 1), mat_metal(metal(new_vec3(0.3, 0.3, 0.6),0.6)));
-	add_box(world, new_vec3(-1, -1, 0), new_vec3( 1, 1, 0.5), mat_lamber(lamber(new_vec3(0.5, 1.0, 0.0))));
-	add_box(world, new_vec3(-1,  1.5, 0), new_vec3( 1, 3.5, 1), mat_lamber(lamber(new_vec3(1.0, 1.0, 0.0))));
-	add_box(world, new_vec3( 1.5, -3.5, 0), new_vec3( 3.5,-1.5, 1), mat_metal(metal(new_vec3(1.0, 0.0, 0.1), 0.4)));
-	add_box(world, new_vec3( 1.5, -1, 0), new_vec3( 3.5, 1, 2), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8))));
-	add_box(world, new_vec3( 1.5,  1.5, 0), new_vec3( 3.5, 3.5, 3), mat_dielec(dielec(new_vec3(0.2, 0.7, 0.0), 1.5)));
-	add_box(world, new_vec3( -4,  -6, 4), new_vec3( 3.5, 3.5, 3), mat_dielec(dielec(new_vec3(0.2, 0.7, 0.0), 1.5)));
- 	//world.add(box(point3(265, 0, 295), point3(430, 330, 460), white));
-	//httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(7, 4, 2), 2)), mat_metal(metal(new_vec3(1.0, 0.9, 0.9), 0))));
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, -1000), 1000)), mat_metal(metal(new_vec3(0.6, 0.6, 0.6), 0.5))));
+//	//httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 2, 0), 2)), mat_lamber(lamber(new_vec3(1, 0.0, 0.1)))));
+//    t_material difflight = mat_diff_light(diff_light(new_vec3(5, 5, 5)));
+//    t_material difflight_2 = mat_diff_light(diff_light(new_vec3(0, 5, 5)));
+//	httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(-4, -4, 0), new_vec3(0, 8, 0), new_vec3(8, 0, 0))), difflight));
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(5, 9, 2), 0.9)), difflight_2));
+//	add_box(world, new_vec3(-3.5, -3.5, 0), new_vec3(-1.5,-1.5, 1.1), mat_dielec(dielec(new_vec3(0.05, 0.15, 0.9), 1.5)));
+//	add_box(world, new_vec3(-3.5, -1, 0), new_vec3(-1.5, 1, 1.65), mat_lamber(lamber(new_vec3(1.0, 0.6, 0.0))));
+//	add_box(world, new_vec3(-3.5,  1.5, 0), new_vec3(-1.5, 3.5, 2.2), mat_lamber(lamber(new_vec3(0.2, 0.0, 0.3))));
+//	add_box(world, new_vec3(-1, -3.5, 0), new_vec3( 1,-1.5, 0.7), mat_metal(metal(new_vec3(0.8, 0.8, 0.8), 0.6)));
+//	//add_box(world, new_vec3(-1, -1, 0), new_vec3( 1, 1, 0.5), mat_lamber(lamber(new_vec3(5.0, 4.0, 0.0))));
+//	//add_box(world, new_vec3(-0.5, -0.5, 0), new_vec3( 0.5, 0.5, 1.3), difflight_2);
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 0.9), 0.9)), mat_dielec(dielec(new_vec3(1.0, 0.9, 0.9), 1.5))));
+//	//add_box(world, new_vec3(-0.1, -0.1, 1.5), new_vec3( 0.1, 0.1, 3.2), mat_lamber(lamber(new_vec3(0.05, 0.05, 0.3))));
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 4), 0.5)), mat_metal(metal(new_vec3(0.9, 0.75, 0.1), 0.8))));
+//	add_box(world, new_vec3(-1,  1.5, 0), new_vec3( 1, 3.5, 2.2), mat_metal(metal(new_vec3(1.0, 0.1, 1.0), 0.8)));
+//	add_box(world, new_vec3( 1.5, -3.5, 0), new_vec3( 3.5,-1.5, 1), mat_metal(metal(new_vec3(1.0, 0.0, 0.1), 0.4)));
+//	add_box(world, new_vec3( 1.5, -1, 0), new_vec3( 3.5, 1, 2), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8))));
+//	add_box(world, new_vec3( 1.5,  1.5, 0), new_vec3( 3.5, 3.5, 3), mat_dielec(dielec(new_vec3(0.4, 0.9, 0.0), 1.5)));
+//	add_box(world, new_vec3( -0.7,  -5.5, 0), new_vec3( 0.8, -5.4, 1.5), mat_dielec(dielec(new_vec3(1.0, 0.3, 1.0), 1.5)));
+//	add_box(world, new_vec3( 0.8,  -5.5, 0), new_vec3( 2.3, -5.4, 1.9), mat_dielec(dielec(new_vec3(1.0, 1.0, 0.3), 1.5)));
+//	add_box(world, new_vec3( 2.3,  -5.5, 0), new_vec3( 5.5, -5.4, 1.2), mat_dielec(dielec(new_vec3(0.3, 1.0, 1.0), 1.5)));
+// 	//world.add(box(point3(265, 0, 295), point3(430, 330, 460), white))
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(7, 4, 1.8), 1.8)), mat_metal(metal(new_vec3(1.0, 0.9, 0.9), 0))));
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(7.2, -0.5, 1.5), 0.7)), mat_metal(metal(new_vec3(0.65, 0.8, 0.1), 0.8))));
+//	httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(5.9, -2, 0.6), 0.6)), difflight));
 
     //t_material difflight = mat_diff_light(diff_light(new_vec3(50, 50, 50)));
-	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 1, -10), new_vec3(5, 0, 0), new_vec3(0, 5, 0))), difflight));
+	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 0, 0), new_vec3(1, 0, 0), new_vec3(0, 1, 0))), mat_lamber(lamber(new_vec3(0.8, 0.8, 0.8)))));
 	////httbl_addback(world, new_httbl(geom_sphere(sphere(new_vec3(5, 4, 10), 1)), difflight));
 
 	//httbl_addback(world, new_httbl(geom_cylinder(cylinder(new_vec3(0, 0, 0), new_vec3(0, 0, 10), 1, 10)), mat_lamber(lamber(new_vec3(1, 0, 0)))));
+
+
+	httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, -1004), 1000)), mat_lamber(lamber(new_vec3(0, 0, 0)))));
+	//httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 0.5), 0.5)), mat_lamber(lamber(new_vec3(1.0, 1.0, 0.3)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0.0, 0.0, 0.0), new_vec3(0.0, 0., 1), 0.2, 1)), mat_lamber(lamber(new_vec3(0, 0, 1)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(1.0, -1.0, 0.0), new_vec3(0.3, 0., 1), 0.2, 2.0)), mat_lamber(lamber(new_vec3(1, 0, 0.3)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(-1.0, 1.0, 0.0), new_vec3(0.3, 0., 1), 0.2, 2.0)), mat_lamber(lamber(new_vec3(1, 0, 0.3)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(1.0, 1.0, 0.0), new_vec3(0.3, 0., 1), 0.2, 2.0)), mat_lamber(lamber(new_vec3(1, 0, 0.3)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0.0, 0.0, 2.0), new_vec3(0.3, 0., 1), 1.5, 0.5)), mat_lamber(lamber(new_vec3(1, 0, 0.8)))));
+	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0.0, 0.0, 2.5), new_vec3(0.3, 0., 1), 0.5, 0.3)), mat_lamber(lamber(new_vec3(0.2, 0, 0.8)))));
+	////DIE
+	t_material difflight = mat_diff_light(diff_light(new_vec3(5, 5, 5)));
+	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(-4, -4, 0), new_vec3(0, 8, 0), new_vec3(8, 0, 0))), difflight));
+	httbl_record(world, new_httbl(geom_box(box(new_vec3(-4, -4, -2), new_vec3(8, 8, 0))), difflight));
+	double a = 1;
+//	httbl_record(world, new_httbl(geom_box(box(new_vec3( -a/2, -a/2, 0), new_vec3(a/2, a/2, a))), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8)))));
+	httbl_record(world, new_httbl(geom_dice(box(new_vec3( 0, 0, 0), new_vec3(a, a, a))), mat_dielec(dielec(new_vec3(0.05, 0.15, 0.9), 1.5))));
+	httbl_record(world, new_httbl(geom_dice(box(new_vec3( -2, 2.5, 0), new_vec3(-2 + a, 2.5 + a, a))), mat_dielec(dielec(new_vec3(0.9, 0.15, 0.05), 1.5))));
+	httbl_record(world, new_httbl(geom_dice(box(new_vec3( -2.8, -2, 0), new_vec3(-2.8 + a, -2 + a, a))), mat_dielec(dielec(new_vec3(0.05, 0.9, 0.15), 1.5))));
+	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(-a / 2, -a / 2, 0), new_vec3(a, 0, 0), new_vec3(0, a, 0))), mat_lamber(lamber(new_vec3(1, 0 , 0.8)))));
+	//
+	//httbl_record(world, new_httbl(geom_cone(cone(new_vec3(0.0, 0.0, 2.0), new_vec3(0, 0., 1), 0, 0.5, -1)), mat_lamber(lamber(new_vec3(1, 1, 0)))));
+	//httbl_record(world, new_httbl(geom_box(box(new_vec3( 0, 0, -0), new_vec3( 3, 2, 2))), mat_lamber(lamber(new_vec3(0.4, 0.3, 0.8)))));
+	////PINK: new_vec3(1, 0, 0.8)
+	//CUP
+	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(4, 4, 0.0), new_vec3(0., 0., 1), 1.8, 2, 4)), mat_metal(metal(new_vec3(0.6, 0.6, 0.6), 0.5))));
+	httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(4, 4, 4), new_vec3(0.0, 0., 1), 2.1, 0.6)), mat_lamber(lamber(new_vec3(1, 0, 0)))));
 	return (0);
 }
+
+//tableau de pointeurs sur fonctions
+//typedef bool (*t_hit)(const t_rt *, const t_ray, const t_interval, t_hit_rec *);
+//
+//static void render(t_httbl* httbl)
+//{
+//	static const t_hit _table[LEN_GEOM_TYPES] =
+//	{
+//		&hit_plane,
+//		&hit_quad,
+//		&hit_disc,
+//		NULL,
+//		&hit_sphere,
+//		&hit_cylinder_finite
+//	}
+//
+//	_table[httbl->geom.type](...);
+//}
 
 bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 {
@@ -173,16 +228,25 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 	closest_so_far = tray.max;
 	while (rt->world.httbl)
 	{
+		//printf("theta\n");
+		//display_vec3(rt->world.httbl->geom.theta);
+		//printf("\n");
 		cos_theta = vec3_cos(rt->world.httbl->geom.theta);
 		sin_theta = vec3_sin(rt->world.httbl->geom.theta);
 		transformed_r = offset_r(r, vec3_scale(-1, rt->world.httbl->geom.offset));
 		transformed_r = rotate_rx(transformed_r, cos_theta.x, -sin_theta.x);
 		transformed_r = rotate_ry(transformed_r, cos_theta.y, -sin_theta.y);
 		transformed_r = rotate_rz(transformed_r, cos_theta.z, -sin_theta.z);
+		//display_vec3(r.dir);
+		//printf("\n*");
+		//display_vec3(transformed_r.dir);
+		//printf("\n");
 		if ((rt->world.httbl->geom.type == PLANE && hit_plane(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == QUAD && hit_quad(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
+					(rt->world.httbl->geom.type == DISC && hit_disc(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == SPHERE && hit_sphere(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
-					(rt->world.httbl->geom.type == CYLINDER && hit_cylinder(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)))
+					(rt->world.httbl->geom.type == CYLINDER && hit_cylinder_finite(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
+					(rt->world.httbl->geom.type == CONE && hit_cone_finite(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)))
 		{
 			hit_anything = true;
 			closest_so_far = temp_rec.t;
@@ -228,4 +292,27 @@ void	httbl_addback(t_world *world, t_httbl *new_httbl)
 	//Assign (if first) or go back to first element
 	world->httbl = world->httbl_head;
 	return ;
+}
+
+void	httbl_record(t_world *world, t_httbl *new_httbl)
+{
+	if (new_httbl->geom.type == BOX)
+	{
+		add_box_quads(world, &new_httbl->geom.box, new_httbl->mat);
+		free(new_httbl);
+		return;
+	}
+	if (new_httbl->geom.type == DICE)
+	{
+		add_box_quads(world, &new_httbl->geom.box, new_httbl->mat);
+		add_dice_dots(world, &new_httbl->geom.box, new_httbl->mat);
+		free(new_httbl);
+		return;
+	}
+	if (new_httbl->geom.type == CYLINDER)
+		add_cyl_discs(world, &new_httbl->geom, new_httbl->mat);
+	if (new_httbl->geom.type == CONE)
+		add_con_discs(world, &new_httbl->geom, new_httbl->mat);
+	
+	httbl_addback(world, new_httbl);
 }

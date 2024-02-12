@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray_tracing.h                                      :+:      :+:    :+:   */
+/*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/30 07:37:26 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/12 06:50:41 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RAY_TRACING_H
-# define RAY_TRACING_H
+#ifndef MINI_RT_H
+# define MINI_RT_H
 
 # include "mlx.h"
 # include <unistd.h>
@@ -25,18 +25,38 @@
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
-# define ERR_NO_AMBIENT_PARAMS	"Missing ambient parameters in scene file"
-# define ERR_NO_LIGHT_PARAMS	"Missing light parameters in scene file"
-# define ERR_NO_CAMERA_PARAMS	"Missing camera parameters in scene file"
-# define ERR_OPEN_FILE			"File could not be open"
-# define ERR_IS_NOT_RT_FILE		"File is not an .rt file"
-# define ERR_BAD_NB_ARGUMENTS	"Program requires 1 argument, the scene info as an .rt file"
+# define	NB_PARAMS_AMBIENT_LIGHT		3
+# define	NB_PARAMS_LIGHT				4
+# define	NB_PARAMS_CAMERA			4
+# define	NB_PARAMS_SPHERE			4
+# define	NB_PARAMS_QUAD				5
+# define	NB_PARAMS_DISC				5
+# define	NB_PARAMS_BOX				4
+# define	NB_PARAMS_PLANE				4
+# define	NB_PARAMS_CYLINDER			6
+# define	NB_PARAMS_CONE				7
+# define	NB_PARAMS_DIE				4
+# define	NB_PARAMS_SAFETY_CONE		4
+# define	ERR_NB_COMPS_VEC			"Vector should have 3 components"
+# define	ERR_NB_COMPS_COLOR			"Color should have 3 components"
+# define	ERR_FLOAT					"Not a float number"
+# define	ERR_INT						"Not an int number"
+# define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters in scene file"
+# define	ERR_NB_PARAMS_AMBIENT		"Wrong number of ambient light parameters in scene file"
+# define	ERR_NO_PARAMS_LIGHT			"Missing light parameters in scene file"
+# define	ERR_NB_PARAMS_LIGHT			"Wrong number light parameters in scene file"
+# define	ERR_NO_PARAMS_CAMERA		"Missing camera parameters in scene file"
+# define	ERR_NB_PARAMS_CAMERA		"Wrong number of camera parameters in scene file"
+# define	ERR_NB_PARAMS_GEOM			"Wrong number of parameters for geometry element in scene file"
+# define	ERR_OPEN_FILE				"File could not be open"
+# define	ERR_IS_NOT_RT_FILE			"File is not an .rt file"
+# define	ERR_NB_ARGUMENTS			"Program requires 1 argument: the scene info as an .rt file"
 
 # define	PI	3.1415926535897932385
 // Aspect ratio : 16/9
 # define	ASPECT_RATIO 1.777777778
 # define	EPSILON 1e-8
-# define	IMAGE_WIDTH 1000
+# define	IMAGE_WIDTH 500
 
 typedef struct s_httbl	t_httbl;
 
@@ -45,8 +65,11 @@ typedef enum	e_geom_types {
 	QUAD,
 	DISC,
 	BOX,
+	DIE,
 	SPHERE,
 	CYLINDER,
+	CONE,
+	SAFETY_CONE,
 	LEN_GEOM_TYPES
 }	t_geom_types;
 
@@ -105,8 +128,9 @@ typedef struct	s_ray
 typedef struct	s_plane
 {
 	t_vec3	q;
-	t_vec3	u;
-	t_vec3	v;
+	t_vec3	d;
+	//t_vec3	u;
+	//t_vec3	v;
 }	t_plane;
 
 typedef struct	s_quad
@@ -143,6 +167,17 @@ typedef struct	s_cylinder
 	double		height;
 	t_interval	interval_z;
 }	t_cylinder;
+
+typedef struct	s_cone
+{
+	t_vec3		base_center;
+	t_vec3		tip;
+	t_vec3		generator;
+	double		radius_min;
+	double		radius_max;
+	double		height;
+	t_interval	interval_z;
+}	t_cone;
 
 typedef struct	s_lamber
 {
@@ -191,6 +226,7 @@ typedef struct	s_geometry
 		t_box		box;
 		t_sphere	sph;
 		t_cylinder	cyl;
+		t_cone		con;
 	};
 } t_geometry;
 
@@ -226,8 +262,10 @@ typedef struct	s_image {
 typedef struct	s_camera {
 	bool	set;
 	t_vec3	center;
+	t_vec3	dir;
 	//double	focal_length;
 	double	vfov;
+	double	hfov;
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
@@ -283,7 +321,6 @@ typedef struct	s_rt
 }	t_rt;
 
 //All functions prototypes
-//src/parsing/
 //file.c
 bool		is_rt_file(char *file_path);
 int			read_file(t_rt *rt, int fd);
@@ -293,20 +330,29 @@ int			open_and_read_file(t_rt *rt, char *file_path);
 
 //parsing.c
 int			parse_line(t_rt *rt, char *line);
-int			parse_httbl_params(t_rt *rt, char *line, t_geom_types geom_type);
+int			parse_httbl_params(t_rt *rt, char *line, t_geom_types geom_type, int nb_params);
+int			parse_dbl_vec3(char* str, t_vec3 *vec);
+int			parse_dbl(char* str, double	*num);
+int			parse_color(char* str, t_vec3 *color);
 
 //parsing_geom.c
 int		parse_sphere(t_rt *rt, char **params);
 int		parse_plane(t_rt *rt, char **params);
 int		parse_cylinder(t_rt *rt, char **params);
+int		parse_cone(t_rt *rt, char **params);
+int		parse_quad(t_rt *rt, char **params);
+int		parse_disc(t_rt *rt, char **params);
+int		parse_box(t_rt *rt, char **params);
+int		parse_die(t_rt *rt, char **params);
+int		parse_safety_cone(t_rt *rt, char **params);
 
 //parsing_env.c
-int			parse_ambient_params(t_rt *rt, char *line);
-int			parse_light_params(t_rt *rt, char *line);
-int			parse_camera_params(t_rt *rt, char *line);
+int			parse_ambient_params(t_rt *rt, char *line, int nb_params);
+int			parse_light_params(t_rt *rt, char *line, int nb_params);
+int			parse_camera_params(t_rt *rt, char *line, int nb_params);
 
-//ray_tracing.c
-int			ray_tracing(t_rt *rt);
+//mini_rt.c
+int			mini_rt(t_rt *rt);
 
 //rt_initialize.c
 void		rt_initialize(t_rt *rt);
@@ -399,6 +445,8 @@ t_vec3		random_in_unit_disk(void);
 
 //world.c
 int			world_initialize(t_world *world);
+void		create_safety_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
+void		create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offsset);
 bool		world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec);
 void		httbl_addback(t_world *world, t_httbl *new_httbl);
 void		httbl_record(t_world *world, t_httbl *new_httbl);
@@ -412,7 +460,7 @@ t_httbl		*new_httbl(const t_geometry geom, const t_material mat);
 //void		assign_mat(t_httbl *httbl, t_mat_types mat_type, void(*p2));
 
 //httbl_plane.c
-t_plane		plane(const t_vec3 point, const t_vec3 vec1, const t_vec3 vec2);
+t_plane		plane(const t_vec3 point, const t_vec3 dir);
 bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
 
 //httbl_quad.c
@@ -435,14 +483,30 @@ bool		hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec
 t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height);
 bool		hit_cylinder_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 
+//httbl_cone.c
+t_cone		cone(const t_vec3 base_center, t_vec3 generator, double radius_min, double radius_max, double height);
+bool		hit_cone_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
+
 //httbl_quad.c
 //bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 //bool	is_interior(double a, double b, t_hit_rec *rec);
 
-//utils.c
+//utils_math.c
 double		ft_min(const double n1, const double n2);
+double		ft_max(const double n1, const double n2);
+
+//utils_convert.c
 double		deg2rad(double deg);
 double		lin2gam_double(double linear);
+double		str2dbl(char *str);
+
+//utils_numbers.c
+int	is_digit(char c);
+int	is_double(char *str);
+int	is_ulong(char *str);
+
+//utils_array.c
+double	array_size(char **params);
 
 //interval.c
 t_interval	interval(double min, double max);
@@ -479,8 +543,10 @@ t_geometry	geom_plane(t_plane pln);
 t_geometry	geom_quad(t_quad qud);
 t_geometry	geom_disc(t_disc dsc);
 t_geometry	geom_box(t_box box);
+t_geometry	geom_die(t_box box);
 t_geometry	geom_sphere(t_sphere sph);
 t_geometry	geom_cylinder(t_cylinder cyl);
+t_geometry	geom_cone(t_cone con);
 
 //material.c
 t_material	mat_lamber(t_lamber lamber);
@@ -493,7 +559,9 @@ bool		diffuse_light(t_vec3 *attenuation, t_ray *scattered);
 
 //geom_operations.c
 void		add_box_quads(t_world *world, t_box *box, t_material mat);
+void		add_die_dots(t_world *world, t_box *box, t_material mat);
 void		add_cyl_discs(t_world *world, t_geometry *geom, t_material mat);
+void		add_con_discs(t_world *world, t_geometry *geom, t_material mat);
 t_ray		offset_r(t_ray r, t_vec3 offset);
 t_vec3		offset_p(t_vec3 v, t_vec3 offset);
 t_vec3		rotate_x(t_vec3 vec, double cos_theta, double sin_theta);
@@ -502,8 +570,9 @@ t_vec3		rotate_y(t_vec3 vec, double cos_theta, double sin_theta);
 t_ray		rotate_ry(t_ray r, double cos_theta, double sin_theta);
 t_vec3		rotate_z(t_vec3 vec, double cos_theta, double sin_theta);
 t_ray		rotate_rz(t_ray r, double cos_theta, double sin_theta);
+t_vec3		rotate(t_vec3 vec, t_vec3 cos_theta, t_vec3 sin_theta);
 
 //error.c
 bool		display_error(char *error);
 
-#endif // RAY_TRACING
+#endif // MINI_RT_H

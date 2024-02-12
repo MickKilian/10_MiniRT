@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height)
 {

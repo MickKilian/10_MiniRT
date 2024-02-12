@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 //fonction dest computes the pos_at (t_vec3) on the ray path starting from origin in the direction dir
 t_vec3	hit_point(const t_ray r, double t)

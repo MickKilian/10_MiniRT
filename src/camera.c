@@ -6,11 +6,11 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/30 06:23:22 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/12 01:33:08 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 void	cam_initialize(t_camera *cam, int img_width, int img_height)
 {
@@ -25,17 +25,21 @@ void	cam_initialize(t_camera *cam, int img_width, int img_height)
 	t_vec3	vup;
 	double	defocus_radius;
 
-	cam->samples_per_pixel = 50;
-	cam->max_depth = 50;
+	cam->samples_per_pixel = 10;
+	cam->max_depth = 40;
 	//parsed//cam->background = new_vec3(0.2, 0.2, 0.2);		// Background color
-	cam->vfov = 40;  // Vertical view 5ngle (field of view)
+	//cam->vfov = 30;  // Vertical view angle (field of view) //FROM PARSING
 
 	cam->defocus_angle = 0.0;  // Variation angle of rays through each pixel
-    cam->focus_dist = 100;    // Distance from camera lookfrom point to plane of perfect focus
+    cam->focus_dist = 5000;    // Distance from camera lookfrom point to plane of perfect focus
 
 	// Camera position
-	look_from = new_vec3(0, -10, 3);	// Point camera is looking from
-    look_at = new_vec3(0, 0, 0);		// Point camera is looking at
+	//look_from = new_vec3(3, -10, 10);	// Point camera is looking from // FROM PARSING
+	look_from = cam->center;
+    //look_at = new_vec3(0, 0, 1);		// Point camera is looking at ?// CAMERA DIR FROM PARSING
+    look_at = vec3_add2(cam->center, cam->dir);		// Point camera is looking at
+	display_vec3(look_at);
+	printf("\n");
     vup = new_vec3(0.0, 0.0, 1.0);			// Camera-relative "up" direction
 	cam->center = look_from;
 
@@ -43,9 +47,12 @@ void	cam_initialize(t_camera *cam, int img_width, int img_height)
 	// Viewport widths less than one are ok since they are real valued.
 	// We want viewport proportions to exactly match our image proportions
 	// cam->focal_length = vec3_length(vec3_substract2(look_from, look_at));
-	theta = deg2rad(cam->vfov);
-    viewport_height = 2.0 * tan(theta / 2.0) * cam->focus_dist;
-	viewport_width = viewport_height * ((double)img_width / (double)img_height);
+	//theta = deg2rad(cam->vfov);
+    //viewport_height = 2.0 * tan(theta / 2.0) * cam->focus_dist;
+	//viewport_width = viewport_height * ((double)img_width / (double)img_height);
+	theta = deg2rad(cam->hfov);
+    viewport_width = 2.0 * tan(theta / 2.0) * cam->focus_dist;
+	viewport_height = viewport_width * ((double)img_height / (double)img_width);
 
 	// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
 	cam->w = vec3_unit(vec3_substract2(look_from, look_at));
@@ -85,7 +92,7 @@ int	render(t_rt *rt)
 	ft_bzero(&pixel_color, sizeof(t_vec3));
 
 	// Render
-	printf("P3\n%d %d\n255\n", rt->img_width, rt->img_height);
+	//printf("P3\n%d %d\n255\n", rt->img_width, rt->img_height);
 
 	for (int j = 0; j < rt->img_height; ++j)
 	{

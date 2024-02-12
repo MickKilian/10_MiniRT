@@ -6,11 +6,11 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:09:03 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 10:27:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/12 04:23:48 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
 bool	is_rt_file(char *file_path)
 {
@@ -65,11 +65,11 @@ char	*clean_line(char *line)
 bool	is_incomplete_file(t_rt *rt)
 {
 	if (!rt->ambient.set)
-		return (display_error(ERR_NO_AMBIENT_PARAMS));
-	if (!rt->cam.set)
-		return (display_error(ERR_NO_CAMERA_PARAMS));
+		return (display_error(ERR_NO_PARAMS_AMBIENT));
 	if (!rt->light.set)
-		return (display_error(ERR_NO_LIGHT_PARAMS));
+		return (display_error(ERR_NO_PARAMS_LIGHT));
+	if (!rt->cam.set)
+		return (display_error(ERR_NO_PARAMS_CAMERA));
 	return (0);
 }
 

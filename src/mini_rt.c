@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:39:34 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/27 03:28:57 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/12 04:18:44 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 // https://raytracing.github.io/books/RayTracingInOneWeekend.html             //
 //****************************************************************************//
 
-#include "../inc/ray_tracing.h"
+#include "../inc/mini_rt.h"
 
-int	ray_tracing(t_rt *rt)
+int	mini_rt(t_rt *rt)
 {
 	// Testing of vec_operations
 	// test_vec3_operations();
@@ -31,7 +31,7 @@ int	ray_tracing(t_rt *rt)
 	// Initialization of the mlx
 	if (mlx_initialize(&rt->mlx, rt->img_width, rt->img_height))
 		return (1);
-	// Initialization op camera parameters
+	// Initialization of camera parameters
 	cam_initialize(&rt->cam, rt->img_width, rt->img_height);
 	// Initialisation of environment geometry
 	world_initialize(&rt->world);
