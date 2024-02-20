@@ -6,11 +6,20 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:39:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/15 23:40:32 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 22:57:34 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
+
+t_geometry	geom_point(t_point pnt)
+{
+	t_geometry	geom;
+
+	geom.type = POINT;
+	geom.pnt = pnt;
+	return (geom);
+}
 
 t_geometry	geom_plane(t_plane pln)
 {

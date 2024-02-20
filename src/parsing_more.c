@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 12:57:49 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 23:26:46 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ int	parse_diff_light(char **params, t_material *mat, t_vec3 *color, int *params_
 
 	if (parse_dbl(params[*params_count + 1], &ratio))
 		return (1);
-	*mat = mat_diff_light(diff_light(vec3_scale(ratio, *color)));
+	*mat = mat_diff_light(diff_light(ratio, *color));
 	return (0);
 }

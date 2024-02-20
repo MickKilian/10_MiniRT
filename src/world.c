@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/19 18:24:26 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 18:30:12 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 		//printf("\n*");
 		//display_vec3(transformed_r.dir);
 		//printf("\n");
-		if ((rt->world.httbl->geom.type == PLANE && hit_plane(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
+		if ((rt->world.httbl->geom.type == POINT && hit_point_geom(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
+					(rt->world.httbl->geom.type == PLANE && hit_plane(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == QUAD && hit_quad(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == DISC && hit_disc(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == SPHERE && hit_sphere(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||

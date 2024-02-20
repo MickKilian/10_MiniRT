@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/19 18:44:09 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 23:16:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	parse_line(t_rt *rt, char *line)
 	 if (ft_strncmp(line, "A", 1) == 0)
 		 return(parse_ambient_params(rt, line, NB_PARAMS_AMBIENT_LIGHT));
 	 if (ft_strncmp(line, "L", 1) == 0)
-		 return(parse_light_params(rt, line, NB_PARAMS_LIGHT));
+		 return(parse_light_params(rt, line, NB_PARAMS_LIGHT) || parse_httbl_params(rt, line, POINT, NB_PARAMS_POINT));
 	 if (ft_strncmp(line, "C", 1) == 0)
 		 return(parse_camera_params(rt, line, NB_PARAMS_CAMERA));
 	 if (ft_strncmp(line, "sp", 2) == 0)
@@ -36,7 +36,7 @@ int	parse_line(t_rt *rt, char *line)
 		 return(parse_httbl_params(rt, line, CYLINDER, NB_PARAMS_CYLINDER));
 	 if (ft_strncmp(line, "co", 2) == 0)
 		 return(parse_httbl_params(rt, line, CONE, NB_PARAMS_CONE));
-	 if (ft_strncmp(line, "dc", 2) == 0)
+	 if (ft_strncmp(line, "di", 2) == 0)
 		 return(parse_httbl_params(rt, line, DIE, NB_PARAMS_DIE));
 	 if (ft_strncmp(line, "sc", 2) == 0)
 		 return(parse_httbl_params(rt, line, SAFETY_CONE, NB_PARAMS_SAFETY_CONE));
@@ -59,7 +59,9 @@ int	parse_httbl_params(t_rt *rt, char *line, t_geom_types geom_type, int nb_para
 	params_count = nb_params;
 	params = ft_split(line, ' ');
 	rt->pars_tot = array_size(params);
-	if (rt->pars_tot < nb_params) {
+	if (geom_type == POINT)
+		ret = create_light_point(rt, geom);
+	else if (rt->pars_tot < nb_params) {
 		free(params);
 		return(display_error(ERR_NB_PARAMS_GEOM));
 	}

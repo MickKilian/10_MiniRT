@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/13 02:41:36 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 22:56:17 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,5 +174,10 @@ int	parse_safety_cone(t_rt *rt, char **params)
 	if (parse_dbl(params[3], &height))
 		return (1);
 	create_safety_cone(&rt->world, q, dir, height);
+	return (0);
+}
+
+int	create_light_point(t_rt *rt, t_geometry *geom) {
+	*geom = geom_point(point(rt->light.pos));
 	return (0);
 }

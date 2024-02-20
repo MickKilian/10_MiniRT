@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 13:36:16 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 18:52:12 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	cam_initialize(t_camera *cam, int img_width, int img_height)
 	t_vec3	vup;
 	double	defocus_radius;
 
-	cam->samples_per_pixel = 30;
+	cam->samples_per_pixel = 100;
 	cam->max_depth = 40;
 	//parsed//cam->background = new_vec3(0.2, 0.2, 0.2);		// Background color
 	//cam->vfov = 30;  // Vertical view angle (field of view) //FROM PARSING

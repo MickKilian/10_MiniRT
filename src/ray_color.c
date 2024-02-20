@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 10:11:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 23:30:37 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ t_vec3	ray_color(t_rt *rt, int depth, const t_ray r)
 	// If we've exceeded the ray bounce limit, no more light is gathered.
 	if (depth <= 0)
 		return (new_vec3(0.0, 0.0, 0.0));
-	// If the ray hits nothing, return the background color.
+	// If the ray hits nothing, return the ambient color.
 	// 0.001 prevents bugs from offset calculation of the surface hit point due to float precision
 	if (!world_hit(rt, r, interval(0.001, INFINITY), &rec))
-		return rt->cam.background;
+		return (vec3_scale(rt->ambient.ratio, rt->ambient.color));
 		//return ray_color_grad_blue(r);
 	if (rec.mat == DIFF_LIGHT)
 	{
-		color_from_emission = rec.diff_light.color;
+		color_from_emission = vec3_scale(rec.diff_light.ratio, rec.diff_light.color);
 		color_from_scatter = new_vec3(0., 0., 0.);
 	}
 	else

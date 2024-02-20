@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 13:35:09 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 23:29:18 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@
 # define	NB_PARAMS_AMBIENT_LIGHT		3
 # define	NB_PARAMS_LIGHT				4
 # define	NB_PARAMS_CAMERA			4
+# define	NB_PARAMS_POINT				3
+# define	NB_PARAMS_PLANE				4
 # define	NB_PARAMS_SPHERE			4
 # define	NB_PARAMS_QUAD				5
 # define	NB_PARAMS_DISC				5
 # define	NB_PARAMS_BOX				4
-# define	NB_PARAMS_PLANE				4
 # define	NB_PARAMS_CYLINDER			6
 # define	NB_PARAMS_CONE				7
 # define	NB_PARAMS_DIE				4
@@ -63,6 +64,7 @@
 typedef struct s_httbl	t_httbl;
 
 typedef enum	e_geom_types {
+	POINT,
 	PLANE,
 	QUAD,
 	DISC,
@@ -126,6 +128,11 @@ typedef struct	s_ray
 //	double	g;
 //	double	b;
 //}	t_rgb;
+
+typedef struct	s_point
+{
+	t_vec3	q;
+}	t_point;
 
 typedef struct	s_plane
 {
@@ -201,6 +208,7 @@ typedef struct	s_dielec
 typedef struct	s_diff_light
 {
 	t_vec3	color;
+	double	ratio;
 }	t_diff_light;
 
 typedef struct	s_material
@@ -222,6 +230,7 @@ typedef struct	s_geometry
 	t_vec3			theta;
 	union
 	{
+		t_point		pnt;
 		t_plane		pln;
 		t_quad		qud;
 		t_disc		dsc;
@@ -280,7 +289,6 @@ typedef struct	s_camera {
 	t_vec3	pixel_delta_v;
 	double	max_depth;
 	int		samples_per_pixel;
-	t_vec3	background;
 	t_vec3	offset;
 }	t_camera;
 
@@ -301,12 +309,15 @@ typedef struct	s_mlx
 typedef struct	s_ambient
 {
 	bool	set;
+	double	ratio;
 	t_vec3	color;
 }	t_ambient;
 
 typedef struct	s_light
 {
 	bool	set;
+	t_vec3	pos;
+	double	ratio;
 	t_vec3	color;
 }	t_light;
 
@@ -350,6 +361,7 @@ int		parse_disc(char **params, t_geometry *geom, t_vec3 *color);
 int		parse_box(char **params, t_geometry *geom, t_vec3 *color);
 int		parse_die(char **params, t_geometry *geom, t_vec3 *color);
 int		parse_safety_cone(t_rt *rt, char **params);
+int		create_light_point(t_rt *rt, t_geometry *geom);
 
 //parsing_env.c
 int			parse_resolution_params(t_rt *rt, char *line, int nb_params);
@@ -472,6 +484,10 @@ t_httbl		*new_httbl(const t_geometry geom, const t_material mat);
 //void		assign_geom(t_httbl *httbl, t_httbl_types geom_type, void(*p1));
 //void		assign_mat(t_httbl *httbl, t_mat_types mat_type, void(*p2));
 
+//httbl_point.c
+t_point		point(const t_vec3 point);
+bool		hit_point_geom(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
+
 //httbl_plane.c
 t_plane		plane(const t_vec3 point, const t_vec3 dir);
 bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
@@ -550,9 +566,10 @@ t_metal		metal(t_vec3 color, double fuzz);
 t_dielec	dielec(t_vec3 color, double ir);
 
 //mat_diff_light.c
-t_diff_light	diff_light(t_vec3 color);
+t_diff_light	diff_light(double ratio, t_vec3 color);
 
 //geometries.c
+t_geometry	geom_point(t_point pnt);
 t_geometry	geom_plane(t_plane pln);
 t_geometry	geom_quad(t_quad qud);
 t_geometry	geom_disc(t_disc dsc);
