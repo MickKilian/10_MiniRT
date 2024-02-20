@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httbl_cylinder.c                                   :+:      :+:    :+:   */
+/*   httbl_cylinder_old.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/30 05:28:04 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:57:50 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool	hit_cylinder(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_re
 		rec->dielec = rt->world.httbl->mat.dielec;
 	if (rec->mat == DIFF_LIGHT)
 		rec->diff_light = rt->world.httbl->mat.diff_light;
-	//rec->color = rt->world.httbl->mat.albedo;
+	//rec->color = rt->world.httbl->mat.color;
 	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom.cyl.radius, vec3_substract2(new_vec3(rec->p.x, rec->p.y, 0),
 					new_vec3(rt->world.httbl->geom.cyl.base_center.x, rt->world.httbl->geom.cyl.base_center.y, 0))), rec);
 	return (1);

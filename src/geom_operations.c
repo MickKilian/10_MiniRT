@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 06:50:56 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/15 23:32:59 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,10 @@ void	add_cyl_discs(t_world *world, t_geometry *geom, t_material mat)
 	// Construct the two opposite discs of a finite cylinder.
 	cos_theta = vec3_cos(vec3_scale(1, geom->theta));
 	sin_theta = vec3_sin(vec3_scale(1, geom->theta));
-	begin_disc_center = offset_p(rotate(geom->cyl.base_center, cos_theta, sin_theta), vec3_scale(1, geom->offset));
+	begin_disc_center = translate_p(rotate(geom->cyl.base_center, cos_theta, sin_theta), vec3_scale(1, geom->trans));
 	generator = rotate(geom->cyl.generator, cos_theta, sin_theta);
 	httbl_addback(world, new_httbl(geom_disc(disc(begin_disc_center, generator, geom->cyl.radius)), mat)); // begin
-	end_disc_center = offset_p(rotate(vec3_add2(geom->cyl.base_center, vec3_scale(geom->cyl.height, geom->cyl.generator)),cos_theta, sin_theta), vec3_scale(1, geom->offset));
+	end_disc_center = translate_p(rotate(vec3_add2(geom->cyl.base_center, vec3_scale(geom->cyl.height, geom->cyl.generator)),cos_theta, sin_theta), vec3_scale(1, geom->trans));
 	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->cyl.radius)), mat)); // end
 }
 
@@ -123,24 +123,24 @@ void	add_con_discs(t_world *world, t_geometry *geom, t_material mat)
 	// Construct the two opposite discs of a finite cone.
 	cos_theta = vec3_cos(vec3_scale(1, geom->theta));
 	sin_theta = vec3_sin(vec3_scale(1, geom->theta));
-	begin_disc_center = offset_p(rotate(geom->con.base_center, cos_theta, sin_theta), vec3_scale(1, geom->offset));
+	begin_disc_center = translate_p(rotate(geom->con.base_center, cos_theta, sin_theta), vec3_scale(1, geom->trans));
 	generator = rotate(geom->con.generator, cos_theta, sin_theta);
 	httbl_addback(world, new_httbl(geom_disc(disc(begin_disc_center, generator, geom->con.radius_min)), mat)); // begin
-	end_disc_center = offset_p(rotate(vec3_add2(geom->con.base_center, vec3_scale(geom->con.height, geom->con.generator)),cos_theta, sin_theta), vec3_scale(1, geom->offset));
+	end_disc_center = translate_p(rotate(vec3_add2(geom->con.base_center, vec3_scale(geom->con.height, geom->con.generator)),cos_theta, sin_theta), vec3_scale(1, geom->trans));
 	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->con.radius_max)), mat)); // end
 }
 
-t_ray	offset_r(t_ray r, t_vec3 offset)
+t_ray	translate_r(t_ray r, t_vec3 trans)
 {
 	t_vec3	new_orig;
 
-	new_orig = vec3_add2(r.orig, offset);
+	new_orig = vec3_add2(r.orig, trans);
 	return (new_ray(new_orig, r.dir));
 }
 
-t_vec3	offset_p(t_vec3 v, t_vec3 offset)
+t_vec3	translate_p(t_vec3 v, t_vec3 trans)
 {
-	return (vec3_add2(v, offset));
+	return (vec3_add2(v, trans));
 }
 
 t_vec3	rotate_x(t_vec3 vec, double cos_theta, double sin_theta)

@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/02/12 04:22:44 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/02/13 03:11:59 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ PRIM_SRCS	=	main.c mini_rt.c rt_initialize.c mlx.c \
 				httbl_plane.c httbl_sphere.c httbl_cone.c httbl_cylinder.c httbl_disc.c camera.c \
 				material_scatter.c geometries.c materials.c mat_diff_light.c \
 				mat_dielectric.c mat_lambertian.c mat_metal.c error.c \
-				file.c parsing.c parsing_env.c parsing_geom.c
+				file.c parsing.c parsing_env.c parsing_geom.c parsing_more.c
 PRIM_SRCDIR	=	src
 PRIM_PATH	=	$(addprefix $(PRIM_SRCDIR)/, $(PRIM_SRCS))
 PRIM_OBJDIR	=	obj
@@ -34,7 +34,7 @@ HEADER_SRCS	=	mini_rt.h mlx.h
 HEADER_DIR	=	inc
 HEADER_PATH	=	$(addprefix $(HEADER_DIR)/, $(HEADER_SRCS))
 
-NAME		=	mini_rt
+NAME		=	miniRT
 LIB1_DIR	=	lib/gnl
 LIB1_NAME	=	lib/gnl/libgnl.a
 LIB2_DIR	=	lib/libft

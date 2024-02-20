@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 06:51:16 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:24:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 		//printf("\n");
 		cos_theta = vec3_cos(rt->world.httbl->geom.theta);
 		sin_theta = vec3_sin(rt->world.httbl->geom.theta);
-		transformed_r = offset_r(r, vec3_scale(-1, rt->world.httbl->geom.offset));
+		transformed_r = translate_r(r, vec3_scale(-1, rt->world.httbl->geom.trans));
 		transformed_r = rotate_rx(transformed_r, cos_theta.x, -sin_theta.x);
 		transformed_r = rotate_ry(transformed_r, cos_theta.y, -sin_theta.y);
 		transformed_r = rotate_rz(transformed_r, cos_theta.z, -sin_theta.z);
@@ -131,7 +131,7 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 				temp_rec.p = rotate_x(temp_rec.p, cos_theta.x, sin_theta.x);
 				temp_rec.normal = rotate_x(temp_rec.normal, cos_theta.x, sin_theta.x);
 			}
-			temp_rec.p = offset_p(temp_rec.p, rt->world.httbl->geom.offset);
+			temp_rec.p = translate_p(temp_rec.p, rt->world.httbl->geom.trans);
 			*rec = temp_rec;
 		}
 		rt->world.httbl = rt->world.httbl->next;
@@ -175,8 +175,9 @@ void	httbl_record(t_world *world, t_httbl *new_httbl)
 		free(new_httbl);
 		return;
 	}
-	if (new_httbl->geom.type == CYLINDER)
+	if (new_httbl->geom.type == CYLINDER) {
 		add_cyl_discs(world, &new_httbl->geom, new_httbl->mat);
+	}
 	if (new_httbl->geom.type == CONE)
 		add_con_discs(world, &new_httbl->geom, new_httbl->mat);
 	

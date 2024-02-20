@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 02:25:58 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/06 23:37:50 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:02:39 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	lambertian_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuati
 	if (near_zero(scatter_direction))
 		scatter_direction = rec.normal;
 	*scattered = new_ray(rec.p, scatter_direction);
-    *attenuation = rec.lamber.albedo;
+    *attenuation = rec.lamber.color;
 	(void)r_in;
     return (1);
 }
@@ -42,7 +42,7 @@ bool	metal_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuation, t
 
 	reflected = reflect(vec3_unit(r_in.dir), rec.normal);
 	*scattered = new_ray(rec.p, vec3_add2(reflected, vec3_scale(rec.metal.fuzz, random_unit_vector())));
-    *attenuation = rec.metal.albedo;
+    *attenuation = rec.metal.color;
     return (1);
 }
 
@@ -69,6 +69,6 @@ bool	dielectric_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuati
 	else
 	direction = refract(vec3_unit(r_in.dir), rec.normal, refraction_ratio);
 	*scattered = new_ray(rec.p, direction);
-    *attenuation = rec.dielec.albedo;
+    *attenuation = rec.dielec.color;
     return (1);
 }

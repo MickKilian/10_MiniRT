@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 06:51:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:44:09 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	parse_line(t_rt *rt, char *line)
 {
+	 if (ft_strncmp(line, "R", 1) == 0)
+		 return(parse_resolution_params(rt, line, NB_PARAMS_RESOLUTION));
 	 if (ft_strncmp(line, "A", 1) == 0)
 		 return(parse_ambient_params(rt, line, NB_PARAMS_AMBIENT_LIGHT));
 	 if (ft_strncmp(line, "L", 1) == 0)
@@ -43,33 +45,49 @@ int	parse_line(t_rt *rt, char *line)
 
 int	parse_httbl_params(t_rt *rt, char *line, t_geom_types geom_type, int nb_params)
 {
-	char	**params;
+	char		**params;
+	t_geometry	*geom;
+	t_material	*mat;
+	t_vec3		*color;
+	int			ret;
+	int			params_count;
 
+	ret = 1;
+	geom = ft_calloc(1, sizeof(t_geometry));
+	mat = ft_calloc(1, sizeof(t_material));
+	color = ft_calloc(1, sizeof(t_vec3));
+	params_count = nb_params;
 	params = ft_split(line, ' ');
-	if (array_size(params) != nb_params) {
+	rt->pars_tot = array_size(params);
+	if (rt->pars_tot < nb_params) {
 		free(params);
 		return(display_error(ERR_NB_PARAMS_GEOM));
 	}
 	if (geom_type == SPHERE)
-		return(parse_sphere(rt, params));
-	if (geom_type == QUAD)
-		return(parse_quad(rt, params));
-	if (geom_type == DISC)
-		return(parse_disc(rt, params));
-	if (geom_type == BOX)
-		return(parse_box(rt, params));
-	if (geom_type == PLANE)
-		return(parse_plane(rt, params));
-	if (geom_type == CYLINDER)
-		return(parse_cylinder(rt, params));
-	if (geom_type == CONE)
-		return(parse_cone(rt, params));
-	if (geom_type == DIE)
-		return(parse_die(rt, params));
-	if (geom_type == SAFETY_CONE)
-		return(parse_safety_cone(rt, params));
+		ret = parse_sphere(params, geom, color);
+	else if (geom_type == QUAD)
+		ret = parse_quad(params, geom, color);
+	else if (geom_type == DISC)
+		ret = parse_disc(params, geom, color);
+	else if (geom_type == BOX)
+		ret = parse_box(params, geom, color);
+	else if (geom_type == PLANE)
+		ret = parse_plane(params, geom, color);
+	else if (geom_type == CYLINDER)
+		ret = parse_cylinder(params, geom, color);
+	else if (geom_type == CONE)
+		ret = parse_cone(params, geom, color);
+	else if (geom_type == DIE)
+		ret = parse_die(params, geom, color);
+	else if (geom_type == SAFETY_CONE)
+		ret = parse_safety_cone(rt, params);
+	if (rt->pars_tot > params_count)
+		ret = parse_more(params, geom, mat, color, &params_count);
+	if (ret == 0 && !mat->type)
+		*mat = mat_lamber(lamber(rgb2vec(*color)));
+	httbl_record(&rt->world, new_httbl(*geom, *mat));
 	free(params);
-	return (1);
+	return (ret);
 }
 
 int	parse_dbl_vec3(char* str, t_vec3 *vec)

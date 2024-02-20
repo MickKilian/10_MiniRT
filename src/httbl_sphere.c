@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/01/30 04:45:46 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:02:03 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool	hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec 
 		rec->dielec = rt->world.httbl->mat.dielec;
 	if (rec->mat == DIFF_LIGHT)
 		rec->diff_light = rt->world.httbl->mat.diff_light;
-	//rec->color = rt->world.httbl->mat.albedo;
+	//rec->color = rt->world.httbl->mat.color;
 	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom.sph.radius, vec3_substract2(rec->p, rt->world.httbl->geom.sph.center)), rec);
 	return (1);
 }

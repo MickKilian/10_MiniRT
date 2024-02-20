@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 06:50:41 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/20 13:35:09 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
+# define	NB_PARAMS_RESOLUTION		3
 # define	NB_PARAMS_AMBIENT_LIGHT		3
 # define	NB_PARAMS_LIGHT				4
 # define	NB_PARAMS_CAMERA			4
@@ -41,6 +42,7 @@
 # define	ERR_NB_COMPS_COLOR			"Color should have 3 components"
 # define	ERR_FLOAT					"Not a float number"
 # define	ERR_INT						"Not an int number"
+# define	ERR_NB_PARAMS_RESOLUTION	"Wrong number of resolution parameters in scene file"
 # define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters in scene file"
 # define	ERR_NB_PARAMS_AMBIENT		"Wrong number of ambient light parameters in scene file"
 # define	ERR_NO_PARAMS_LIGHT			"Missing light parameters in scene file"
@@ -181,18 +183,18 @@ typedef struct	s_cone
 
 typedef struct	s_lamber
 {
-	t_vec3	albedo;
+	t_vec3	color;
 }	t_lamber;
 
 typedef struct	s_metal
 {
-	t_vec3	albedo;
+	t_vec3	color;
 	double	fuzz;
 }	t_metal;
 
 typedef struct	s_dielec
 {
-	t_vec3	albedo;
+	t_vec3	color;
 	double	idx_refract;
 }	t_dielec;
 
@@ -216,7 +218,7 @@ typedef struct	s_material
 typedef struct	s_geometry
 {
 	t_geom_types	type;
-	t_vec3			offset;
+	t_vec3			trans;
 	t_vec3			theta;
 	union
 	{
@@ -313,11 +315,14 @@ typedef struct	s_rt
 	t_ambient	ambient;
 	t_light		light;
 	double		aspect_ratio;
+	bool		set_resolution;
 	int			img_width;
 	int			img_height;
 	t_mlx		mlx;
 	t_camera	cam;
 	t_world		world;
+	int			pars_count;
+	int			pars_tot;
 }	t_rt;
 
 //All functions prototypes
@@ -336,20 +341,28 @@ int			parse_dbl(char* str, double	*num);
 int			parse_color(char* str, t_vec3 *color);
 
 //parsing_geom.c
-int		parse_sphere(t_rt *rt, char **params);
-int		parse_plane(t_rt *rt, char **params);
-int		parse_cylinder(t_rt *rt, char **params);
-int		parse_cone(t_rt *rt, char **params);
-int		parse_quad(t_rt *rt, char **params);
-int		parse_disc(t_rt *rt, char **params);
-int		parse_box(t_rt *rt, char **params);
-int		parse_die(t_rt *rt, char **params);
+int		parse_sphere(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_plane(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_cylinder(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_cone(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_quad(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_disc(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_box(char **params, t_geometry *geom, t_vec3 *color);
+int		parse_die(char **params, t_geometry *geom, t_vec3 *color);
 int		parse_safety_cone(t_rt *rt, char **params);
 
 //parsing_env.c
+int			parse_resolution_params(t_rt *rt, char *line, int nb_params);
 int			parse_ambient_params(t_rt *rt, char *line, int nb_params);
 int			parse_light_params(t_rt *rt, char *line, int nb_params);
 int			parse_camera_params(t_rt *rt, char *line, int nb_params);
+
+//parsing_more.c
+int	parse_more(char **params, t_geometry *geom, t_material *mat, t_vec3 *color, int *params_count);
+int	parse_transform(char **params, t_geometry *geom,  int *params_count);
+int	parse_dielectric(char **params, t_material *mat, t_vec3 *color, int *params_count);
+int	parse_metal(char **params, t_material *mat, t_vec3 *color, int *params_count);
+int	parse_diff_light(char **params, t_material *mat, t_vec3 *color, int *params_count);
 
 //mini_rt.c
 int			mini_rt(t_rt *rt);
@@ -497,6 +510,7 @@ double		ft_max(const double n1, const double n2);
 
 //utils_convert.c
 double		deg2rad(double deg);
+t_vec3		deg2rad_vec3(t_vec3 vec);
 double		lin2gam_double(double linear);
 double		str2dbl(char *str);
 
@@ -562,8 +576,8 @@ void		add_box_quads(t_world *world, t_box *box, t_material mat);
 void		add_die_dots(t_world *world, t_box *box, t_material mat);
 void		add_cyl_discs(t_world *world, t_geometry *geom, t_material mat);
 void		add_con_discs(t_world *world, t_geometry *geom, t_material mat);
-t_ray		offset_r(t_ray r, t_vec3 offset);
-t_vec3		offset_p(t_vec3 v, t_vec3 offset);
+t_ray		translate_r(t_ray r, t_vec3 trans);
+t_vec3		translate_p(t_vec3 v, t_vec3 trans);
 t_vec3		rotate_x(t_vec3 vec, double cos_theta, double sin_theta);
 t_ray		rotate_rx(t_ray r, double cos_theta, double sin_theta);
 t_vec3		rotate_y(t_vec3 vec, double cos_theta, double sin_theta);

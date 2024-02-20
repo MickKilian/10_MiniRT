@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 03:22:09 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/04 06:03:30 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:03:39 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_metal	metal(t_vec3 color, double fuzz)
 {
 	t_metal	metal;
 
-	metal.albedo = color;
+	metal.color = color;
 	metal.fuzz  = fuzz;
 	return (metal);
 }
