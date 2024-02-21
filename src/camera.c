@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 18:52:12 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 05:29:05 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	cam_initialize(t_camera *cam, int img_width, int img_height)
 	t_vec3	vup;
 	double	defocus_radius;
 
-	cam->samples_per_pixel = 100;
-	cam->max_depth = 40;
+	cam->samples_per_pixel = 20;
+	cam->max_depth = MAX_DEPTH;
 	//parsed//cam->background = new_vec3(0.2, 0.2, 0.2);		// Background color
 	//cam->vfov = 30;  // Vertical view angle (field of view) //FROM PARSING
 
@@ -104,6 +104,12 @@ int	render(t_rt *rt)
 						ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam, i, j)));
 			}
 			pixel_color = vec3_scale(1.0 / (double)rt->cam.samples_per_pixel, pixel_color);
+	//		if (!vec3_length(pixel_color))
+	//		{
+	//			printf("PIXEL COLOR : ");
+	//			display_vec3(pixel_color);
+	//			printf("\n");
+	//		}
 			//pixel_color = new_vec3(fmin(pixel_color.x, 1), fmin(pixel_color.y, 1), fmin(pixel_color.z, 1));
 			// We apply the gamme correction to the image
 			//my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(pixel_color)));

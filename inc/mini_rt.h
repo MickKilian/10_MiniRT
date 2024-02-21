@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 23:29:18 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 05:21:03 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 # define	ERR_FLOAT					"Not a float number"
 # define	ERR_INT						"Not an int number"
 # define	ERR_NB_PARAMS_RESOLUTION	"Wrong number of resolution parameters in scene file"
+# define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual) in scene file"
 # define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters in scene file"
 # define	ERR_NB_PARAMS_AMBIENT		"Wrong number of ambient light parameters in scene file"
 # define	ERR_NO_PARAMS_LIGHT			"Missing light parameters in scene file"
@@ -60,6 +61,7 @@
 # define	ASPECT_RATIO 1.777777778
 # define	EPSILON 1e-8
 # define	IMAGE_WIDTH 500
+# define	MAX_DEPTH 40
 
 typedef struct s_httbl	t_httbl;
 
@@ -248,6 +250,7 @@ typedef struct	s_httbl {
 }	t_httbl;
 
 typedef struct	s_hit_rec {
+	t_geom_types		geom_type;
 	t_vec3				p;
 	t_vec3				normal;
 	double				t;

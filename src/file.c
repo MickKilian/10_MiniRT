@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:09:03 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 04:23:48 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 03:38:58 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,12 @@ char	*clean_line(char *line)
 
 bool	is_incomplete_file(t_rt *rt)
 {
-	if (!rt->ambient.set)
-		return (display_error(ERR_NO_PARAMS_AMBIENT));
-	if (!rt->light.set)
-		return (display_error(ERR_NO_PARAMS_LIGHT));
+	if (!rt->ambient.set && !rt->light.set)
+		return (display_error(ERR_AT_LEAST_A_OR_L));
+	//if (!rt->ambient.set)
+	//	return (display_error(ERR_NO_PARAMS_AMBIENT));
+	//if (!rt->light.set)
+	//	return (display_error(ERR_NO_PARAMS_LIGHT));
 	if (!rt->cam.set)
 		return (display_error(ERR_NO_PARAMS_CAMERA));
 	return (0);

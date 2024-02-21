@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 18:36:23 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 05:33:15 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,32 @@ bool	hit_point_geom(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_
 {
 	//t_vec3	n;
 	t_vec3	normal;
-	t_ray	light_ray;
+	t_vec3	ray_to_light;
 	double	dot_prod;
 	double	t;
 	t_vec3	intersection;
 
 	// To determine where the ray r hits the punctual light
 
-	light_ray.dir = vec3_substract2(r.orig, rt->world.httbl->geom.pnt.q);
-	light_ray.orig = rt->world.httbl->geom.pnt.q;
+	ray_to_light = vec3_substract2(rt->world.httbl->geom.pnt.q, r.orig);
 
-	dot_prod = vec3_dot(vec3_scale(-1, light_ray.dir), r.dir);
+	dot_prod = vec3_dot(vec3_unit(ray_to_light), vec3_unit(r.dir));
 
-	// No hit if the ray is not close to light_ray
-	if (dot_prod < EPSILON)
+	// No hit if the ray is perpendicular to light_ray
+	//if (dot_prod < EPSILON)
+	//	return (0);
+	// No hit if the cosine is negative
+	if (dot_prod < 0.0) {
+		//printf("                    nodot_prod : %f\n", dot_prod);
 		return (0);
-
+	}
+	//else
+		//printf("dot_prod : %f\n", dot_prod);
 	// Return false if the hit point parameter t is outside the ray interval.
-	t = vec3_length(light_ray.dir);
+	t = vec3_length(ray_to_light);
 	if (!contains(tray, t))
 		return (0);
-
+	
 	// Determine if the hit point lies within the planar shape using its plane coordinates.
 	intersection = hit_point(r, t);
 

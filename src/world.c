@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 18:30:12 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 04:26:12 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,7 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 		transformed_r = rotate_rx(transformed_r, cos_theta.x, -sin_theta.x);
 		transformed_r = rotate_ry(transformed_r, cos_theta.y, -sin_theta.y);
 		transformed_r = rotate_rz(transformed_r, cos_theta.z, -sin_theta.z);
-		//display_vec3(r.dir);
-		//printf("\n*");
-		//display_vec3(transformed_r.dir);
-		//printf("\n");
+		//printf("geom_type : %d\n", rt->world.httbl->geom.type);
 		if ((rt->world.httbl->geom.type == POINT && hit_point_geom(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == PLANE && hit_plane(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
 					(rt->world.httbl->geom.type == QUAD && hit_quad(rt, transformed_r, interval(tray.min, closest_so_far), &temp_rec)) ||
@@ -138,6 +135,8 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 		rt->world.httbl = rt->world.httbl->next;
 	}
 	rt->world.httbl = rt->world.httbl_head;
+	//if (hit_anything)
+	//	printf("HIT %d\n", rt->world.httbl->geom.type);
 	return hit_anything;
 }
 
