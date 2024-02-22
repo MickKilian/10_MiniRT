@@ -6,7 +6,7 @@
 /*   By: bgrulois <bgrulois@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 04:41:55 by bgrulois          #+#    #+#             */
-/*   Updated: 2022/11/29 04:33:13 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/21 23:15:13 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ int	ft_strcmp(char *s1, char *s2)
 	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
 	if (s1[i] == '\0' && s2[i] == '\0')
-		return (1);
-	return (0);
+		return (0);
+	return (1);
 }

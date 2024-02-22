@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 03:03:50 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/07 06:15:54 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/22 06:37:21 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,14 @@ t_vec3	vec3_prod_comp_by_comp(const t_vec3 v1, const t_vec3 v2)
 	v_res.y = v1.y * v2.y;
 	v_res.z = v1.z * v2.z;
 	return (v_res);
+}
+
+int	vec3_update(t_vec3 *vec, double x, double y, double z)
+{
+	vec->x = x;
+	vec->y = y;
+	vec->z = z;
+	return (0);
 }
 
 //int	vec_prod_2vec_comp_by_comp_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2)

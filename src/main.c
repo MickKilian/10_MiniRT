@@ -6,13 +6,13 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:19:34 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/21 02:10:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/22 04:54:14 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //****************************************************************************//
-// I learned ray tracing using the following resources                        //
-// Tuto mini_rt                                                               //
+// I learned ray tracing using the following different resources like         //
+// Tuto rayTracing                                                            //
 // https://raytracing.github.io/books/RayTracingInOneWeekend.html             //
 //****************************************************************************//
 

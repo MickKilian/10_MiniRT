@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/21 05:21:03 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/22 06:06:28 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,16 @@
 # define	NB_PARAMS_CYLINDER			6
 # define	NB_PARAMS_CONE				7
 # define	NB_PARAMS_DIE				4
-# define	NB_PARAMS_SAFETY_CONE		4
+# define	NB_PARAMS_SAF_CONE		4
+# define	ERR_INFO_TYPE				"Invalid information type"
 # define	ERR_NB_COMPS_VEC			"Vector should have 3 components"
 # define	ERR_NB_COMPS_COLOR			"Color should have 3 components"
-# define	ERR_FLOAT					"Not a float number"
-# define	ERR_INT						"Not an int number"
+# define	ERR_INVALID_COLOR_COMP		"Color component should be an integer in range [0-255]"
+# define	ERR_NUM						"Not a valid number"
+# define	ERR_DEC						"Not a valid decimal number"
+# define	ERR_OUT_OF_INT				"Input is out of range"
+# define	ERR_OUT_OF_RATIO			"Ratio should be in range [0.0-1.0]"
+# define	ERR_OUT_OF_VIEW_ANGLE		"Horizontral view angle should be in range [0-180]"
 # define	ERR_NB_PARAMS_RESOLUTION	"Wrong number of resolution parameters in scene file"
 # define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual) in scene file"
 # define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters in scene file"
@@ -75,7 +80,7 @@ typedef enum	e_geom_types {
 	SPHERE,
 	CYLINDER,
 	CONE,
-	SAFETY_CONE,
+	SAF_CONE,
 	LEN_GEOM_TYPES
 }	t_geom_types;
 
@@ -335,8 +340,14 @@ typedef struct	s_rt
 	t_mlx		mlx;
 	t_camera	cam;
 	t_world		world;
-	int			pars_count;
-	int			pars_tot;
+	int			p_expected;
+	int			p_count;
+	int			p_avail;
+	t_geometry	temp_geom;
+	t_material	temp_mat;
+	t_vec3		temp_color;
+	int			temp_ret;
+	char		**temp_params;
 }	t_rt;
 
 //All functions prototypes
@@ -348,36 +359,45 @@ bool		is_incomplete_file(t_rt *rt);
 int			open_and_read_file(t_rt *rt, char *file_path);
 
 //parsing.c
-int			parse_line(t_rt *rt, char *line);
-int			parse_httbl_params(t_rt *rt, char *line, t_geom_types geom_type, int nb_params);
-int			parse_dbl_vec3(char* str, t_vec3 *vec);
-int			parse_dbl(char* str, double	*num);
-int			parse_color(char* str, t_vec3 *color);
+int	parse_line(t_rt *rt, char *line);
+int	parse_line_cont(t_rt *rt);
+int	parse_httbl(t_rt *rt, t_geom_types geom_type, int nb_params);
+int	parse_httbl_cont(t_rt *rt, t_geom_types geom_type);
+
+//parsing_types_1.c
+int	parse_dbl(char* str, double *num);
+int	parse_dbl_01(char* str, double *num);
+int	parse_dbl_0180(char* str, double *num);
+
+//parsing_types_2.c
+int	parse_dbl_vec3(char* str, t_vec3 *vec);
+int	parse_color(char* str, t_vec3 *color);
+//char	*get_info_type(char *line);
 
 //parsing_geom.c
-int		parse_sphere(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_plane(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_cylinder(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_cone(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_quad(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_disc(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_box(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_die(char **params, t_geometry *geom, t_vec3 *color);
-int		parse_safety_cone(t_rt *rt, char **params);
-int		create_light_point(t_rt *rt, t_geometry *geom);
+int		parse_sphere(t_rt *rt);
+int		parse_plane(t_rt *rt);
+int		parse_cylinder(t_rt *rt);
+int		parse_cone(t_rt *rt);
+int		parse_quad(t_rt *rt);
+int		parse_disc(t_rt *rt);
+int		parse_box(t_rt *rt);
+int		parse_die(t_rt *rt);
+int		parse_saf_cone(t_rt *rt);
+int		create_light_point(t_rt *rt);
 
 //parsing_env.c
-int			parse_resolution_params(t_rt *rt, char *line, int nb_params);
-int			parse_ambient_params(t_rt *rt, char *line, int nb_params);
-int			parse_light_params(t_rt *rt, char *line, int nb_params);
-int			parse_camera_params(t_rt *rt, char *line, int nb_params);
+int			parse_resolution_params(t_rt *rt);
+int			parse_ambient_params(t_rt *rt);
+int			parse_light_params(t_rt *rt);
+int			parse_camera_params(t_rt *rt);
 
-//parsing_more.c
-int	parse_more(char **params, t_geometry *geom, t_material *mat, t_vec3 *color, int *params_count);
-int	parse_transform(char **params, t_geometry *geom,  int *params_count);
-int	parse_dielectric(char **params, t_material *mat, t_vec3 *color, int *params_count);
-int	parse_metal(char **params, t_material *mat, t_vec3 *color, int *params_count);
-int	parse_diff_light(char **params, t_material *mat, t_vec3 *color, int *params_count);
+//parsing_extra.c
+int	parse_extra(t_rt *rt);
+int	parse_transform(t_rt *rt);
+int	parse_dielectric(t_rt *rt);
+int	parse_metal(t_rt *rt);
+int	parse_diff_light(t_rt *rt);
 
 //mini_rt.c
 int			mini_rt(t_rt *rt);
@@ -410,6 +430,7 @@ t_vec3		vec3_add3(const t_vec3 v1, const t_vec3 v2, const t_vec3 v3);
 t_vec3		vec3_substract2(const t_vec3 v1, const t_vec3 v2);
 //int			vec_substract_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
 t_vec3		vec3_prod_comp_by_comp(const t_vec3 v1, const t_vec3 v2);
+int			vec3_update(t_vec3 *vec, double x, double y, double z);
 //int			vec_prod_2vec_comp_by_comp_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
 t_vec3		vec3_identity_number(double t);
 //int			vec_identity_number_in(t_vec3 *v, double t);
@@ -473,7 +494,7 @@ t_vec3		random_in_unit_disk(void);
 
 //world.c
 int			world_initialize(t_world *world);
-void		create_safety_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
+void		create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
 void		create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offsset);
 bool		world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec);
 void		httbl_addback(t_world *world, t_httbl *new_httbl);
@@ -535,8 +556,13 @@ double		str2dbl(char *str);
 
 //utils_numbers.c
 int	is_digit(char c);
-int	is_double(char *str);
+int	is_dec(char *str);
 int	is_ulong(char *str);
+int	is_long(char *str);
+int	is_valid_color_comp(char *str);
+int	is_in_int_range(char *str);
+int	is_in_range01 (double num);
+int	is_in_range0180 (double num);
 
 //utils_array.c
 double	array_size(char **params);
@@ -608,5 +634,8 @@ t_vec3		rotate(t_vec3 vec, t_vec3 cos_theta, t_vec3 sin_theta);
 
 //error.c
 bool		display_error(char *error);
+bool		display_error_plus(char *error, char *msg);
+bool		display_warning(char *warning);
+bool		display_warning_plus(char *warning, char *msg);
 
 #endif // MINI_RT_H

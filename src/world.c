@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/21 04:26:12 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/22 02:20:19 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	world_initialize(t_world *world)
 	return (0);
 }
 
-void	create_safety_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height) {
+void	create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height) {
 	double	radius_max = height / 4;
 	double	radius_min = height / 20;
 	double	radius_step = (radius_max - radius_min) / 5;
