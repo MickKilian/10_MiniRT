@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 05:52:22 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 15:00:04 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	parse_line_cont(t_rt *rt)
 
 int	parse_httbl(t_rt *rt, t_geom_types geom_type, int p_expected)
 {
+	char	*msg;
+
 	rt->temp_ret = 1;
 	rt->p_expected = p_expected;
 	if (geom_type == POINT)
@@ -70,8 +72,9 @@ int	parse_httbl(t_rt *rt, t_geom_types geom_type, int p_expected)
 	{
 		if (rt->p_avail < rt->p_expected)
 		{
+			msg = rt->temp_params[0];
 			free (rt->temp_params);
-			return (display_error(ERR_NB_PARAMS_GEOM));
+			return (display_error_plus(ERR_NB_PARAMS_GEOM, msg));
 		}
 		rt->temp_ret = parse_httbl_cont(rt, geom_type);
 	}

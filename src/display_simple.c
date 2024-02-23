@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httbl_create.c                                     :+:      :+:    :+:   */
+/*   display_simple.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/29 19:21:16 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 14:58:38 by mbourgeo         ###   ########.fr       */
+/*   Created: 2023/11/26 03:03:50 by mbourgeo          #+#    #+#             */
+/*   Updated: 2024/02/23 14:11:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-t_httbl	*new_httbl(const t_geometry geom, const t_material mat)
+void	display_vec3(const t_vec3 v)
 {
-	t_httbl	*new_httbl;
+	printf("(%f, %f, %f)", v.x, v.y, v.z);
+}
 
-	new_httbl = ft_calloc(1, sizeof(t_httbl));
-	printf("first creates : \n");
-	display_vec3(new_httbl->geom.theta);
-	printf("\n");
-	display_vec3(geom.theta);
-	printf("\n");
-	if (!new_httbl)
-		return (NULL);
-	new_httbl->next = NULL;
-	new_httbl->geom = geom;
-	new_httbl->mat = mat;
-	return (new_httbl);
+void	display_color(t_vec3 pixel_color)
+{
+    printf("%d %d %d\n", (int)(255.999 * pixel_color.x), (int)(255.999 * pixel_color.y), (int)(255.999 * pixel_color.z));
 }

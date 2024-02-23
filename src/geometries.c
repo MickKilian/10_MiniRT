@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:39:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/20 22:57:34 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 14:46:23 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ t_geometry	geom_sphere(t_sphere sph)
 {
 	t_geometry	geom;
 
+	ft_bzero(&geom, sizeof(t_geometry));
 	geom.type = SPHERE;
 	geom.sph = sph;
 	return (geom);

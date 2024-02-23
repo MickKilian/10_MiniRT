@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 05:43:50 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 13:02:07 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,22 @@ int	parse_resolution_params(t_rt *rt)
 	double	width;
 	double	height;
 
-	if (rt->p_avail != NB_PARAMS_RESOLUTION)
+	if (rt->p_avail < NB_PARAMS_RESOLUTION || rt->p_avail > NB_PARAMS_RESOLUTION + 1)
 	{
 		free(rt->temp_params);
-		return (display_error(ERR_NB_PARAMS_RESOLUTION));
+		return (display_error_plus(ERR_NB_PARAMS_RESOLUTION, ft_itoa(NB_PARAMS_RESOLUTION - 1)));
 	}
-	if (parse_dbl(rt->temp_params[1], &width))
+	if (parse_int_pos(rt->temp_params[1], &width))
 		return (1);
-	if (parse_dbl(rt->temp_params[2], &height))
-		return (1);
+	if (rt->p_avail > NB_PARAMS_RESOLUTION) {
+		if (parse_int_pos(rt->temp_params[2], &height))
+			return (1);
+	}
+	else
+		height = width / ASPECT_RATIO;
 	rt->img_width = (int)width;
 	rt->img_height = (int)height;
+	rt->aspect_ratio = (double)rt->img_height/(double)rt->img_height;
 	rt->set_resolution = 1;
 	if (rt->temp_params)
 		free(rt->temp_params);
@@ -39,7 +44,7 @@ int	parse_ambient_params(t_rt *rt)
 	if (rt->p_avail != NB_PARAMS_AMBIENT_LIGHT)
 	{
 		free(rt->temp_params);
-		return (display_error(ERR_NB_PARAMS_AMBIENT));
+		return (display_error_plus(ERR_NB_PARAMS_AMBIENT, ft_itoa(NB_PARAMS_AMBIENT_LIGHT - 1)));
 	}
 	if (parse_dbl_01(rt->temp_params[1], &rt->ambient.ratio))
 		return (1);
@@ -57,7 +62,7 @@ int	parse_light_params(t_rt *rt)
 	if (rt->p_avail != NB_PARAMS_LIGHT)
 	{
 		free(rt->temp_params);
-		return (display_error(ERR_NB_PARAMS_LIGHT));
+		return (display_error_plus(ERR_NB_PARAMS_LIGHT, ft_itoa(NB_PARAMS_LIGHT - 1)));
 	}
 	if (parse_dbl_vec3(rt->temp_params[1], &rt->light.pos))
 		return (1);
@@ -77,7 +82,7 @@ int	parse_camera_params(t_rt *rt)
 	if (rt->p_avail != NB_PARAMS_CAMERA)
 	{
 		free(rt->temp_params);
-		return (display_error(ERR_NB_PARAMS_CAMERA));
+		return (display_error_plus(ERR_NB_PARAMS_CAMERA, ft_itoa(NB_PARAMS_CAMERA - 1)));
 	}
 	if (parse_dbl_vec3(rt->temp_params[1], &rt->cam.center))
 		return (1);

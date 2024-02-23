@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 20:41:26 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/13 04:28:35 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 13:29:08 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ t_vec3	deg2rad_vec3(t_vec3 vec)
 {
 	t_vec3	new_vec;
 
-	display_vec3(vec);
 	new_vec = vec3_scale(PI / 180.0, vec);
-	printf("\n");
 	return (new_vec);
 }
 

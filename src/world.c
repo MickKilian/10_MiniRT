@@ -6,18 +6,20 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 02:20:19 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 14:04:27 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-int	world_initialize(t_world *world)
+int	world_populate(t_world *world)
 {
-	(void)world;
+	//(void)world;
+	printf("world's size is : %ld\n", world->size);
+	display_world(world);
 	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3( 0, 0, 0), vec3_cross(new_vec3(1, 0, 0), new_vec3(0, 1, 0)))), mat_lamber(lamber(new_vec3(0.7, 0.7, 0.7)))));
-	//display_vec3(vec3_cross(new_vec3(1, 0, 0), new_vec3(0, 1, 0)));
 	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0, 0, 0), new_vec3(0, 0, 1), 1, 2.5)), mat_metal(metal(new_vec3(0.81, 1, 0.02), 0))));
+	//httbl_record(world, new_httbl(geom_disc(disc(new_vec3(0,0,0), new_vec3(0,0,1), 1)), mat_lamber(lamber(new_vec3(0.81, 1, 0.02))))); // begin
 	//httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 1), 1)), mat_lamber(lamber(new_vec3(0, 1.0, 0.3)))));
 	//httbl_record(world, new_httbl(geom_cone(cone(new_vec3(0.0, 0.0, 2.0), new_vec3(0, 0., 1), 0, 1, -2)), mat_lamber(lamber(new_vec3(1, 0, 0)))));
 	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 0, 0), new_vec3(3, 0, 0), new_vec3(0, 3, 0))), mat_lamber(lamber(new_vec3(0, 0, 0.8)))));
@@ -94,9 +96,6 @@ bool	world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec)
 	closest_so_far = tray.max;
 	while (rt->world.httbl)
 	{
-		//printf("theta\n");
-		//display_vec3(rt->world.httbl->geom.theta);
-		//printf("\n");
 		cos_theta = vec3_cos(rt->world.httbl->geom.theta);
 		sin_theta = vec3_sin(rt->world.httbl->geom.theta);
 		transformed_r = translate_r(r, vec3_scale(-1, rt->world.httbl->geom.trans));
@@ -176,6 +175,7 @@ void	httbl_record(t_world *world, t_httbl *new_httbl)
 		return;
 	}
 	if (new_httbl->geom.type == CYLINDER) {
+		printf("adding for cyl\n");
 		add_cyl_discs(world, &new_httbl->geom, new_httbl->mat);
 	}
 	if (new_httbl->geom.type == CONE)

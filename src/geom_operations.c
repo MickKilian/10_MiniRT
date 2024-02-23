@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/15 23:32:59 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 14:01:49 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,27 @@ void	add_cyl_discs(t_world *world, t_geometry *geom, t_material mat)
 	t_vec3	generator;
 
 	// Construct the two opposite discs of a finite cylinder.
+//	printf("in add_cyl_discs\n");
+//	display_vec3(geom->theta);
+//	printf("\n");
+//	display_vec3(geom->trans);
+//	printf("\n");
 	cos_theta = vec3_cos(vec3_scale(1, geom->theta));
 	sin_theta = vec3_sin(vec3_scale(1, geom->theta));
 	begin_disc_center = translate_p(rotate(geom->cyl.base_center, cos_theta, sin_theta), vec3_scale(1, geom->trans));
+	//(void)begin_disc_center;
+	//display_vec3(geom->cyl.generator);
+	//printf("\n");
 	generator = rotate(geom->cyl.generator, cos_theta, sin_theta);
 	httbl_addback(world, new_httbl(geom_disc(disc(begin_disc_center, generator, geom->cyl.radius)), mat)); // begin
+	//display_vec3(begin_disc_center);
+	display_vec3(generator);
+	printf("\n");
 	end_disc_center = translate_p(rotate(vec3_add2(geom->cyl.base_center, vec3_scale(geom->cyl.height, geom->cyl.generator)),cos_theta, sin_theta), vec3_scale(1, geom->trans));
-	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->cyl.radius)), mat)); // end
+	(void)end_disc_center;
+	//httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->cyl.radius)), mat)); // end
+	//display_vec3(end_disc_center);
+	//printf("\n");
 }
 
 void	add_con_discs(t_world *world, t_geometry *geom, t_material mat)

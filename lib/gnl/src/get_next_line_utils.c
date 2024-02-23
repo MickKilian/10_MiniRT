@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 00:44:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2022/12/02 04:03:46 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 03:22:43 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,14 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-/*int	ft_strlen(const char *str)
+void	ft_bzero(void *s, size_t n)
 {
-	int	i;
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}*/
-
-void	ft_bzero2(void *s, size_t n)
-{
-	size_t	i;
-	char	*cpy;
-
-	i = 0;
-	cpy = s;
-	while (i < n)
+	while (n > 0)
 	{
-		cpy[i] = '\0';
-		i++;
+		*(char *)s = '\0';
+		n--;
+		s++;
 	}
-	s = cpy;
 }
 
 char	*ft_strjoin2(char *s1, char *s2, char *res)
@@ -86,11 +72,17 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 		s1[0] = '\0';
 	}
 	if (!s1 || !s2)
+	{
+		free(s1);
 		return (NULL);
+	}
 	res = malloc(sizeof(char) * ((ft_strlen((char *)s1)
 					+ ft_strlen((char *)s2)) + 1));
 	if (!res)
+	{
+		free(s1);
 		return (0);
+	}
 	res = ft_strjoin2(s1, s2, res);
 	free(s1);
 	return (res);

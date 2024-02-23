@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:39:34 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/12 04:18:44 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 12:27:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	mini_rt(t_rt *rt)
 	if (mlx_initialize(&rt->mlx, rt->img_width, rt->img_height))
 		return (1);
 	// Initialization of camera parameters
-	cam_initialize(&rt->cam, rt->img_width, rt->img_height);
+	cam_initialize(rt);
 	// Initialisation of environment geometry
-	world_initialize(&rt->world);
+	world_populate(&rt->world);
 
 	// Render whole scene
 	render(rt);

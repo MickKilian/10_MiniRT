@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 03:03:50 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 06:37:21 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 13:57:25 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,12 +208,6 @@ double	vec3_index(t_vec3 v, int i)
 	return (*((double *)temp + i));
 }
 
-int	display_vec3(const t_vec3 v)
-{
-	printf("(%f, %f, %f)", v.x, v.y, v.z);
-	return (0);
-}
-
 //compute a vec from 2 points
 //t_vec3	vec3_2points(const t_vec3 orig, const t_vec3 end)
 //{
@@ -225,11 +219,10 @@ int	display_vec3(const t_vec3 v)
 //	return (vec);
 //}
 
-bool	near_zero(const t_vec3 vec)
+bool	vec3_is_nearzero(const t_vec3 vec)
 {
 		// Return true if the vector is close to zero in all dimensions.
-		double s = 0.000000001;
-		return (fabs(vec.x) < s) && (fabs(vec.y) < s) && (fabs(vec.z) < s);
+		return (fabs(vec.x) < EPSILON) && (fabs(vec.y) < EPSILON) && (fabs(vec.z) < EPSILON);
 }
 
 t_vec3	vec3_cos(t_vec3 theta)

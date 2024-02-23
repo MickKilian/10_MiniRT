@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/16 00:47:14 by mbourgeo          #+#    #+#             */
-/*   Updated: 2022/11/29 04:39:10 by mbourgeo         ###   ########.fr       */
+/*   Created: 2021/11/22 21:12:22 by mbourgeo          #+#    #+#             */
+/*   Updated: 2021/11/30 23:29:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strndup(const char *s, size_t n)
+void	*ft_memset(void *str, int c, size_t n)
 {
-	char	*cpy;
-	int		i;
+	unsigned char	*s;
 
-	if (!n)
-		n = ft_strlen(s);
-	cpy = malloc((n + 1) * sizeof(char));
-	if (!cpy)
-		return (NULL);
-	i = 0;
+	s = str;
 	while (n--)
-	{
-		*(cpy + i) = *(s + i);
-		i++;
-	}
-	*(cpy + i) = '\0';
-	return (cpy);
+		*s++ = c;
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 06:06:28 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 14:59:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
-# define	NB_PARAMS_RESOLUTION		3
+# define	NB_PARAMS_RESOLUTION		2
 # define	NB_PARAMS_AMBIENT_LIGHT		3
 # define	NB_PARAMS_LIGHT				4
 # define	NB_PARAMS_CAMERA			4
@@ -38,35 +38,38 @@
 # define	NB_PARAMS_CYLINDER			6
 # define	NB_PARAMS_CONE				7
 # define	NB_PARAMS_DIE				4
-# define	NB_PARAMS_SAF_CONE		4
+# define	NB_PARAMS_SAF_CONE			4
 # define	ERR_INFO_TYPE				"Invalid information type"
 # define	ERR_NB_COMPS_VEC			"Vector should have 3 components"
 # define	ERR_NB_COMPS_COLOR			"Color should have 3 components"
 # define	ERR_INVALID_COLOR_COMP		"Color component should be an integer in range [0-255]"
 # define	ERR_NUM						"Not a valid number"
+# define	ERR_INT						"Not a valid int number"
 # define	ERR_DEC						"Not a valid decimal number"
+# define	ERR_NEGATIVE_NUM			"Input should be a positive number"
 # define	ERR_OUT_OF_INT				"Input is out of range"
 # define	ERR_OUT_OF_RATIO			"Ratio should be in range [0.0-1.0]"
 # define	ERR_OUT_OF_VIEW_ANGLE		"Horizontral view angle should be in range [0-180]"
-# define	ERR_NB_PARAMS_RESOLUTION	"Wrong number of resolution parameters in scene file"
-# define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual) in scene file"
-# define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters in scene file"
-# define	ERR_NB_PARAMS_AMBIENT		"Wrong number of ambient light parameters in scene file"
-# define	ERR_NO_PARAMS_LIGHT			"Missing light parameters in scene file"
-# define	ERR_NB_PARAMS_LIGHT			"Wrong number light parameters in scene file"
-# define	ERR_NO_PARAMS_CAMERA		"Missing camera parameters in scene file"
-# define	ERR_NB_PARAMS_CAMERA		"Wrong number of camera parameters in scene file"
-# define	ERR_NB_PARAMS_GEOM			"Wrong number of parameters for geometry element in scene file"
+# define	ERR_NB_PARAMS_RESOLUTION	"Expected number of resolution parameters at least"
+# define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual)"
+# define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters"
+# define	ERR_NB_PARAMS_AMBIENT		"Expected number of parameters for ambient light"
+# define	ERR_NO_PARAMS_LIGHT			"Missing light parameters"
+# define	ERR_NB_PARAMS_LIGHT			"Expected number of parameters for punctual light"
+# define	ERR_NO_PARAMS_CAMERA		"Missing camera parameters"
+# define	ERR_NB_PARAMS_CAMERA		"Expected number of parameters for camera"
+# define	ERR_NB_PARAMS_GEOM			"Expected number of parameters for geometry element"
 # define	ERR_OPEN_FILE				"File could not be open"
 # define	ERR_IS_NOT_RT_FILE			"File is not an .rt file"
 # define	ERR_NB_ARGUMENTS			"Program requires 1 argument: the scene info as an .rt file"
 
 # define	PI	3.1415926535897932385
 // Aspect ratio : 16/9
-# define	ASPECT_RATIO 1.777777778
 # define	EPSILON 1e-8
 # define	IMAGE_WIDTH 500
+# define	ASPECT_RATIO 1.777777778
 # define	MAX_DEPTH 40
+# define	SAMPLES_PER_PIXEL 20
 
 typedef struct s_httbl	t_httbl;
 
@@ -295,7 +298,7 @@ typedef struct	s_camera {
 	t_vec3	pixel00_loc;
 	t_vec3	pixel_delta_u;
 	t_vec3	pixel_delta_v;
-	double	max_depth;
+	int		max_depth;
 	int		samples_per_pixel;
 	t_vec3	offset;
 }	t_camera;
@@ -366,6 +369,7 @@ int	parse_httbl_cont(t_rt *rt, t_geom_types geom_type);
 
 //parsing_types_1.c
 int	parse_dbl(char* str, double *num);
+int	parse_int_pos(char *str, double *num);
 int	parse_dbl_01(char* str, double *num);
 int	parse_dbl_0180(char* str, double *num);
 
@@ -407,7 +411,7 @@ void		rt_initialize(t_rt *rt);
 
 //camera.c
 int			render(t_rt *rt);
-void		cam_initialize(t_camera *cam, int img_width, int img_height);
+void		cam_initialize(t_rt *rt);
 
 //mlx.c
 int			mlx_initialize(t_mlx *mlx, int img_width, int img_height);
@@ -446,22 +450,18 @@ t_vec3		vec3_unit(const t_vec3 v);
 double		vec3_length(const t_vec3 v);
 double		vec3_length_squared(const t_vec3 v);
 double		vec3_index(const t_vec3 v, int i);
-int			display_vec3(const t_vec3 v);
 //t_vec3		vec3_2points(const t_vec3 orig, const t_vec3 end);
-bool		near_zero(const t_vec3 vec);
+bool		vec3_is_nearzero(const t_vec3 vec);
 t_vec3		vec3_cos(t_vec3 theta);
 t_vec3		vec3_sin(t_vec3 theta);
 
 //memory.c
-void		*ft_calloc(size_t nmemb, size_t size);
-void		ft_bzero(void *ptr, const size_t size);
+//void		*ft_calloc(size_t nmemb, size_t size);
+//void		ft_bzero(void *ptr, const size_t size);
 void		free_httbls(t_httbl *httbl);
 
 //test.c
 int			test_vec3_operations(void);
-
-//color_display.c
-void		write_color(t_vec3 pixel_color);
 
 //ray_color.c
 t_vec3		ray_color(t_rt *rt, int depth, const t_ray r);
@@ -493,7 +493,7 @@ t_vec3		random_in_same_hemisphere(const t_vec3 normal);
 t_vec3		random_in_unit_disk(void);
 
 //world.c
-int			world_initialize(t_world *world);
+int			world_populate(t_world *world);
 void		create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
 void		create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offsset);
 bool		world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec);
@@ -632,10 +632,21 @@ t_vec3		rotate_z(t_vec3 vec, double cos_theta, double sin_theta);
 t_ray		rotate_rz(t_ray r, double cos_theta, double sin_theta);
 t_vec3		rotate(t_vec3 vec, t_vec3 cos_theta, t_vec3 sin_theta);
 
-//error.c
+//display_errors.c
 bool		display_error(char *error);
 bool		display_error_plus(char *error, char *msg);
 bool		display_warning(char *warning);
 bool		display_warning_plus(char *warning, char *msg);
+
+//display_objects.c
+void	display_world(t_world *world);
+void	display_httbl(t_httbl *httbl, int id);
+void	display_geometry(t_geometry *geom);
+void	display_material(t_material *mat);
+void	display_sphere(t_sphere *sph);
+
+//display_simple.c
+void	display_vec3(const t_vec3 v);
+void	display_color(t_vec3 pixel_color);
 
 #endif // MINI_RT_H

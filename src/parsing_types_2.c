@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 06:44:24 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 01:31:51 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int	parse_color(char *str, t_vec3 *color)
 	if (array_size(params) != 3)
 	{
 		free(params);
+		printf("ret value is: 1\n");
 		return (display_error_plus(ERR_NB_COMPS_COLOR, str));
 	}
 	color->x = ft_atoi(params[0]);

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 02:25:58 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/13 02:02:39 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 13:30:14 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	lambertian_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuati
 	//bouncing_dir = random_in_same_hemisphere(rec.normal);
 	scatter_direction = vec3_add2(rec.normal, random_unit_vector());
 	// Catch degenerate scatter direction
-	if (near_zero(scatter_direction))
+	if (vec3_is_nearzero(scatter_direction))
 		scatter_direction = rec.normal;
 	*scattered = new_ray(rec.p, scatter_direction);
     *attenuation = rec.lamber.color;

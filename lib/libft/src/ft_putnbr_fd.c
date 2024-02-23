@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/29 23:49:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2021/12/22 17:53:49 by mbourgeo         ###   ########.fr       */
+/*   Created: 2021/11/30 17:38:31 by mbourgeo          #+#    #+#             */
+/*   Updated: 2021/12/06 01:41:56 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+static	void	ft_putchar(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+static	int	ft_power(int p)
+{
+	if (p == 0)
+		return (1);
+	return (10 * ft_power(p - 1));
+}
 
 static	int	ft_getsize(int n)
 {
@@ -34,28 +46,25 @@ static	int	ft_getsize(int n)
 	return (size);
 }
 
-char	*ft_itoa(int n)
+void	ft_putnbr_fd(int n, int fd)
 {
-	int		sign;
 	int		nb_carac;
-	char	*str;
 
-	nb_carac = ft_getsize(n);
 	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
-	str = malloc((nb_carac + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
-	sign = (n < 0);
-	n = n - 2 * n * (n < 0);
-	if (sign == 1)
-		str[0] = '-';
-	str[nb_carac] = '\0';
-	while (nb_carac - sign)
 	{
-		str[nb_carac - 1] = n % 10 + '0';
-		n = n / 10;
+		ft_putstr_fd("-2147483648", fd);
+		return ;
+	}
+	if (n < 0)
+	{
+		n = -n;
+		ft_putchar('-', fd);
+	}
+	nb_carac = ft_getsize(n);
+	while (nb_carac)
+	{
+		ft_putchar((n / ft_power(nb_carac - 1)) + '0', fd);
+		n = n - (n / ft_power(nb_carac - 1) * ft_power(nb_carac - 1));
 		nb_carac--;
 	}
-	return (str);
 }

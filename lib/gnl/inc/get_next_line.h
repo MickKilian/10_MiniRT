@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:23:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2022/12/02 20:04:27 by bgrulois         ###   ########.fr       */
+/*   Updated: 2024/02/23 03:25:59 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ char	*ft_get_line(char *str);
 char	*ft_next_line(char *str);
 char	*ft_read(char *tmp, int fd);
 char	*ft_strjoin_gnl(char *s1, char *s2);
-void	ft_bzero2(void *s, size_t n);
+void	ft_bzero(void *s, size_t n);
 
 #endif

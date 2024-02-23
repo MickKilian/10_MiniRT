@@ -3,93 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgrulois <bgrulois@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/25 10:57:59 by bgrulois          #+#    #+#             */
-/*   Updated: 2022/10/08 22:01:52 by mbourgeo         ###   ########.fr       */
+/*   Created: 2021/11/29 21:40:11 by mbourgeo          #+#    #+#             */
+/*   Updated: 2024/02/23 03:09:37 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	word_count(char const *s, char c)
+static	size_t	ft_count_words(char const *s, int c)
 {
-	int	wc;
-	int	i;
+	size_t	count;
+	int		trigger;
 
-	wc = 0;
-	i = 1;
-	if (s == NULL || s[0] == '\0')
-		return (0);
-	if (s[0] != c)
-		wc++;
-	while (s[i] != '\0')
+	count = 0;
+	trigger = 0;
+	while (*s)
 	{
-		if (s[i] != c && s[i - 1] == c)
-			wc++;
-		i++;
+		if (*s == c)
+			trigger = 0;
+		else if (*s != c)
+		{
+			if (trigger == 0)
+			{
+				trigger = 1;
+				count++;
+			}
+		}
+		s++;
 	}
-	return (wc);
+	return (count);
 }
 
-static void	free_if_error(char **strs, int strs_pos)
+static	char	*ft_strndup(const char *s, size_t n)
 {
-	while (strs_pos >= 0)
-	{
-		free(strs[strs_pos]);
-		strs_pos--;
-	}
-	free(strs);
-}
+	char	*cpy;
+	int		i;
 
-static void	malloc_and_cpy(char const *s, char c, char **strs, int strs_pos)
-{
-	int	len;
-	int	i;
-
-	len = 0;
+	cpy = malloc((n + 1) * sizeof(char));
+	if (!cpy)
+		return (NULL);
 	i = 0;
-	while (s[len] != '\0' && s[len] != c)
-		len++;
-	strs[strs_pos] = malloc(sizeof(char) * (len + 1));
-	if (!(strs[strs_pos]))
+	while (n--)
 	{
-		free_if_error(strs, strs_pos);
-		return ;
-	}
-	while (i < len)
-	{
-		strs[strs_pos][i] = s[i];
+		*(cpy + i) = *(s + i);
 		i++;
 	}
-	strs[strs_pos][i] = '\0';
+	*(cpy + i) = '\0';
+	return (cpy);
+}
+
+static	void	*free_malloc(char **temp, int i)
+{
+	while (i)
+	{
+		free(temp[i]);
+		i--;
+	}
+	free(temp);
+	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char			**strs;
-	unsigned int	i;
-	int				j;
+	int		count;
+	int		nb_words;
+	char	**temp;
+	int		i;
 
+	if (s == NULL)
+		return (NULL);
 	i = 0;
-	j = 0;
-	if (!s)
+	nb_words = ft_count_words(s, c);
+	temp = malloc((nb_words + 1) * sizeof(char *));
+	if (!temp)
 		return (NULL);
-	while (s[i] == c)
-		i++;
-	strs = malloc(sizeof(char *) * (word_count(s, c) + 1));
-	if (!(strs))
-		return (NULL);
-	while (j < word_count(s, c))
+	while (i < nb_words)
 	{
-		malloc_and_cpy(&s[i], c, strs, j);
-		if (strs[j] == NULL)
-			return (NULL);
-		i += ft_strlen(strs[j]);
-		while (s[i] == c)
-			i++;
-		j++;
+		while (*s == c)
+			s++;
+		count = 0;
+		while ((*s && *s != c) && s++)
+			count++;
+		temp[i++] = ft_strndup(s - count, count);
+		if (!temp[i - 1])
+			return (free_malloc(temp, i - 1));
 	}
-	strs[j] = 0;
-	return (strs);
+	temp[i] = 0;
+	return (temp);
 }

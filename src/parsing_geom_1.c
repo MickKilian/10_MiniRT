@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/22 05:57:25 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 14:59:30 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ int	parse_cylinder(t_rt *rt)
 		return (1);
 	if (parse_dbl(rt->temp_params[4], &height))
 		return (1);
-	if (parse_color(rt->temp_params[5], &rt->temp_color))
+	if (parse_color(rt->temp_params[5], &rt->temp_color)) {
 		return (1);
+	}
 	rt->temp_geom = geom_cylinder(cylinder(q, dir, radius, height));
 	return (0);
 }
