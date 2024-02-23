@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/13 02:02:03 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:50:17 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@ t_sphere	sphere(const t_vec3 center, double r)
 	sph.center = center;
 	sph.radius = r;
 	return (sph);
+}
+
+t_geometry	*geom_sphere(t_sphere sph)
+{
+	t_geometry	*geom;
+
+	geom = ft_calloc(1, sizeof(t_geometry));
+	geom->type = SPHERE;
+	geom->sph = sph;
+	return (geom);
 }
 
 bool	hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
@@ -34,26 +44,26 @@ bool	hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec 
 	// We simplify the quadratic equation noticing that we can devide
 	// everything by a factor 2 and that a dot product of a vector
 	// with itself is the length squared of that vector
-	oc = vec3_substract2(r.orig, rt->world.httbl->geom.sph.center);
+	oc = vec3_substract2(r.orig, rt->world.httbl->geom->sph.center);
 	half_poly.a = vec3_length_squared(r.dir);
 	half_poly.half_b = 2 * vec3_dot(oc, r.dir);
-	half_poly.c = vec3_length_squared(oc) - (rt->world.httbl->geom.sph.radius * rt->world.httbl->geom.sph.radius);
+	half_poly.c = vec3_length_squared(oc) - (rt->world.httbl->geom->sph.radius * rt->world.httbl->geom->sph.radius);
 
 	if (!search_poly_root(&half_poly, tray, &root))
 		return (0);
 	rec->t = root;
 	rec->p = hit_point(r, rec->t);
 	// CHECK THIS
-	rec->mat = rt->world.httbl->mat.type;
+	rec->mat = rt->world.httbl->mat->type;
 	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat.lamber;
+		rec->lamber = rt->world.httbl->mat->lamber;
 	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat.metal;
+		rec->metal = rt->world.httbl->mat->metal;
 	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat.dielec;
+		rec->dielec = rt->world.httbl->mat->dielec;
 	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat.diff_light;
-	//rec->color = rt->world.httbl->mat.color;
-	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom.sph.radius, vec3_substract2(rec->p, rt->world.httbl->geom.sph.center)), rec);
+		rec->diff_light = rt->world.httbl->mat->diff_light;
+	//rec->color = rt->world.httbl->mat->color;
+	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom->sph.radius, vec3_substract2(rec->p, rt->world.httbl->geom->sph.center)), rec);
 	return (1);
 }

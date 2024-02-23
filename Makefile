@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/02/23 14:10:37 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/02/23 16:40:01 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ PRIM_SRCS	=	main.c mini_rt.c rt_initialize.c mlx.c \
 				random.c ray_color.c search_poly_root.c httbl_quad.c \
 				httbl_box.c httbl_point.c httbl_plane.c httbl_sphere.c \
 				httbl_cone.c httbl_cylinder.c httbl_disc.c camera.c \
-				material_scatter.c geometries.c materials.c mat_diff_light.c \
+				material_scatter.c materials.c mat_diff_light.c \
 				mat_dielectric.c mat_lambertian.c mat_metal.c file.c \
 				parsing_general.c parsing_env.c parsing_geom_1.c parsing_geom_2.c \
 				parsing_extra.c parsing_types_1.c parsing_types_2.c \

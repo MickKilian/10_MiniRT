@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 01:06:15 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:36:47 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ t_quad	quad(const t_vec3 q, const t_vec3 u, const t_vec3 v)
 	qud.u = u;
 	qud.v = v;
 	return (qud);
+}
+
+t_geometry	*geom_quad(t_quad qud)
+{
+	t_geometry	*geom;
+
+	geom = ft_calloc(1, sizeof(t_geometry));
+	geom->type = QUAD;
+	geom->qud = qud;
+	return (geom);
 }
 
 bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
@@ -38,9 +48,9 @@ bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *r
 	// To determine where the ray r hits the plane we use
 	// equation of a plane x.a + y.b + z.c = d
 
-	n = vec3_cross(rt->world.httbl->geom.qud.u, rt->world.httbl->geom.qud.v);
+	n = vec3_cross(rt->world.httbl->geom->qud.u, rt->world.httbl->geom->qud.v);
 	normal = vec3_unit(n);
-	d = vec3_dot(normal, rt->world.httbl->geom.qud.q);
+	d = vec3_dot(normal, rt->world.httbl->geom->qud.q);
 	w = vec3_scale(1 / vec3_dot(n, n), n);
 
 	denom = vec3_dot(normal, r.dir);
@@ -56,9 +66,9 @@ bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *r
 
 	// Determine if the hit point lies within the planar shape using its plane coordinates.
 	intersection = hit_point(r, t);
-	planar_hitpt_vector = vec3_add2(intersection, vec3_scale(-1, rt->world.httbl->geom.qud.q));
-	alpha =vec3_dot(w, vec3_cross(planar_hitpt_vector, rt->world.httbl->geom.qud.v));
-	beta = vec3_dot(w, vec3_cross(rt->world.httbl->geom.qud.u, planar_hitpt_vector));
+	planar_hitpt_vector = vec3_add2(intersection, vec3_scale(-1, rt->world.httbl->geom->qud.q));
+	alpha =vec3_dot(w, vec3_cross(planar_hitpt_vector, rt->world.httbl->geom->qud.v));
+	beta = vec3_dot(w, vec3_cross(rt->world.httbl->geom->qud.u, planar_hitpt_vector));
 
 	if (!is_interior(alpha, beta, rec))
 		return (0);
@@ -66,15 +76,15 @@ bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *r
 	// Ray hits the 2D shape; set the rest of the hit record and return true.
 	rec->t = t;
 	rec->p = intersection;
-	rec->mat = rt->world.httbl->mat.type;
+	rec->mat = rt->world.httbl->mat->type;
 	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat.lamber;
+		rec->lamber = rt->world.httbl->mat->lamber;
 	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat.metal;
+		rec->metal = rt->world.httbl->mat->metal;
 	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat.dielec;
+		rec->dielec = rt->world.httbl->mat->dielec;
 	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat.diff_light;
+		rec->diff_light = rt->world.httbl->mat->diff_light;
 	set_face_normal(r, normal, rec);
 
 	return (1);

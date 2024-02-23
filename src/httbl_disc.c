@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2023/12/08 02:21:58 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:38:22 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ t_disc	disc(const t_vec3 center, const t_vec3 normal, double radius)
 	return (dsc);
 }
 
+t_geometry	*geom_disc(t_disc dsc)
+{
+	t_geometry	*geom;
+
+	geom = ft_calloc(1, sizeof(t_geometry));
+	geom->type = DISC;
+	geom->dsc = dsc;
+	return (geom);
+}
+
 bool	hit_disc(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
 {
 	t_vec3	n;
@@ -34,9 +44,9 @@ bool	hit_disc(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *r
 	// To determine where the ray r hits the plane we use
 	// equation of a plane x.a + y.b + z.c = d
 
-	n = rt->world.httbl->geom.dsc.normal;
+	n = rt->world.httbl->geom->dsc.normal;
 	normal = vec3_unit(n);
-	d = vec3_dot(normal, rt->world.httbl->geom.dsc.center);
+	d = vec3_dot(normal, rt->world.httbl->geom->dsc.center);
 
 	denom = vec3_dot(normal, r.dir);
 
@@ -51,21 +61,21 @@ bool	hit_disc(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *r
 
 	// Determine if the hit point lies within the disc base of the radius value.
 	intersection = hit_point(r, t);
-	if (vec3_length(vec3_substract2(intersection, rt->world.httbl->geom.dsc.center)) > rt->world.httbl->geom.dsc.radius)
+	if (vec3_length(vec3_substract2(intersection, rt->world.httbl->geom->dsc.center)) > rt->world.httbl->geom->dsc.radius)
 		return (0);
 
 	// Ray hits the 2D shape; set the rest of the hit record and return true.
 	rec->t = t;
 	rec->p = intersection;
-	rec->mat = rt->world.httbl->mat.type;
+	rec->mat = rt->world.httbl->mat->type;
 	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat.lamber;
+		rec->lamber = rt->world.httbl->mat->lamber;
 	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat.metal;
+		rec->metal = rt->world.httbl->mat->metal;
 	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat.dielec;
+		rec->dielec = rt->world.httbl->mat->dielec;
 	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat.diff_light;
+		rec->diff_light = rt->world.httbl->mat->diff_light;
 	set_face_normal(r, normal, rec);
 
 	return (1);

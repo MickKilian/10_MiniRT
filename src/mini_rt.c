@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:39:34 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 12:27:02 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 19:09:40 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	mini_rt(t_rt *rt)
 	// return (0);
 
 	// Initialization for random generator
-	srand(time(0));
+	//srand(time(0));
 	// Initialization of structure rt
 	rt_initialize(rt);
 	// Initialization of the mlx

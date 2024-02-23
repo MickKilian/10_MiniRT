@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 15:00:04 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 17:44:55 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	parse_line(t_rt *rt, char *line)
 	rt->p_avail = array_size(rt->temp_params);
 	if (ft_strcmp(rt->temp_params[0], "R") == 0)
 		return (parse_resolution_params(rt));
+	else if (ft_strcmp(rt->temp_params[0], "P") == 0)
+		return (parse_algo_params(rt));
 	else if (ft_strcmp(rt->temp_params[0], "A") == 0)
 		return (parse_ambient_params(rt));
 	else if (ft_strcmp(rt->temp_params[0], "L") == 0)
@@ -79,6 +81,8 @@ int	parse_httbl(t_rt *rt, t_geom_types geom_type, int p_expected)
 		rt->temp_ret = parse_httbl_cont(rt, geom_type);
 	}
 	httbl_record(&rt->world, new_httbl(rt->temp_geom, rt->temp_mat));
+	rt->temp_geom = 0;
+	rt->temp_mat = 0;
 	return (rt->temp_ret);
 }
 
@@ -104,8 +108,9 @@ int	parse_httbl_cont(t_rt *rt, t_geom_types geom_type)
 		rt->temp_ret = parse_saf_cone(rt);
 	if (rt->p_avail > rt->p_expected)
 		rt->temp_ret = parse_extra(rt);
-	if (!rt->temp_ret && !rt->temp_mat.type)
+	if (!rt->temp_ret && !rt->temp_mat) {
 		rt->temp_mat = mat_lamber(lamber(rgb2vec(rt->temp_color)));
+	}
 	free(rt->temp_params);
 	return (rt->temp_ret);
 }

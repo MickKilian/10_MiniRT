@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 13:02:07 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 17:54:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,28 @@ int	parse_resolution_params(t_rt *rt)
 	rt->img_height = (int)height;
 	rt->aspect_ratio = (double)rt->img_height/(double)rt->img_height;
 	rt->set_resolution = 1;
+	if (rt->temp_params)
+		free(rt->temp_params);
+	return (0);
+}
+
+int	parse_algo_params(t_rt *rt)
+{
+	double	spp;
+	double	depth;
+
+	if (rt->p_avail != NB_PARAMS_ALGO)
+	{
+		free(rt->temp_params);
+		return (display_error_plus(ERR_NB_PARAMS_ALGO, ft_itoa(NB_PARAMS_ALGO - 1)));
+	}
+	if (parse_int_pos(rt->temp_params[1], &spp))
+		return (1);
+	if (parse_int_pos(rt->temp_params[2], &depth))
+		return (1);
+	rt->cam.samples_per_pixel = (int)spp;
+	rt->cam.max_depth = (int)depth;
+	rt->set_algo = 1;
 	if (rt->temp_params)
 		free(rt->temp_params);
 	return (0);

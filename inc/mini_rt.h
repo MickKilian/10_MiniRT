@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 14:59:10 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 20:02:53 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@
 # include <string.h>
 # include <math.h>
 # include <stdbool.h>
-# include <time.h>
+# include <sys/time.h>
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
 # define	NB_PARAMS_RESOLUTION		2
+# define	NB_PARAMS_ALGO				3
 # define	NB_PARAMS_AMBIENT_LIGHT		3
 # define	NB_PARAMS_LIGHT				4
 # define	NB_PARAMS_CAMERA			4
@@ -51,6 +52,7 @@
 # define	ERR_OUT_OF_RATIO			"Ratio should be in range [0.0-1.0]"
 # define	ERR_OUT_OF_VIEW_ANGLE		"Horizontral view angle should be in range [0-180]"
 # define	ERR_NB_PARAMS_RESOLUTION	"Expected number of resolution parameters at least"
+# define	ERR_NB_PARAMS_ALGO			"Expected number of algorithm parameters"
 # define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual)"
 # define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters"
 # define	ERR_NB_PARAMS_AMBIENT		"Expected number of parameters for ambient light"
@@ -69,7 +71,8 @@
 # define	IMAGE_WIDTH 500
 # define	ASPECT_RATIO 1.777777778
 # define	MAX_DEPTH 40
-# define	SAMPLES_PER_PIXEL 20
+# define	SAMPLES_PER_PIXEL 100
+# define	REFRESH_FREQ 20
 
 typedef struct s_httbl	t_httbl;
 
@@ -252,8 +255,8 @@ typedef struct	s_geometry
 } t_geometry;
 
 typedef struct	s_httbl {
-	t_geometry	geom;
-	t_material	mat;
+	t_geometry	*geom;
+	t_material	*mat;
 	t_httbl		*next;
 }	t_httbl;
 
@@ -338,6 +341,7 @@ typedef struct	s_rt
 	t_light		light;
 	double		aspect_ratio;
 	bool		set_resolution;
+	bool		set_algo;
 	int			img_width;
 	int			img_height;
 	t_mlx		mlx;
@@ -346,8 +350,8 @@ typedef struct	s_rt
 	int			p_expected;
 	int			p_count;
 	int			p_avail;
-	t_geometry	temp_geom;
-	t_material	temp_mat;
+	t_geometry	*temp_geom;
+	t_material	*temp_mat;
 	t_vec3		temp_color;
 	int			temp_ret;
 	char		**temp_params;
@@ -392,6 +396,7 @@ int		create_light_point(t_rt *rt);
 
 //parsing_env.c
 int			parse_resolution_params(t_rt *rt);
+int			parse_algo_params(t_rt *rt);
 int			parse_ambient_params(t_rt *rt);
 int			parse_light_params(t_rt *rt);
 int			parse_camera_params(t_rt *rt);
@@ -411,6 +416,8 @@ void		rt_initialize(t_rt *rt);
 
 //camera.c
 int			render(t_rt *rt);
+int			render_innerloop(t_rt *rt, int j);
+void		time_estimation(t_rt *rt);
 void		cam_initialize(t_rt *rt);
 
 //mlx.c
@@ -501,7 +508,7 @@ void		httbl_addback(t_world *world, t_httbl *new_httbl);
 void		httbl_record(t_world *world, t_httbl *new_httbl);
 
 //httbl_create.c
-t_httbl		*new_httbl(const t_geometry geom, const t_material mat);
+t_httbl		*new_httbl(t_geometry *geom, t_material *mat);
 //t_httbl		*new_httbl_plane(t_plane pln);
 //t_httbl		*new_httbl_sphere(t_sphere sph);
 //t_httbl		*new_httbl_cylinder(t_cylinder cyl);
@@ -510,39 +517,44 @@ t_httbl		*new_httbl(const t_geometry geom, const t_material mat);
 
 //httbl_point.c
 t_point		point(const t_vec3 point);
+t_geometry	*geom_point(t_point pnt);
 bool		hit_point_geom(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
 
 //httbl_plane.c
 t_plane		plane(const t_vec3 point, const t_vec3 dir);
+t_geometry	*geom_plane(t_plane pln);
 bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
 
 //httbl_quad.c
 t_quad		quad(const t_vec3 point, const t_vec3 vec1, const t_vec3 vec2);
+t_geometry	*geom_quad(t_quad qud);
 bool		hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 bool		is_interior(double a, double b, t_hit_rec *rec);
 
 //httbl_box.c
 t_box		box(const t_vec3 a, const t_vec3 b);
+t_geometry	*geom_box(t_box box);
+t_geometry	*geom_die(t_box box);
 
 //httbl_disc.c
 t_disc		disc(const t_vec3 center, const t_vec3 normal, double radius);
+t_geometry	*geom_disc(t_disc dsc);
 bool		hit_disc(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 
 //httbl_sphere.c
 t_sphere	sphere(const t_vec3 center, double r);
+t_geometry	*geom_sphere(t_sphere sph);
 bool		hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 
 //httbl_cylinder.c
 t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height);
+t_geometry	*geom_cylinder(t_cylinder cyl);
 bool		hit_cylinder_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
 
 //httbl_cone.c
 t_cone		cone(const t_vec3 base_center, t_vec3 generator, double radius_min, double radius_max, double height);
+t_geometry	*geom_cone(t_cone con);
 bool		hit_cone_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
-
-//httbl_quad.c
-//bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
-//bool	is_interior(double a, double b, t_hit_rec *rec);
 
 //utils_math.c
 double		ft_min(const double n1, const double n2);
@@ -597,31 +609,20 @@ t_dielec	dielec(t_vec3 color, double ir);
 //mat_diff_light.c
 t_diff_light	diff_light(double ratio, t_vec3 color);
 
-//geometries.c
-t_geometry	geom_point(t_point pnt);
-t_geometry	geom_plane(t_plane pln);
-t_geometry	geom_quad(t_quad qud);
-t_geometry	geom_disc(t_disc dsc);
-t_geometry	geom_box(t_box box);
-t_geometry	geom_die(t_box box);
-t_geometry	geom_sphere(t_sphere sph);
-t_geometry	geom_cylinder(t_cylinder cyl);
-t_geometry	geom_cone(t_cone con);
-
 //material.c
-t_material	mat_lamber(t_lamber lamber);
-t_material	mat_metal(t_metal metal);
-t_material	mat_dielec(t_dielec dielec);
-t_material	mat_diff_light(t_diff_light diff_light);
+t_material	*mat_lamber(t_lamber lamber);
+t_material	*mat_metal(t_metal metal);
+t_material	*mat_dielec(t_dielec dielec);
+t_material	*mat_diff_light(t_diff_light diff_light);
 
 //lights.c
 bool		diffuse_light(t_vec3 *attenuation, t_ray *scattered);
 
 //geom_operations.c
-void		add_box_quads(t_world *world, t_box *box, t_material mat);
-void		add_die_dots(t_world *world, t_box *box, t_material mat);
-void		add_cyl_discs(t_world *world, t_geometry *geom, t_material mat);
-void		add_con_discs(t_world *world, t_geometry *geom, t_material mat);
+void		add_box_quads(t_world *world, t_box *box, t_material *mat);
+void		add_die_dots(t_world *world, t_box *box, t_material *mat);
+void		add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat);
+void		add_con_discs(t_world *world, t_geometry *geom, t_material *mat);
 t_ray		translate_r(t_ray r, t_vec3 trans);
 t_vec3		translate_p(t_vec3 v, t_vec3 trans);
 t_vec3		rotate_x(t_vec3 vec, double cos_theta, double sin_theta);
@@ -644,6 +645,7 @@ void	display_httbl(t_httbl *httbl, int id);
 void	display_geometry(t_geometry *geom);
 void	display_material(t_material *mat);
 void	display_sphere(t_sphere *sph);
+void	display_lamber(t_lamber *lamber);
 
 //display_simple.c
 void	display_vec3(const t_vec3 v);

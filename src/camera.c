@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 13:16:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 20:06:56 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ void	cam_initialize(t_rt *rt)
 	t_vec3	vup;
 	double	defocus_radius;
 
-	rt->cam.samples_per_pixel = SAMPLES_PER_PIXEL;
-	rt->cam.max_depth = MAX_DEPTH;
+	if (!rt->set_algo) {
+		rt->cam.samples_per_pixel = SAMPLES_PER_PIXEL;
+		rt->cam.max_depth = MAX_DEPTH;
+	}
 	//parsed//rt->cam.background = new_vec3(0.2, 0.2, 0.2);		// Background color
 	//rt->cam.vfov = 30;  // Vertical view angle (field of view) //FROM PARSING
 
@@ -82,38 +84,67 @@ void	cam_initialize(t_rt *rt)
 
 int	render(t_rt *rt)
 {
-	t_vec3	pixel_color;
-
-	// Intialization of pixel_color
-	ft_bzero(&pixel_color, sizeof(t_vec3));
-
 	// Render
 	//printf("P3\n%d %d\n255\n", rt->img_width, rt->img_height);
-
+	time_estimation(rt);
 	for (int j = 0; j < rt->img_height; ++j)
 	{
-		printf("\rScanlines remaining: %d ", rt->img_height - j);
-		for (int i = 0; i < rt->img_width; ++i)
+		printf("\rRemaining scanlines: %d ", rt->img_height - j);
 		{
-			pixel_color = new_vec3(0, 0, 0);
-			for (int k = 0; k < rt->cam.samples_per_pixel; ++k)
-			{
-				pixel_color = vec3_add2(pixel_color,
-						ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam, i, j)));
-			}
-			pixel_color = vec3_scale(1.0 / (double)rt->cam.samples_per_pixel, pixel_color);
-	//		if (!vec3_length(pixel_color))
-	//		{
-	//			printf("PIXEL COLOR : ");
-	//			display_vec3(pixel_color);
-	//			printf("\n");
-	//		}
-			//pixel_color = new_vec3(fmin(pixel_color.x, 1), fmin(pixel_color.y, 1), fmin(pixel_color.z, 1));
-			// We apply the gamme correction to the image
-			//my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(pixel_color)));
-			my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(lin2gam_vec(pixel_color))));
+			render_innerloop(rt, j);
 		}
 	}
 	printf("\rDone.                   \n");
 	return (0);
+}
+
+int	render_innerloop(t_rt *rt, int j)
+{
+	t_vec3			pixel_color;
+
+	for (int i = 0; i < rt->img_width; ++i)
+	{
+		pixel_color = new_vec3(0, 0, 0);
+		for (int k = 0; k < rt->cam.samples_per_pixel; ++k)
+		{
+			pixel_color = vec3_add2(pixel_color,
+					ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam, i, j)));
+		}
+		pixel_color = vec3_scale(1.0 / (double)rt->cam.samples_per_pixel, pixel_color);
+//		if (!vec3_length(pixel_color))
+//		{
+//			printf("PIXEL COLOR : ");
+//			display_vec3(pixel_color);
+//			printf("\n");
+//		}
+		//pixel_color = new_vec3(fmin(pixel_color.x, 1), fmin(pixel_color.y, 1), fmin(pixel_color.z, 1));
+		// We apply the gamme correction to the image
+		//my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(pixel_color)));
+		my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(lin2gam_vec(pixel_color))));
+	}
+	return (0);
+}
+
+void	time_estimation(t_rt *rt)
+{
+	struct timeval	end_time, begin_time;
+	int				estimated;
+
+	estimated = 0;
+	gettimeofday(&begin_time, NULL);
+	render_innerloop(rt, 0);
+	gettimeofday(&end_time, NULL);
+	estimated = (int)((rt->img_height) * ((end_time.tv_sec - begin_time.tv_sec)
+		* 1000000 + end_time.tv_usec - begin_time.tv_usec) / 1000000);
+	gettimeofday(&begin_time, NULL);
+	render_innerloop(rt, rt->img_height / 3);
+	gettimeofday(&end_time, NULL);
+	estimated += (int)((rt->img_height) * ((end_time.tv_sec - begin_time.tv_sec)
+		* 1000000 + end_time.tv_usec - begin_time.tv_usec) / 1000000);
+	gettimeofday(&begin_time, NULL);
+	render_innerloop(rt, rt->img_height * 0.666);
+	gettimeofday(&end_time, NULL);
+	estimated += (int)((rt->img_height) * ((end_time.tv_sec - begin_time.tv_sec)
+		* 1000000 + end_time.tv_usec - begin_time.tv_usec) / 1000000);
+	printf("\rEstimated computation time: %d sec\n", estimated / 3);
 }

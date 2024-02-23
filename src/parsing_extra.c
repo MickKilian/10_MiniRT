@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 14:59:41 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:45:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	parse_transform(t_rt *rt)
 {
 	t_vec3	rot;
 
-	if (parse_dbl_vec3(rt->temp_params[rt->p_count + 1], &rt->temp_geom.trans))
+	if (parse_dbl_vec3(rt->temp_params[rt->p_count + 1], &rt->temp_geom->trans))
 		return (1);
 	if (parse_dbl_vec3(rt->temp_params[rt->p_count + 2], &rot))
 		return (1);
-	rt->temp_geom.theta = deg2rad_vec3(rot);
+	rt->temp_geom->theta = deg2rad_vec3(rot);
 	rt->p_count += 3;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 03:03:50 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 14:11:13 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 17:27:58 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	display_world(t_world *world)
 void	display_httbl(t_httbl *httbl, int id)
 {
 	printf("***OBJECT : %d\n", id);
-	display_geometry(&httbl->geom);
-	display_material(&httbl->mat);
+	display_geometry(httbl->geom);
+	display_material(httbl->mat);
 
 }
 
@@ -53,6 +53,8 @@ void	display_material(t_material *mat)
 {
 	printf("   ***MATERIAL\n");
 	printf("      type : %d\n", mat->type);
+	if (mat->type == LAMBERTIAN)
+		display_lamber(&mat->lamber);
 }
 
 void	display_sphere(t_sphere *sph)
@@ -62,4 +64,12 @@ void	display_sphere(t_sphere *sph)
 	display_vec3(sph->center);
 	printf("\n");
 	printf("         radius : %f\n", sph->radius);
+}
+
+void	display_lamber(t_lamber *lamber)
+{
+	printf("      ***LAMBERTIAN\n");
+	printf("         color : ");
+	display_vec3(lamber->color);
+	printf("\n");
 }

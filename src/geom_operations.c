@@ -6,13 +6,13 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 14:01:49 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:21:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-void	add_box_quads(t_world *world, t_box *box, t_material mat)
+void	add_box_quads(t_world *world, t_box *box, t_material *mat)
 {
 	t_vec3	min;
 	t_vec3	max;
@@ -36,7 +36,7 @@ void	add_box_quads(t_world *world, t_box *box, t_material mat)
 	httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(min.x, min.y, min.z), dx, dz)), mat)); // front
 }
 
-void	add_die_dots(t_world *world, t_box *box, t_material mat)
+void	add_die_dots(t_world *world, t_box *box, t_material *mat)
 {
 	t_vec3	min;
 	t_vec3	max;
@@ -44,7 +44,7 @@ void	add_die_dots(t_world *world, t_box *box, t_material mat)
 	t_vec3	dy;
 	t_vec3	dz;
 	double	dot_r;
-	t_material	mat_dot;
+	t_material	*mat_dot;
 	t_vec3	size;
 
 	// Construct the two opposite vertices with the minimum and maximum coordinates.
@@ -94,7 +94,7 @@ void	add_die_dots(t_world *world, t_box *box, t_material mat)
 	httbl_addback(world, new_httbl(geom_disc(disc(new_vec3(min.x + size.x / 2 + size.x / 3, min.y + size.y / 2 + size.y / 3, min.z), vec3_scale(-1, dz), dot_r)), mat_dot));
 }
 
-void	add_cyl_discs(t_world *world, t_geometry *geom, t_material mat)
+void	add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat)
 {
 	t_vec3	begin_disc_center;
 	t_vec3	end_disc_center;
@@ -126,7 +126,7 @@ void	add_cyl_discs(t_world *world, t_geometry *geom, t_material mat)
 	//printf("\n");
 }
 
-void	add_con_discs(t_world *world, t_geometry *geom, t_material mat)
+void	add_con_discs(t_world *world, t_geometry *geom, t_material *mat)
 {
 	t_vec3	begin_disc_center;
 	t_vec3	end_disc_center;
