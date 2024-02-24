@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:09:03 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 03:33:52 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/24 01:25:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ int	read_file(t_rt *rt, int fd)
 		if (ft_strcmp(line, "\0") == 0 || ft_strncmp(line, "#", 1) == 0)
 			continue ;
 		if (parse_line(rt, line))
-		{
 			ret = 1;
-		}
 		free(line);
 	}
 	if (ret == 0 && is_incomplete_file(rt))

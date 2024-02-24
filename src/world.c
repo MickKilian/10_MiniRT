@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:29:22 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/24 01:24:50 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	world_populate(t_world *world)
 	//(void)world;
 	printf("world's size is : %ld\n", world->size);
 	display_world(world);
-	//httbl_addback(world, new_httbl(geom_plane(plane(new_vec3( 0, 0, 0), vec3_cross(new_vec3(1, 0, 0), new_vec3(0, 1, 0)))), mat_lamber(lamber(new_vec3(0.7, 0.7, 0.7)))));
-	//httbl_record(world, new_httbl(geom_cylinder(cylinder(new_vec3(0, 0, 0), new_vec3(0, 0, 1), 1, 2.5)), mat_metal(metal(new_vec3(0.81, 1, 0.02), 0))));
-	//httbl_record(world, new_httbl(geom_disc(disc(new_vec3(0,0,0), new_vec3(0,0,1), 1)), mat_lamber(lamber(new_vec3(0.81, 1, 0.02))))); // begin
-	//httbl_record(world, new_httbl(geom_sphere(sphere(new_vec3(0, 0, 1), 1)), mat_lamber(lamber(new_vec3(0, 1.0, 0.3)))));
-	//httbl_record(world, new_httbl(geom_cone(cone(new_vec3(0.0, 0.0, 2.0), new_vec3(0, 0., 1), 0, 1, -2)), mat_lamber(lamber(new_vec3(1, 0, 0)))));
-	//httbl_addback(world, new_httbl(geom_quad(quad(new_vec3(0, 0, 0), new_vec3(3, 0, 0), new_vec3(0, 3, 0))), mat_lamber(lamber(new_vec3(0, 0, 0.8)))));
+	//httbl_addback(world, geom_plane(plane(new_vec3( 0, 0, 0), vec3_cross(new_vec3(1, 0, 0), new_vec3(0, 1, 0)))), mat_lamber(lamber(new_vec3(0.7, 0.7, 0.7)))));
+	//httbl_record(world, geom_cylinder(cylinder(new_vec3(0, 0, 0), new_vec3(0, 0, 1), 1, 2.5)), mat_metal(metal(new_vec3(0.81, 1, 0.02), 0)));
+	//httbl_record(world, geom_disc(disc(new_vec3(0,0,0), new_vec3(0,0,1), 1)), mat_lamber(lamber(new_vec3(0.81, 1, 0.02)))); // begin
+	//httbl_record(world, geom_sphere(sphere(new_vec3(0, 0, 1), 1)), mat_lamber(lamber(new_vec3(0, 1.0, 0.3))));
+	//httbl_record(world, geom_cone(cone(new_vec3(0.0, 0.0, 2.0), new_vec3(0, 0., 1), 0, 1, -2)), mat_lamber(lamber(new_vec3(1, 0, 0))));
+	//httbl_addback(world, geom_quad(quad(new_vec3(0, 0, 0), new_vec3(3, 0, 0), new_vec3(0, 3, 0))), mat_lamber(lamber(new_vec3(0, 0, 0.8)))));
 	return (0);
 }
 
@@ -31,12 +31,12 @@ void	create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height) {
 	double	radius_min = height / 20;
 	double	radius_step = (radius_max - radius_min) / 5;
 
-	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(pos.x, pos.y, 5 * height / 5), gen, radius_min + 0 * radius_step, radius_min + 1 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0)))));
-	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(pos.x, pos.y, 4 * height / 5), gen, radius_min + 1 * radius_step, radius_min + 2 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 1, 1)))));
-	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(pos.x, pos.y, 3 * height / 5), gen, radius_min + 2 * radius_step, radius_min + 3 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0)))));
-	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(pos.x, pos.y, 2 * height / 5), gen, radius_min + 3 * radius_step, radius_min + 4 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 1, 1)))));
-	httbl_record(world, new_httbl(geom_cone(cone(new_vec3(pos.x, pos.y, 1 * height / 5), gen, radius_min + 4 * radius_step, radius_min + 5 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0)))));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(pos.x - radius_max * 6 / 5, pos.y - radius_max * 6 / 5, 0), new_vec3(pos.x + radius_max * 6 / 5, pos.y + radius_max * 6 / 5, height / 20))), mat_lamber(lamber(new_vec3(1.0, 0.2, 0.1)))));
+	httbl_record(world, geom_cone(cone(new_vec3(pos.x, pos.y, 5 * height / 5), gen, radius_min + 0 * radius_step, radius_min + 1 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0))));
+	httbl_record(world, geom_cone(cone(new_vec3(pos.x, pos.y, 4 * height / 5), gen, radius_min + 1 * radius_step, radius_min + 2 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 1, 1))));
+	httbl_record(world, geom_cone(cone(new_vec3(pos.x, pos.y, 3 * height / 5), gen, radius_min + 2 * radius_step, radius_min + 3 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0))));
+	httbl_record(world, geom_cone(cone(new_vec3(pos.x, pos.y, 2 * height / 5), gen, radius_min + 3 * radius_step, radius_min + 4 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 1, 1))));
+	httbl_record(world, geom_cone(cone(new_vec3(pos.x, pos.y, 1 * height / 5), gen, radius_min + 4 * radius_step, radius_min + 5 * radius_step, -height / 5)), mat_lamber(lamber(new_vec3(1, 0.2, 0))));
+	httbl_record(world, geom_box(box(new_vec3(pos.x - radius_max * 6 / 5, pos.y - radius_max * 6 / 5, 0), new_vec3(pos.x + radius_max * 6 / 5, pos.y + radius_max * 6 / 5, height / 20))), mat_lamber(lamber(new_vec3(1.0, 0.2, 0.1))));
 }
 
 void	create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offset) {
@@ -45,23 +45,23 @@ void	create_cylinder_box(t_world *world, double height, double width, double thi
 	t_material *metal_trans_tube = mat_metal(metal(new_vec3(0.05, 0.05, 0.05), 0));
 
 	//BOX
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(0, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + 0), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width, y_offset + spacing / 2, z_offset + 0), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + 0), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + height + thickness * factor), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube));
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(0, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + 0), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(width, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(width, y_offset + spacing / 2, z_offset + 0), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + 0), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width + thickness * factor, y_offset - spacing / 2, z_offset + height + 2 * thickness * factor))), metal_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset + spacing / 2, z_offset + height + thickness * factor), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_tube);
 	//
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height / 2 - spacing / 8 - thickness), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height / 2 - spacing / 8))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height / 2 + spacing / 8), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height / 2 + spacing / 8 + thickness))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width, y_offset + - spacing / 2 - thickness, z_offset + height / 2 - spacing / 8 - thickness), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height / 2 - spacing / 8))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width, y_offset + - spacing / 2 - thickness, z_offset + height / 2 + spacing / 8), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height / 2 + spacing / 8 + thickness))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width / 2 - spacing / 8 - thickness, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width / 2 - spacing / 8, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width / 2 + spacing / 8, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width / 2 + spacing / 8 + thickness, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width / 2 - spacing / 8 - thickness, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width / 2 - spacing / 8, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_trans_tube));
-	httbl_record(world, new_httbl(geom_box(box(new_vec3(width / 2 + spacing / 8, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width / 2 + spacing / 8 + thickness, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_trans_tube));
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height / 2 - spacing / 8 - thickness), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height / 2 - spacing / 8))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(-thickness * factor, y_offset - spacing / 2 - thickness, z_offset + height / 2 + spacing / 8), new_vec3(0, y_offset + spacing / 2 + thickness, z_offset + height / 2 + spacing / 8 + thickness))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width, y_offset + - spacing / 2 - thickness, z_offset + height / 2 - spacing / 8 - thickness), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height / 2 - spacing / 8))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width, y_offset + - spacing / 2 - thickness, z_offset + height / 2 + spacing / 8), new_vec3(width + thickness * factor, y_offset + spacing / 2 + thickness, z_offset + height / 2 + spacing / 8 + thickness))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width / 2 - spacing / 8 - thickness, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width / 2 - spacing / 8, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width / 2 + spacing / 8, y_offset - spacing / 2 - thickness, z_offset + height + thickness * factor), new_vec3(width / 2 + spacing / 8 + thickness, y_offset + spacing / 2 + thickness, z_offset + height + 2 * thickness * factor))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width / 2 - spacing / 8 - thickness, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width / 2 - spacing / 8, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_trans_tube);
+	httbl_record(world, geom_box(box(new_vec3(width / 2 + spacing / 8, y_offset - spacing / 2 - thickness, z_offset + 0), new_vec3(width / 2 + spacing / 8 + thickness, y_offset + spacing / 2 + thickness, z_offset + thickness * factor))), metal_trans_tube);
 }
 
 //tableau de pointeurs sur fonctions
@@ -159,27 +159,25 @@ void	httbl_addback(t_world *world, t_httbl *new_httbl)
 	return ;
 }
 
-void	httbl_record(t_world *world, t_httbl *new_httbl)
+void	httbl_record(t_world *world, t_geometry *geom, t_material *mat)
 {
-	if (new_httbl->geom->type == BOX)
+	if (!geom)
+		return;
+	else if (geom->type == BOX)
 	{
-		add_box_quads(world, &new_httbl->geom->box, new_httbl->mat);
-		free(new_httbl);
+		add_box_quads(world, &geom->box, mat);
 		return;
 	}
-	if (new_httbl->geom->type == DIE)
+	else if (geom->type == DIE)
 	{
-		add_box_quads(world, &new_httbl->geom->box, new_httbl->mat);
-		add_die_dots(world, &new_httbl->geom->box, new_httbl->mat);
-		free(new_httbl);
+		add_box_quads(world, &geom->box, mat);
+		add_die_dots(world, &geom->box, mat);
 		return;
 	}
-	if (new_httbl->geom->type == CYLINDER) {
-		printf("adding for cyl\n");
-		add_cyl_discs(world, new_httbl->geom, new_httbl->mat);
+	else if (geom->type == CYLINDER) {
+		add_cyl_discs(world, geom, mat);
 	}
-	if (new_httbl->geom->type == CONE)
-		add_con_discs(world, new_httbl->geom, new_httbl->mat);
-	
-	httbl_addback(world, new_httbl);
+	else if (geom->type == CONE)
+		add_con_discs(world, geom, mat);
+	httbl_addback(world, new_httbl(geom, mat));
 }

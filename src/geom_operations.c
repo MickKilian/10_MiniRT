@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:21:02 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 20:25:29 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,8 @@ void	add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat)
 	display_vec3(generator);
 	printf("\n");
 	end_disc_center = translate_p(rotate(vec3_add2(geom->cyl.base_center, vec3_scale(geom->cyl.height, geom->cyl.generator)),cos_theta, sin_theta), vec3_scale(1, geom->trans));
-	(void)end_disc_center;
-	//httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->cyl.radius)), mat)); // end
+	//(void)end_disc_center;
+	httbl_addback(world, new_httbl(geom_disc(disc(end_disc_center, generator, geom->cyl.radius)), mat)); // end
 	//display_vec3(end_disc_center);
 	//printf("\n");
 }

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 20:06:56 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 23:10:16 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,11 @@ void	cam_initialize(t_rt *rt)
 
 int	render(t_rt *rt)
 {
-	// Render
-	//printf("P3\n%d %d\n255\n", rt->img_width, rt->img_height);
 	time_estimation(rt);
 	for (int j = 0; j < rt->img_height; ++j)
 	{
 		printf("\rRemaining scanlines: %d ", rt->img_height - j);
-		{
-			render_innerloop(rt, j);
-		}
+		render_innerloop(rt, j);
 	}
 	printf("\rDone.                   \n");
 	return (0);
@@ -111,12 +107,6 @@ int	render_innerloop(t_rt *rt, int j)
 					ray_color(rt, rt->cam.max_depth, get_ray(&rt->cam, i, j)));
 		}
 		pixel_color = vec3_scale(1.0 / (double)rt->cam.samples_per_pixel, pixel_color);
-//		if (!vec3_length(pixel_color))
-//		{
-//			printf("PIXEL COLOR : ");
-//			display_vec3(pixel_color);
-//			printf("\n");
-//		}
 		//pixel_color = new_vec3(fmin(pixel_color.x, 1), fmin(pixel_color.y, 1), fmin(pixel_color.z, 1));
 		// We apply the gamme correction to the image
 		//my_mlx_pixel_put(rt->mlx.image, i, j, rgb2val(vec2rgb(pixel_color)));

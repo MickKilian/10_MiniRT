@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:37:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 21:19:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ t_geometry	*geom_cylinder(t_cylinder cyl)
 	geom->type = CYLINDER;
 	geom->trans = cyl.base_center;
 	geom->theta = new_vec3(-atan2(cyl.generator.y, cyl.generator.z),
-			atan2(cyl.generator.x, cyl.generator.z),
-			0);
+			atan2(cyl.generator.x, cyl.generator.z),0);
+			//atan2(cyl.generator.x, cyl.generator.y));
 	geom->cyl = cyl;
 	geom->cyl.base_center = new_vec3(0, 0, 0);
 	geom->cyl.generator = new_vec3(0, 0, 1.0);

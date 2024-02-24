@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 01:31:51 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 23:27:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	parse_dbl_vec3(char *str, t_vec3 *vec)
 {
 	char	**params;
+	char	*msg;
 	int		i;
 
 	i = 0;
@@ -23,8 +24,9 @@ int	parse_dbl_vec3(char *str, t_vec3 *vec)
 	{
 		if (!is_dec(params[i++]))
 		{
+			msg = params[i - 1];
 			free(params);
-			return (display_error(ERR_DEC));
+			return (display_error_plus(ERR_DEC, msg));
 		}
 	}
 	if (array_size(params) != 3)

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 20:02:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 23:35:15 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@
 # define	IMAGE_WIDTH 500
 # define	ASPECT_RATIO 1.777777778
 # define	MAX_DEPTH 40
-# define	SAMPLES_PER_PIXEL 100
+# define	SAMPLES_PER_PIXEL 20
 # define	REFRESH_FREQ 20
 
 typedef struct s_httbl	t_httbl;
@@ -505,7 +505,7 @@ void		create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
 void		create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offsset);
 bool		world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec);
 void		httbl_addback(t_world *world, t_httbl *new_httbl);
-void		httbl_record(t_world *world, t_httbl *new_httbl);
+void		httbl_record(t_world *world, t_geometry *geom, t_material *mat);
 
 //httbl_create.c
 t_httbl		*new_httbl(t_geometry *geom, t_material *mat);

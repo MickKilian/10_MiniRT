@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:45:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/23 21:56:25 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	parse_extra(t_rt *rt)
 {
 	int	ret;
 
+	printf("metal parsing %d\n", rt->p_count);
 	if (ft_strcmp(rt->temp_params[rt->p_count], "ttr") == 0)
 		ret = parse_transform(rt);
 	if (ft_strcmp(rt->temp_params[rt->p_count], "die") == 0)
@@ -64,6 +65,7 @@ int	parse_diff_light(t_rt *rt)
 {
 	double	ratio;
 
+	printf("metal parsing %d\n", rt->p_count);
 	if (parse_dbl(rt->temp_params[rt->p_count + 1], &ratio))
 		return (1);
 	rt->temp_mat = mat_diff_light(diff_light(ratio, rt->temp_color));

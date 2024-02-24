@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 17:44:55 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/02/24 01:25:14 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ int	parse_httbl(t_rt *rt, t_geom_types geom_type, int p_expected)
 		}
 		rt->temp_ret = parse_httbl_cont(rt, geom_type);
 	}
-	httbl_record(&rt->world, new_httbl(rt->temp_geom, rt->temp_mat));
-	rt->temp_geom = 0;
-	rt->temp_mat = 0;
+	httbl_record(&rt->world, rt->temp_geom, rt->temp_mat);
+	rt->temp_geom = NULL;
+	rt->temp_mat = NULL;
 	return (rt->temp_ret);
 }
 
@@ -106,11 +106,12 @@ int	parse_httbl_cont(t_rt *rt, t_geom_types geom_type)
 		rt->temp_ret = parse_die(rt);
 	else if (geom_type == SAF_CONE)
 		rt->temp_ret = parse_saf_cone(rt);
+	if (!rt->temp_ret)
+		rt->p_count = rt->p_expected;
 	if (rt->p_avail > rt->p_expected)
 		rt->temp_ret = parse_extra(rt);
-	if (!rt->temp_ret && !rt->temp_mat) {
+	if (!rt->temp_ret && !rt->temp_mat)
 		rt->temp_mat = mat_lamber(lamber(rgb2vec(rt->temp_color)));
-	}
 	free(rt->temp_params);
 	return (rt->temp_ret);
 }
