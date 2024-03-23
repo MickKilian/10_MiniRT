@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 21:40:49 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 07:04:16 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 int	parse_sphere(t_rt *rt)
 {
 	t_vec3	q;
-	double	radius;
+	double	rd;
 
-	if (parse_dbl_vec3(rt->temp_params[1], &q))
+	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	if (parse_dbl(rt->temp_params[2], &radius))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &rd))
 		return (1);
-	if (parse_color(rt->temp_params[3], &rt->temp_color))
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->temp_geom = geom_sphere(sphere(q, radius));
+	rt->tp_geom = geom_sphere(sphere(q, rd));
 	return (0);
 }
 
@@ -32,13 +32,13 @@ int	parse_plane(t_rt *rt)
 	t_vec3	q;
 	t_vec3	dir;
 
-	if (parse_dbl_vec3(rt->temp_params[1], &q))
+	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[2], &dir))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	if (parse_color(rt->temp_params[3], &rt->temp_color))
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->temp_geom = geom_plane(plane(q, dir));
+	rt->tp_geom = geom_plane(plane(q, dir));
 	return (0);
 }
 
@@ -46,21 +46,20 @@ int	parse_cylinder(t_rt *rt)
 {
 	t_vec3	q;
 	t_vec3	dir;
-	double	radius;
-	double	height;
+	double	rd;
+	double	h;
 
-	if (parse_dbl_vec3(rt->temp_params[1], &q))
+	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[2], &dir))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	if (parse_dbl(rt->temp_params[3], &radius))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &rd))
 		return (1);
-	if (parse_dbl(rt->temp_params[4], &height))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &h))
 		return (1);
-	if (parse_color(rt->temp_params[5], &rt->temp_color)) {
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	}
-	rt->temp_geom = geom_cylinder(cylinder(q, dir, radius, height));
+	rt->tp_geom = geom_cylinder(cylinder(q, dir, rd, h));
 	return (0);
 }
 
@@ -68,23 +67,23 @@ int	parse_cone(t_rt *rt)
 {
 	t_vec3	q;
 	t_vec3	dir;
-	double	radius_min;
-	double	radius_max;
-	double	height;
+	double	r_min;
+	double	r_max;
+	double	h;
 
-	if (parse_dbl_vec3(rt->temp_params[1], &q))
+	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[2], &dir))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	if (parse_dbl(rt->temp_params[3], &radius_min))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &r_min))
 		return (1);
-	if (parse_dbl(rt->temp_params[4], &radius_max))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &r_max))
 		return (1);
-	if (parse_dbl(rt->temp_params[5], &height))
+	else if (parse_dbl(rt->tp_params[++rt->tp_count], &h))
 		return (1);
-	if (parse_color(rt->temp_params[6], &rt->temp_color))
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->temp_geom = geom_cone(cone(q, dir, radius_min, radius_max, height));
+	rt->tp_geom = geom_cone(cone(q, vec3_scale(h, dir), r_min, r_max));
 	return (0);
 }
 
@@ -94,14 +93,14 @@ int	parse_quad(t_rt *rt)
 	t_vec3	u;
 	t_vec3	v;
 
-	if (parse_dbl_vec3(rt->temp_params[1], &q))
+	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[2], &u))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &u))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[3], &v))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &v))
 		return (1);
-	if (parse_color(rt->temp_params[4], &rt->temp_color))
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->temp_geom = geom_quad(quad(q, u, v));
+	rt->tp_geom = geom_quad(quad(q, u, v));
 	return (0);
 }

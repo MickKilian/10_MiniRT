@@ -6,11 +6,11 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 17:38:31 by mbourgeo          #+#    #+#             */
-/*   Updated: 2021/12/06 18:34:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/18 00:32:31 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 void	ft_putendl_fd(char *s, int fd)
 {

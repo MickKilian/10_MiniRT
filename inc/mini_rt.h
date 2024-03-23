@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 23:35:15 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 10:46:05 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,54 @@
 # include <string.h>
 # include <math.h>
 # include <stdbool.h>
+# include <time.h>
 # include <sys/time.h>
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
-# define	NB_PARAMS_RESOLUTION		2
-# define	NB_PARAMS_ALGO				3
-# define	NB_PARAMS_AMBIENT_LIGHT		3
-# define	NB_PARAMS_LIGHT				4
-# define	NB_PARAMS_CAMERA			4
-# define	NB_PARAMS_POINT				3
-# define	NB_PARAMS_PLANE				4
-# define	NB_PARAMS_SPHERE			4
-# define	NB_PARAMS_QUAD				5
-# define	NB_PARAMS_DISC				5
-# define	NB_PARAMS_BOX				4
-# define	NB_PARAMS_CYLINDER			6
-# define	NB_PARAMS_CONE				7
-# define	NB_PARAMS_DIE				4
-# define	NB_PARAMS_SAF_CONE			4
+# define	NB_PARAMS_RESOLUTION		1
+# define	ERR_PARAMS_RESOLUTION		"Resolution WIDTH(int[>0]) (OPT)HEIGHT(int[>0])"
+# define	NB_PARAMS_ALGO				2
+# define	ERR_PARAMS_ALGO				"Algorithm SAMPLES_PER_PIXEL(int[>0]) DEPTH(int[>0])"
+# define	NB_PARAMS_AMBIENT			2
+# define	ERR_PARAMS_AMBIENT			"Ambient light FACTOR(double[0-1]) COLOR(vector[3X0-255])"
+# define	NB_PARAMS_POINT_LIGHT		3
+# define	ERR_PARAMS_POINT_LIGHT		"Point light LOCATION(vector[3Xdouble]) FACTOR(double[0-1]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_CAMERA			3
+# define	ERR_PARAMS_CAMERA			"Camera LOCATION(vector[3Xdouble]) DIRECTION(3Xvector[double]) HFOV(double[0-180])"
+# define	NB_PARAMS_POINT				2
+# define	NB_PARAMS_PLANE				3
+# define	ERR_PARAMS_PLANE			"Plane POINT(vector[3Xdouble]) DIR_1(vector[3Xdouble]) DIR_2(vector[3Xdouble])"
+# define	NB_PARAMS_SPHERE			3
+# define	ERR_PARAMS_SPHERE			"Sphere CENTER(vector[3Xdouble]) RADIUS(double[>=0]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_QUAD				4
+# define	ERR_PARAMS_QUAD				"Quad CENTER(vector[3Xdouble]) VEC_1(vector[3Xdouble]) VEC_2(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_DISC				4
+# define	ERR_PARAMS_DISC				"Disc CENTER(vector[3Xdouble]) NORMAL(vector[3Xdouble]) RADIUS(double[>=0]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_BOX				5
+# define	ERR_PARAMS_BOX				"Box CENTER(vector[3Xdouble]) VEC_1(vector[3Xdouble]) VEC_2(vector[3Xdouble]) VEC_3(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_CYLINDER			5
+# define	ERR_PARAMS_CYLINDER			"Cylinder CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) RADIUS(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_CONE				6
+# define	ERR_PARAMS_CONE				"Cone BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) MAX_RADIUS(double[>=0]) MIN_RADIUS(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_DICE				5
+# define	ERR_PARAMS_DICE				"Dice BASE_CENTER(vector[3Xdouble]) DIR_FACE_1(vector[3Xdouble]) DIR_FACE_2(vector[3Xdouble]) SIZE(double[>=0]) COLOR(vector[3Xint0-255])"
+# define	NB_PARAMS_SAFE_CONE			3
+# define	ERR_PARAMS_SAFE_CONE		"Safety cone BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) HEIGHT(double[>=0])"
+# define	NB_PARAMS_PENCIL			3
+# define	ERR_PARAMS_PENCIL			"Pencil BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) HEIGHT(double[>=0])"
+# define	NB_PARAMS_TRANSLATION		1
+# define	ERR_PARAMS_TRANSLATION		"Translation TRANSLATION_VECTOR(vector[3Xdouble])"
+# define	NB_PARAMS_ROTATION			2
+# define	ERR_PARAMS_ROTATION			"Rotation ROTATION_AXIS(vector[3Xdouble]) ROTATION_ANGLE[double[DEG]]"
+# define	NB_PARAMS_METAL				1
+# define	ERR_PARAMS_METAL			"Material type Metal FUZZ(double[0-1])"
+# define	NB_PARAMS_DIELECTRIC		1
+# define	ERR_PARAMS_DIELECTRIC		"Material type Dielectric INDEX_REFRACT(double[>0])"
+# define	NB_PARAMS_DIFF_LIGHT		1
+# define	ERR_PARAMS_DIFF_LIGHT		"Material type Diffuse Light FACTOR(double[0-1])"
 # define	ERR_INFO_TYPE				"Invalid information type"
+# define	ERR_GEOM_TYPE				"Geometry type not implemented"
 # define	ERR_NB_COMPS_VEC			"Vector should have 3 components"
 # define	ERR_NB_COMPS_COLOR			"Color should have 3 components"
 # define	ERR_INVALID_COLOR_COMP		"Color component should be an integer in range [0-255]"
@@ -51,28 +79,30 @@
 # define	ERR_OUT_OF_INT				"Input is out of range"
 # define	ERR_OUT_OF_RATIO			"Ratio should be in range [0.0-1.0]"
 # define	ERR_OUT_OF_VIEW_ANGLE		"Horizontral view angle should be in range [0-180]"
-# define	ERR_NB_PARAMS_RESOLUTION	"Expected number of resolution parameters at least"
-# define	ERR_NB_PARAMS_ALGO			"Expected number of algorithm parameters"
-# define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or punctual)"
+# define	ERR_NB_PARAMS				"Wrong number of parameters for"
+# define	ERR_TL_PARAMS				"Less parameters than expected for"
+# define	ERR_TM_PARAMS				"More parameters than expected for"
+# define	ERR_EXTRA_INFO				"Object cannot take extra information"
+# define	ERR_DUPLICATE_RESOLUTION	"Resolution parameters were already set"
+# define	ERR_DUPLICATE_ALGO			"Algorithm parameters were already set"
+# define	ERR_AT_LEAST_A_OR_L			"Missing a light source (ambient or point)"
 # define	ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters"
-# define	ERR_NB_PARAMS_AMBIENT		"Expected number of parameters for ambient light"
+# define	ERR_DUPLICATE_AMBIENT		"Ambient light was already set"
 # define	ERR_NO_PARAMS_LIGHT			"Missing light parameters"
-# define	ERR_NB_PARAMS_LIGHT			"Expected number of parameters for punctual light"
 # define	ERR_NO_PARAMS_CAMERA		"Missing camera parameters"
-# define	ERR_NB_PARAMS_CAMERA		"Expected number of parameters for camera"
-# define	ERR_NB_PARAMS_GEOM			"Expected number of parameters for geometry element"
+# define	ERR_DUPLICATE_CAMERA		"Camera parameters were already set"
 # define	ERR_OPEN_FILE				"File could not be open"
 # define	ERR_IS_NOT_RT_FILE			"File is not an .rt file"
 # define	ERR_NB_ARGUMENTS			"Program requires 1 argument: the scene info as an .rt file"
 
 # define	PI	3.1415926535897932385
-// Aspect ratio : 16/9
 # define	EPSILON 1e-8
 # define	IMAGE_WIDTH 500
 # define	ASPECT_RATIO 1.777777778
-# define	MAX_DEPTH 40
+# define	MAX_DEPTH 50
 # define	SAMPLES_PER_PIXEL 20
 # define	REFRESH_FREQ 20
+# define	NORMAL_MODE 0
 
 typedef struct s_httbl	t_httbl;
 
@@ -82,11 +112,12 @@ typedef enum	e_geom_types {
 	QUAD,
 	DISC,
 	BOX,
-	DIE,
+	DICE,
 	SPHERE,
 	CYLINDER,
 	CONE,
-	SAF_CONE,
+	SAFE_CONE,
+	PENCIL,
 	LEN_GEOM_TYPES
 }	t_geom_types;
 
@@ -105,42 +136,29 @@ typedef struct	s_vec3
 	double	z;
 }	t_vec3;
 
-typedef struct	s_interval
+typedef struct	s_itv
 {
 	double	min;
 	double	max;
-}	t_interval;
+}	t_itv;
 
-typedef struct	s_half_poly
+typedef struct	s_h_pol
 {
+	t_vec3	oc;
+	double	r_sq;
+	double	h_sq;
 	double	a;
-	double	half_b;
+	double	h_b;
 	double	c;
 	double	root_1;
 	double	root_2;
-}	t_half_poly;
+}	t_h_pol;
 
 typedef struct	s_ray
 {
 	t_vec3	orig;
 	t_vec3	dir;
 }	t_ray;
-
-//typedef struct	s_color
-//{
-//	double	val;
-//	t_vec3	vec;
-//	double	rgb[4];
-//	double	thsv[4];
-//}	t_color;
-
-//typedef struct	s_rgb
-//{
-//	double	t;
-//	double	r;
-//	double	g;
-//	double	b;
-//}	t_rgb;
 
 typedef struct	s_point
 {
@@ -151,55 +169,93 @@ typedef struct	s_plane
 {
 	t_vec3	q;
 	t_vec3	d;
-	//t_vec3	u;
-	//t_vec3	v;
 }	t_plane;
 
 typedef struct	s_quad
 {
-	t_vec3	q;
+	t_vec3	ctr;
 	t_vec3	u;
 	t_vec3	v;
+	t_vec3	nrm;
+	double	d;
+	t_vec3	q;
+	t_vec3	w;
 }	t_quad;
 
 typedef struct	s_box
 {
-	t_vec3	a;
-	t_vec3	b;
+	t_vec3	ctr;
+	t_vec3	u;
+	t_vec3	v;
+	t_vec3	w;
 }	t_box;
 
 typedef struct	s_disc
 {
-	t_vec3	center;
-	t_vec3	normal;
-	double	radius;
+	t_vec3	ctr;
+	t_vec3	nrm;
+	double	rd;
 }	t_disc;
 
 typedef struct	s_sphere
 {
-	t_vec3	center;
-	double	radius;
+	t_vec3	ctr;
+	double	rd;
 }	t_sphere;
 
 typedef struct	s_cylinder
 {
-	t_vec3		base_center;
-	t_vec3		generator;
-	double		radius;
-	double		height;
-	t_interval	interval_z;
+	t_vec3		ctr;
+	t_vec3		gen;
+	double		rd;
+	double		h;
+	t_itv	itv_z;
 }	t_cylinder;
 
 typedef struct	s_cone
 {
-	t_vec3		base_center;
+	t_vec3		b_ctr;
 	t_vec3		tip;
-	t_vec3		generator;
-	double		radius_min;
-	double		radius_max;
-	double		height;
-	t_interval	interval_z;
+	t_vec3		gen;
+	double		r_max;
+	double		r_min;
+	double		h;
+	t_itv	itv_z;
 }	t_cone;
+
+typedef struct	s_safe_cone
+{
+	t_vec3	b_ctr;
+	t_vec3	gen;
+	double	h;
+	double	r_max;
+	double	r_min;
+	double	r_step;
+}	t_safe_cone;
+
+typedef struct	s_dice
+{
+	t_vec3		ctr;
+	t_vec3		u;
+	t_vec3		v;
+	t_vec3		w;
+	double		h;
+}	t_dice;
+
+typedef struct	s_dice_dots
+{
+	int		code;
+	t_vec3	u;
+	t_vec3	v;
+}	t_dice_dots;
+
+typedef struct	s_pencil
+{
+	t_vec3	b_ctr;
+	t_vec3	gen;
+	double	l;
+	double	w;
+}	t_pencil;
 
 typedef struct	s_lamber
 {
@@ -236,11 +292,18 @@ typedef struct	s_material
 	};
 } t_material;
 
+typedef struct	s_trsf
+{
+	t_vec3	tra;
+	t_vec3	rot_ax;
+	double	rot_an;
+}	t_trsf;
+
 typedef struct	s_geometry
 {
 	t_geom_types	type;
-	t_vec3			trans;
-	t_vec3			theta;
+	t_trsf			trsf;
+	t_trsf			trsf_i;
 	union
 	{
 		t_point		pnt;
@@ -251,6 +314,9 @@ typedef struct	s_geometry
 		t_sphere	sph;
 		t_cylinder	cyl;
 		t_cone		con;
+		t_safe_cone	sfc;
+		t_dice		dce;
+		t_pencil	pnc;
 	};
 } t_geometry;
 
@@ -261,12 +327,14 @@ typedef struct	s_httbl {
 }	t_httbl;
 
 typedef struct	s_hit_rec {
-	t_geom_types		geom_type;
-	t_vec3				p;
-	t_vec3				normal;
-	double				t;
-	bool				front_face;
-	t_mat_types			mat;
+	t_geom_types	geom_type;
+	t_vec3			p;
+	t_vec3			nrm;
+	double			t;
+	bool			front_face;
+	t_mat_types		mat;
+	t_vec3 			att;
+	t_ray			sctt;
 	union
 	{
 		t_lamber		lamber;
@@ -286,7 +354,7 @@ typedef struct	s_image {
 
 typedef struct	s_camera {
 	bool	set;
-	t_vec3	center;
+	t_vec3	ctr;
 	t_vec3	dir;
 	//double	focal_length;
 	double	vfov;
@@ -294,6 +362,9 @@ typedef struct	s_camera {
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
+	t_vec3	look_from;
+	t_vec3	look_at;
+	t_vec3	vup;
 	double	defocus_angle;
 	double	focus_dist;
 	t_vec3	defocus_disk_u;
@@ -301,9 +372,13 @@ typedef struct	s_camera {
 	t_vec3	pixel00_loc;
 	t_vec3	pixel_delta_u;
 	t_vec3	pixel_delta_v;
-	int		max_depth;
-	int		samples_per_pixel;
 	t_vec3	offset;
+	double	viewport_h;
+	double	viewport_w;
+	t_vec3	viewport_u;
+	t_vec3	viewport_v;
+	t_vec3	viewport_upper_left;
+	double	defocus_radius;
 }	t_camera;
 
 typedef struct	s_world
@@ -329,7 +404,6 @@ typedef struct	s_ambient
 
 typedef struct	s_light
 {
-	bool	set;
 	t_vec3	pos;
 	double	ratio;
 	t_vec3	color;
@@ -337,39 +411,49 @@ typedef struct	s_light
 
 typedef struct	s_rt
 {
-	t_ambient	ambient;
-	t_light		light;
-	double		aspect_ratio;
-	bool		set_resolution;
-	bool		set_algo;
-	int			img_width;
-	int			img_height;
-	t_mlx		mlx;
-	t_camera	cam;
-	t_world		world;
-	int			p_expected;
-	int			p_count;
-	int			p_avail;
-	t_geometry	*temp_geom;
-	t_material	*temp_mat;
-	t_vec3		temp_color;
-	int			temp_ret;
-	char		**temp_params;
+	t_ambient		ambient;
+	double			aspect_ratio;
+	bool			set_resolution;
+	bool			set_algo;
+	bool			set_point_light;
+	int				img_w;
+	int				img_h;
+	t_mlx			mlx;
+	t_camera		cam;
+	t_world			world;
+	int				spp;
+	int				max_depth;
+	int				estim_sec;
+	struct timeval	begin_time;
+	int				tp_expect;
+	int				tp_count;
+	int				tp_avail;
+	int				tp_end;
+	int				tp_option;
+	bool			tp_extra;
+	char			**tp_params;
+	t_geometry		*tp_geom;
+	t_material		*tp_mat;
+	t_ray			tp_ray;
+	int				tp_type;
+	t_vec3			tp_color;
+	t_light			tp_light;
+	int				tp_ret;
+	t_trsf			tp_trsf;
 }	t_rt;
 
-//All functions prototypes
-//file.c
+//parsing_file.c
 bool		is_rt_file(char *file_path);
 int			read_file(t_rt *rt, int fd);
 char		*clean_line(char *line);
 bool		is_incomplete_file(t_rt *rt);
 int			open_and_read_file(t_rt *rt, char *file_path);
 
-//parsing.c
-int	parse_line(t_rt *rt, char *line);
-int	parse_line_cont(t_rt *rt);
-int	parse_httbl(t_rt *rt, t_geom_types geom_type, int nb_params);
-int	parse_httbl_cont(t_rt *rt, t_geom_types geom_type);
+//parsing_general.c
+int		parse_line(t_rt *rt, char *line);
+void	parse_line_cont(t_rt *rt);
+int		parse_httbl(t_rt *rt, t_geom_types geom_type, int nb_params);
+void	parse_httbl_cont(t_rt *rt, t_geom_types geom_type);
 
 //parsing_types_1.c
 int	parse_dbl(char* str, double *num);
@@ -390,9 +474,9 @@ int		parse_cone(t_rt *rt);
 int		parse_quad(t_rt *rt);
 int		parse_disc(t_rt *rt);
 int		parse_box(t_rt *rt);
-int		parse_die(t_rt *rt);
-int		parse_saf_cone(t_rt *rt);
-int		create_light_point(t_rt *rt);
+int		parse_dce(t_rt *rt);
+int		parse_safe_cone(t_rt *rt);
+int		parse_pencil(t_rt *rt);
 
 //parsing_env.c
 int			parse_resolution_params(t_rt *rt);
@@ -403,175 +487,171 @@ int			parse_camera_params(t_rt *rt);
 
 //parsing_extra.c
 int	parse_extra(t_rt *rt);
-int	parse_transform(t_rt *rt);
+
+//parsing_transformation.c
+int	parse_translation(t_rt *rt);
+int	parse_rotation(t_rt *rt);
+
+//parsing_material.c
 int	parse_dielectric(t_rt *rt);
 int	parse_metal(t_rt *rt);
 int	parse_diff_light(t_rt *rt);
 
-//mini_rt.c
-int			mini_rt(t_rt *rt);
-
-//rt_initialize.c
-void		rt_initialize(t_rt *rt);
-
-//camera.c
-int			render(t_rt *rt);
-int			render_innerloop(t_rt *rt, int j);
-void		time_estimation(t_rt *rt);
-void		cam_initialize(t_rt *rt);
+//main.c
+int	mini_rt(t_rt *rt);
+int	ft_exit(t_rt *rt);
 
 //mlx.c
-int			mlx_initialize(t_mlx *mlx, int img_width, int img_height);
-int			image_create(t_mlx *mlx, int img_width, int img_height);
+int			mlx_initialize(t_mlx *mlx, int img_w, int img_h);
+int			image_create(t_mlx *mlx, int img_w, int img_h);
 int			image_update(t_mlx *mlx);
 int			my_mlx_pixel_put(t_image img, int x, int y, int color);
 
 //color_convert.c
-t_vec3		vec2rgb(const t_vec3 color);
-t_vec3		rgb2vec(const t_vec3 color);
-t_vec3		lin2gam_vec(const t_vec3 lin);
-double		rgb2val(const t_vec3 color);
-
-//vec3_operations.c
-t_vec3		new_vec3(double x, double y, double z);
-//int			edit_vec3(t_vec3 *v, double x, double y, double z);
-t_vec3		vec3_add2(const t_vec3 v1, const t_vec3 v2);
-t_vec3		vec3_add3(const t_vec3 v1, const t_vec3 v2, const t_vec3 v3);
-//int			vec_add_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
-t_vec3		vec3_substract2(const t_vec3 v1, const t_vec3 v2);
-//int			vec_substract_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
-t_vec3		vec3_prod_comp_by_comp(const t_vec3 v1, const t_vec3 v2);
-int			vec3_update(t_vec3 *vec, double x, double y, double z);
-//int			vec_prod_2vec_comp_by_comp_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
-t_vec3		vec3_identity_number(double t);
-//int			vec_identity_number_in(t_vec3 *v, double t);
-//t_vec3		vec_prod_number(const t_vec3 *v, double t);
-//nt			vec_prod_number_in(t_vec3 *v, double t);
-t_vec3		vec3_scale(double t, t_vec3 v);
-//int			vec_number_prod_in(double t, t_vec3 *v);
-double		vec3_dot(const t_vec3 v1, const t_vec3 v2);
-t_vec3		vec3_cross(const t_vec3 v1, const t_vec3 v2);
-//int			vec_cross_in(t_vec3 *v3, const t_vec3 *v1, const t_vec3 *v2);
-t_vec3		vec3_unit(const t_vec3 v);
-//int			vec_unit_in(t_vec3 *v);
-double		vec3_length(const t_vec3 v);
-double		vec3_length_squared(const t_vec3 v);
-double		vec3_index(const t_vec3 v, int i);
-//t_vec3		vec3_2points(const t_vec3 orig, const t_vec3 end);
-bool		vec3_is_nearzero(const t_vec3 vec);
-t_vec3		vec3_cos(t_vec3 theta);
-t_vec3		vec3_sin(t_vec3 theta);
-
-//memory.c
-//void		*ft_calloc(size_t nmemb, size_t size);
-//void		ft_bzero(void *ptr, const size_t size);
-void		free_httbls(t_httbl *httbl);
+t_vec3		vec2rgb(t_vec3 color);
+t_vec3		rgb2vec(t_vec3 color);
+t_vec3		lin2gam_vec(t_vec3 lin);
+double		rgb2val(t_vec3 color);
 
 //test.c
 int			test_vec3_operations(void);
 
 //ray_color.c
-t_vec3		ray_color(t_rt *rt, int depth, const t_ray r);
-t_vec3		ray_color_grad_blue(const t_ray r);
-t_vec3		ray_color_grad_red(const t_ray r);
-t_vec3		ray_color_grad_violet(const t_ray r);
-t_vec3		ray_color_grad_yellow(const t_ray r);
-t_vec3		ray_color_grad_sunset(const t_ray r);
+t_vec3		ray_color(t_rt *rt, int depth, t_ray r);
+t_vec3		ray_color_grad_blue(t_ray r);
+t_vec3		ray_color_grad_red(t_ray r);
+t_vec3		ray_color_grad_violet(t_ray r);
+t_vec3		ray_color_grad_yellow(t_ray r);
+t_vec3		ray_color_grad_sunset(t_ray r);
 t_vec3		ray_color_red();
 
 //ray_compute.c
-t_vec3		hit_point(const t_ray r, double t);
-t_ray		new_ray(const t_vec3 orig, const t_vec3 dir);
-t_vec3		reflect(const t_vec3 v, const t_vec3 n);
-t_vec3		refract(const t_vec3 r_in, const t_vec3 n, double eta_in_over_out);
+t_vec3		reflect(t_vec3 v, t_vec3 n);
+t_vec3		refract(t_vec3 r_in, t_vec3 n, double eta_in_over_out);
 double		reflectance(double cosine, double ref_idx);
-t_ray		get_ray(const t_camera *cam, int i, int j);
-t_vec3		pixel_sample_square(const t_camera *cam);
-t_vec3		defocus_disk_sample(const t_camera *cam);
+t_ray		get_ray(t_camera *cam, int i, int j);
 
-//random.c
-t_vec3		get_random_dev(const t_camera *cam);
-double		random_double();
-double		random_double_interval(double min, double max);
-t_vec3		random_vec3_interval(double min, double max);
-t_vec3		random_in_unit_sphere(void);
-t_vec3		random_unit_vector(void);
-t_vec3		random_in_same_hemisphere(const t_vec3 normal);
-t_vec3		random_in_unit_disk(void);
+//rt_camera.c
+void	cam_initialize(t_rt *rt);
+void	cam_viewport_compute(t_rt *rt);
 
-//world.c
-int			world_populate(t_world *world);
-void		create_saf_cone(t_world *world, t_vec3 pos, t_vec3 gen, double height);
-void		create_cylinder_box(t_world *world, double height, double width, double thickness, double factor, double spacing, double y_offset, double z_offsset);
-bool		world_hit(t_rt *rt, const t_ray r, t_interval tray, t_hit_rec *rec);
-void		httbl_addback(t_world *world, t_httbl *new_httbl);
-void		httbl_record(t_world *world, t_geometry *geom, t_material *mat);
+//rt_render.c
+int		render(t_rt *rt);
+int		render_innerloop(t_rt *rt, int j);
+void	time_estimation(t_rt *rt);
+void	progress_compute(t_rt *rt, int j);
+
+//rt_hit_record.c
+void	set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
+void	set_rec_mat(t_rt *rt, t_hit_rec *rec);
+
+//rt_initialize.c
+void		rt_initialize(t_rt *rt);
+
+//rt_world.c
+int		world_populate(t_world *world);
+bool	check_hit_httbl(t_rt *rt, t_ray *r, t_itv *tray, t_hit_rec *rec);
+bool	world_hit(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
+
+//geom_special_build.c
+void		add_box_quads(t_world *world, t_box *box, t_material *mat);
+void		add_dice_dots(t_world *world, t_box *box);
+void		add_dice_face(t_world *world, t_box *box, t_dice_dots dice_dots);
+void		add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat);
+void		add_con_discs(t_world *world, t_geometry *geom, t_material *mat);
+void		create_safe_cone(t_world *world, t_safe_cone *sfc);
+void		create_safe_cone_base(t_world *world, t_safe_cone *sfc, t_vec3 rot_ax, double rot_an);
+
+//geom_object_transform.c
+void	geom_translate(t_rt *rt);
+void	geom_rotate(t_rt *rt);
+void	cylinder_rotate(t_rt *rt);
+void	cone_rotate(t_rt *rt);
 
 //httbl_create.c
 t_httbl		*new_httbl(t_geometry *geom, t_material *mat);
-//t_httbl		*new_httbl_plane(t_plane pln);
-//t_httbl		*new_httbl_sphere(t_sphere sph);
-//t_httbl		*new_httbl_cylinder(t_cylinder cyl);
-//void		assign_geom(t_httbl *httbl, t_httbl_types geom_type, void(*p1));
-//void		assign_mat(t_httbl *httbl, t_mat_types mat_type, void(*p2));
+void		httbl_addback(t_world *world, t_httbl *new_httbl);
+void		httbl_record(t_world *world, t_geometry *geom, t_material *mat);
+void		httbl_create(t_rt *rt);
 
 //httbl_point.c
-t_point		point(const t_vec3 point);
+t_point		point(t_vec3 point);
 t_geometry	*geom_point(t_point pnt);
-bool		hit_point_geom(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
+bool		hit_pt_geom(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //httbl_plane.c
-t_plane		plane(const t_vec3 point, const t_vec3 dir);
+t_plane		plane(t_vec3 point, t_vec3 dir);
 t_geometry	*geom_plane(t_plane pln);
-bool		hit_plane(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec); //bool		is_interior(double a, double b, t_hit_rec *rec);
+bool		hit_plane(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //httbl_quad.c
-t_quad		quad(const t_vec3 point, const t_vec3 vec1, const t_vec3 vec2);
+t_quad		quad(t_vec3 point, t_vec3 vec1, t_vec3 vec2);
 t_geometry	*geom_quad(t_quad qud);
-bool		hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
-bool		is_interior(double a, double b, t_hit_rec *rec);
+bool		hit_quad(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
+bool		is_interior(double a, double b);
 
 //httbl_box.c
-t_box		box(const t_vec3 a, const t_vec3 b);
+t_box		box(t_vec3 ctr, t_vec3 u, t_vec3 v, t_vec3 w);
 t_geometry	*geom_box(t_box box);
-t_geometry	*geom_die(t_box box);
 
 //httbl_disc.c
-t_disc		disc(const t_vec3 center, const t_vec3 normal, double radius);
+t_disc		disc(t_vec3 ctr, t_vec3 nrm, double rd);
 t_geometry	*geom_disc(t_disc dsc);
-bool		hit_disc(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
+bool		hit_disc(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //httbl_sphere.c
-t_sphere	sphere(const t_vec3 center, double r);
+t_sphere	sphere(t_vec3 ctr, double r);
 t_geometry	*geom_sphere(t_sphere sph);
-bool		hit_sphere(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
+bool		hit_sphere(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //httbl_cylinder.c
-t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height);
+t_cylinder	cylinder(t_vec3 b_ctr, t_vec3 gen, double rd, double h);
 t_geometry	*geom_cylinder(t_cylinder cyl);
-bool		hit_cylinder_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
+void		reverse_geom_cylinder(t_geometry *geom);
+bool		hit_cylinder_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
+void		set_poly_cylinder(t_rt *rt, t_ray r, t_h_pol *h_pol);
 
 //httbl_cone.c
-t_cone		cone(const t_vec3 base_center, t_vec3 generator, double radius_min, double radius_max, double height);
+t_cone		cone(t_vec3 b_ctr, t_vec3 gen, double r_min, double r_max);
 t_geometry	*geom_cone(t_cone con);
-bool		hit_cone_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec);
+void		reverse_geom_cone(t_geometry *geom);
+bool		hit_cone_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
+void		set_poly_cone(t_rt *rt, t_ray r, t_h_pol *h_pol);
+
+//httbl_dice.c
+t_dice		dice(t_vec3 ctr, t_vec3 dir_1, t_vec3 dir_2, double size);
+t_dice_dots	dice_dots(t_vec3 u, t_vec3 v, int code);
+t_geometry	*geom_dce(t_box box);
+
+//httbl_safe_cone.c
+t_safe_cone	safe_cone(t_vec3 b_ctr, t_vec3 gen, double h);
+t_geometry	*geom_safe_cone(t_safe_cone safe_cone);
+
+//httbl_pencil.c
+t_pencil	pencil(t_vec3 b_ctr, t_vec3 gen, double l);
+t_geometry	*geom_pencil(t_pencil pnc);
 
 //utils_math.c
-double		ft_min(const double n1, const double n2);
-double		ft_max(const double n1, const double n2);
+double		ft_min(double n1, double n2);
+double		ft_max(double n1, double n2);
 
-//utils_convert.c
+//utils_convert_1.c
 double		deg2rad(double deg);
+double		rad2deg(double rad);
 t_vec3		deg2rad_vec3(t_vec3 vec);
 double		lin2gam_double(double linear);
-double		str2dbl(char *str);
 
-//utils_numbers.c
-int	is_digit(char c);
+//utils_convert_2.c
+double		str2dbl(char *str);
+int			dec2bin(int dec, int bin, int pos);
+
+//utils_numbers_1.c
 int	is_dec(char *str);
 int	is_ulong(char *str);
 int	is_long(char *str);
 int	is_valid_color_comp(char *str);
+
+//utils_numbers_2.c
 int	is_in_int_range(char *str);
 int	is_in_range01 (double num);
 int	is_in_range0180 (double num);
@@ -579,76 +659,141 @@ int	is_in_range0180 (double num);
 //utils_array.c
 double	array_size(char **params);
 
-//interval.c
-t_interval	interval(double min, double max);
-bool		contains(t_interval intrvl, double x);
-bool		surrounds(t_interval intrvl, double x);
-double		clamp(t_interval intrvl, double x);
+//utils_random_1.c
+t_vec3	get_random_dev(t_camera *cam);
+double	random_double(void);
+double	random_double_interval(double min, double max);
+t_vec3	random_vec3_interval(double min, double max);
+t_vec3	random_in_unit_sphere(void);
 
-//search_poly_root.c
-bool		search_poly_root(t_half_poly *half_poly, const t_interval tray, double *root);
-bool		solve_half_poly(t_half_poly *half_poly);
+//utils_random_2.c
+t_vec3	random_unit_vector(void);
+t_vec3	random_in_same_hemisphere(t_vec3 nrm);
+t_vec3	random_in_unit_disk(void);
+t_vec3	pixel_sample_square(t_camera *cam);
+t_vec3	defocus_disk_sample(t_camera *cam);
 
-//hit_record.c
-void		set_face_normal(const t_ray r, const t_vec3 outward_normal, t_hit_rec *rec);
+//utils_vec3_1.c
+t_vec3	new_vec3(double x, double y, double z);
+t_vec3	vec3_add2(t_vec3 v1, t_vec3 v2);
+t_vec3	vec3_add3(t_vec3 v1, t_vec3 v2, t_vec3 v3);
+t_vec3	vec3_sub2(t_vec3 v1, t_vec3 v2);
+t_vec3	vec3_prd(t_vec3 v1, t_vec3 v2);
 
-//material_scatter.c
-bool		lambertian_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuation, t_ray *scattered);
-bool		metal_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuation, t_ray *scattered);
-bool		dielectric_scatter(const t_ray r_in, const t_hit_rec rec, t_vec3 *attenuation, t_ray *scattered);
+//utils_vec3_2.c
+int		vec3_update(t_vec3 *vec, double x, double y, double z);
+t_vec3	vec3_id(double t);
+t_vec3	vec3_scale(double t, t_vec3 v);
+double	vec3_dot(t_vec3 v1, t_vec3 v2);
+t_vec3	vec3_cross(t_vec3 v1, t_vec3 v2);
+
+//utils_vec3_3.c
+t_vec3	vec3_unit(t_vec3 v);
+double	vec3_len(t_vec3 v);
+double	vec3_len_sq(t_vec3 v);
+double	vec3_index(t_vec3 v, int i);
+bool	vec3_is_nz(t_vec3 vec);
+
+//utils_vec3_4.c
+t_vec3	vec3_cos(t_vec3 theta);
+t_vec3	vec3_sin(t_vec3 theta);
+
+//utils_quadratic_solve.c
+bool	search_poly_root(t_h_pol *h_pol, t_itv tray, double *root);
+bool	search_poly_root_2(t_h_pol *h_pol, t_itv tray, double *root_1, double *root_2);
+bool	solve_h_pol(t_h_pol *h_pol);
+
+//utils_memory.c
+void	free_httbls(t_httbl *httbl);
+void	free_split_vec(char **vec);
+
+//utils_parsing.c
+int		check_nb_params(t_rt *rt, int expect, char *err_msg);
+void	get_end_idx(t_rt *rt);
+void	rt_re_init(t_rt *rt);
+
+//utils_ray.c
+t_vec3	hit_pt(t_ray r, double t);
+t_ray	new_ray(t_vec3 orig, t_vec3 dir);
+
+//itv.c
+t_itv	itv(double min, double max);
+bool	cts(t_itv intrvl, double x);
+bool	srs(t_itv intrvl, double x);
+int		sts(t_itv intrvl, double x);
+double	clamp(t_itv intrvl, double x);
 
 //mat_lambertian.c
 t_lamber	lamber(t_vec3 color);
+t_material	*mat_lamber(t_lamber lamber);
 
 //mat_metal.c
 t_metal		metal(t_vec3 color, double fuzz);
+t_material	*mat_metal(t_metal metal);
 
 //mat_dielectric.c
 t_dielec	dielec(t_vec3 color, double ir);
+t_material	*mat_dielec(t_dielec dielec);
 
 //mat_diff_light.c
 t_diff_light	diff_light(double ratio, t_vec3 color);
-
-//material.c
-t_material	*mat_lamber(t_lamber lamber);
-t_material	*mat_metal(t_metal metal);
-t_material	*mat_dielec(t_dielec dielec);
 t_material	*mat_diff_light(t_diff_light diff_light);
+
+//mat_create.c
+void		mat_create(t_rt *rt);
+t_material	*duplicate_mat(t_material *src);
+
+//mat_scatter.c
+bool		lambertian_scatter(t_hit_rec *rec);
+bool		metal_scatter(t_ray r_in, t_hit_rec *rec);
+bool		dielectric_scatter(t_ray r_in, t_hit_rec *rec);
 
 //lights.c
 bool		diffuse_light(t_vec3 *attenuation, t_ray *scattered);
 
-//geom_operations.c
-void		add_box_quads(t_world *world, t_box *box, t_material *mat);
-void		add_die_dots(t_world *world, t_box *box, t_material *mat);
-void		add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat);
-void		add_con_discs(t_world *world, t_geometry *geom, t_material *mat);
-t_ray		translate_r(t_ray r, t_vec3 trans);
-t_vec3		translate_p(t_vec3 v, t_vec3 trans);
-t_vec3		rotate_x(t_vec3 vec, double cos_theta, double sin_theta);
-t_ray		rotate_rx(t_ray r, double cos_theta, double sin_theta);
-t_vec3		rotate_y(t_vec3 vec, double cos_theta, double sin_theta);
-t_ray		rotate_ry(t_ray r, double cos_theta, double sin_theta);
-t_vec3		rotate_z(t_vec3 vec, double cos_theta, double sin_theta);
-t_ray		rotate_rz(t_ray r, double cos_theta, double sin_theta);
-t_vec3		rotate(t_vec3 vec, t_vec3 cos_theta, t_vec3 sin_theta);
+//geom_basic_translate.c
+t_vec3		tra_v(t_vec3 v, t_vec3 tra);
+t_ray		tra_r(t_ray r, t_vec3 tra);
+
+//geom_basic_rotate.c
+t_vec3		rot_v(t_vec3 u, t_vec3 v, double a);
+void		rot_1v(t_trsf trsf, t_vec3 *u1);
+void		rot_2v(t_trsf trsf, t_vec3 *u1, t_vec3 *u2);
+void		rot_3v(t_trsf trsf, t_vec3 *u1, t_vec3 *u2, t_vec3 *u3);
+t_ray		rot_r(t_ray r, t_vec3 v, double a);
 
 //display_errors.c
 bool		display_error(char *error);
 bool		display_error_plus(char *error, char *msg);
 bool		display_warning(char *warning);
 bool		display_warning_plus(char *warning, char *msg);
+char		*get_error_message(char *geom);
 
-//display_objects.c
-void	display_world(t_world *world);
-void	display_httbl(t_httbl *httbl, int id);
+//display_geometry.c
 void	display_geometry(t_geometry *geom);
-void	display_material(t_material *mat);
 void	display_sphere(t_sphere *sph);
+void	display_cylinder(t_cylinder *cyl);
+void	display_disc(t_disc *dsc);
+void	display_quad(t_quad *qud);
+
+//display_material.c
+void	display_material(t_material *mat);
 void	display_lamber(t_lamber *lamber);
+void	display_metal(t_metal *metal);
 
 //display_simple.c
-void	display_vec3(const t_vec3 v);
+void	display_vec3(t_vec3 v);
 void	display_color(t_vec3 pixel_color);
+
+//display_world.c
+void	display_world(t_world *world);
+void	display_httbl(t_httbl *httbl, int id);
+
+//scene_random_logo42_create.c
+bool	is_inside(double x, double r, double min, double max);
+bool	is_in_logo42(t_sphere sph, t_vec3 p, double h);
+void	random_logo42_sphere(t_world *world, double h, int nb_spheres);
+bool	is_overlaying(t_httbl *httbl, t_sphere sph);
+bool	is_overlaying_xz(t_httbl *httbl, t_sphere sph);
 
 #endif // MINI_RT_H

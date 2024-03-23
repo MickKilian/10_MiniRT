@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 08:32:19 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 23:26:30 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/10 06:11:32 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ bool	display_error_plus(char *error, char *msg)
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
-	free(msg);
 	return (1);
 }
 
@@ -46,6 +45,30 @@ bool	display_warning_plus(char *warning, char *msg)
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
-	free(msg);
 	return (1);
+}
+
+char	*get_error_message(char *geom)
+{
+	if (!ft_strcmp(geom, "sp"))
+		return (ERR_PARAMS_SPHERE);
+	else if (!ft_strcmp(geom, "qd"))
+		return (ERR_PARAMS_QUAD);
+	else if (!ft_strcmp(geom, "ds"))
+		return (ERR_PARAMS_DISC);
+	else if (!ft_strcmp(geom, "bx"))
+		return (ERR_PARAMS_BOX);
+	else if (!ft_strcmp(geom, "pl"))
+		return (ERR_PARAMS_PLANE);
+	else if (!ft_strcmp(geom, "cy"))
+		return (ERR_PARAMS_CYLINDER);
+	else if (!ft_strcmp(geom, "co"))
+		return (ERR_PARAMS_CONE);
+	else if (!ft_strcmp(geom, "di"))
+		return (ERR_PARAMS_DICE);
+	else if (!ft_strcmp(geom, "sc"))
+		return (ERR_PARAMS_SAFE_CONE);
+	else if (!ft_strcmp(geom, "pn"))
+		return (ERR_PARAMS_PENCIL);
+	return (NULL);
 }

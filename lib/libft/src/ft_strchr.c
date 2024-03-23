@@ -6,11 +6,11 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 21:33:47 by mbourgeo          #+#    #+#             */
-/*   Updated: 2021/12/06 02:46:08 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/18 00:33:03 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 char	*ft_strchr(const char *s, int c)
 {

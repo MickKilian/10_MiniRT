@@ -6,17 +6,17 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:36:47 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 10:54:20 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-t_quad	quad(const t_vec3 q, const t_vec3 u, const t_vec3 v)
+t_quad	quad(t_vec3 ctr, t_vec3 u, t_vec3 v)
 {
 	t_quad	qud;
 
-	qud.q = q;
+	qud.ctr = ctr;
 	qud.u = u;
 	qud.v = v;
 	return (qud);
@@ -32,76 +32,36 @@ t_geometry	*geom_quad(t_quad qud)
 	return (geom);
 }
 
-bool	hit_quad(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
+bool	hit_quad(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 {
-	t_vec3	n;
-	t_vec3	normal;
-	double	d;
-	double	t;
 	double	alpha;
 	double	beta;
-	double	denom;
-	t_vec3	w;
-	t_vec3	intersection;
-	t_vec3	planar_hitpt_vector;
+	t_vec3	pl_hitpt_vec;
+	t_quad	qud;
 
-	// To determine where the ray r hits the plane we use
-	// equation of a plane x.a + y.b + z.c = d
-
-	n = vec3_cross(rt->world.httbl->geom->qud.u, rt->world.httbl->geom->qud.v);
-	normal = vec3_unit(n);
-	d = vec3_dot(normal, rt->world.httbl->geom->qud.q);
-	w = vec3_scale(1 / vec3_dot(n, n), n);
-
-	denom = vec3_dot(normal, r.dir);
-
-	// No hit if the ray is parallel to the plane.
-	if (fabs(denom) < EPSILON)
+	qud = rt->world.httbl->geom->qud;
+	qud.q = vec3_sub2(vec3_sub2(qud.ctr, qud.u), qud.v);
+	qud.nrm = vec3_cross(vec3_scale(2, qud.u), vec3_scale(2, qud.v));
+	qud.w = vec3_scale(1 / vec3_dot(qud.nrm, qud.nrm), qud.nrm);
+	qud.nrm = vec3_unit(qud.nrm);
+	qud.d = vec3_dot(qud.nrm, qud.q);
+	if (fabs(vec3_dot(qud.nrm, r.dir)) < EPSILON)
 		return (0);
-
-	// Return false if the hit point parameter t is outside the ray interval.
-	t = (d - vec3_dot(normal, r.orig)) / denom;
-	if (!contains(tray, t))
+	rec->t = (qud.d - vec3_dot(qud.nrm, r.orig)) / vec3_dot(qud.nrm, r.dir);
+	if (!cts(tray, rec->t))
 		return (0);
-
-	// Determine if the hit point lies within the planar shape using its plane coordinates.
-	intersection = hit_point(r, t);
-	planar_hitpt_vector = vec3_add2(intersection, vec3_scale(-1, rt->world.httbl->geom->qud.q));
-	alpha =vec3_dot(w, vec3_cross(planar_hitpt_vector, rt->world.httbl->geom->qud.v));
-	beta = vec3_dot(w, vec3_cross(rt->world.httbl->geom->qud.u, planar_hitpt_vector));
-
-	if (!is_interior(alpha, beta, rec))
+	rec->p = hit_pt(r, rec->t);
+	pl_hitpt_vec = vec3_sub2(rec->p, qud.q);
+	alpha = vec3_dot(qud.w, vec3_cross(pl_hitpt_vec, vec3_scale(2, qud.v)));
+	beta = vec3_dot(qud.w, vec3_cross(vec3_scale(2, qud.u), pl_hitpt_vec));
+	if (!is_interior(alpha, beta))
 		return (0);
-
-	// Ray hits the 2D shape; set the rest of the hit record and return true.
-	rec->t = t;
-	rec->p = intersection;
-	rec->mat = rt->world.httbl->mat->type;
-	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat->lamber;
-	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat->metal;
-	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat->dielec;
-	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat->diff_light;
-	set_face_normal(r, normal, rec);
-
+	set_rec_mat(rt, rec);
+	set_face_nrm(r, qud.nrm, rec);
 	return (1);
 }
 
-bool	is_interior(double a, double b, t_hit_rec *rec)
+bool	is_interior(double a, double b)
 {
-	// Given the hit point in quad coordinate, returns false if it is outside the
-	// primitive, otherwise set the hit record UV coordinates and return true.
-
-	if ((a < 0) || (1 < a) || (b < 0) || (1 < b))
-		return (0);
-	else
-		return (1);
-	(void)rec;
-	//*// CHECK THIS
-	//rec->u = a;
-	//rec->v = b;
-	//return (1);
+	return ((a > 0) && (1 > a) && (b > 0) && (1 > b));
 }

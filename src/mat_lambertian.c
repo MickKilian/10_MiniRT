@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 03:18:48 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:41:30 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/22 07:21:04 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,4 +18,14 @@ t_lamber	lamber(t_vec3 color)
 
 	lamber.color = color;
 	return (lamber);
+}
+
+t_material	*mat_lamber(t_lamber lamber)
+{
+	t_material	*mat;
+
+	mat = ft_calloc(1, sizeof(t_material));
+	mat->type = LAMBERTIAN;
+	mat->lamber = lamber;
+	return (mat);
 }

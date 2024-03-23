@@ -6,25 +6,39 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/02/23 16:40:01 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/03/23 07:01:06 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .DEFAULT_GOAL	= all
 
-PRIM_SRCS	=	main.c mini_rt.c rt_initialize.c mlx.c \
-				color_convert.c vec3_operations.c memory.c tests.c \
-				color_display.c geom_operations.c camera.c utils_array.c \
-				utils_conv.c utils_math.c utils_numbers.c \
-				ray_compute.c hit_record.c httbl_create.c interval.c world.c \
-				random.c ray_color.c search_poly_root.c httbl_quad.c \
-				httbl_box.c httbl_point.c httbl_plane.c httbl_sphere.c \
-				httbl_cone.c httbl_cylinder.c httbl_disc.c camera.c \
-				material_scatter.c materials.c mat_diff_light.c \
-				mat_dielectric.c mat_lambertian.c mat_metal.c file.c \
-				parsing_general.c parsing_env.c parsing_geom_1.c parsing_geom_2.c \
-				parsing_extra.c parsing_types_1.c parsing_types_2.c \
-				display_simple.c display_objects.c display_errors.c
+PRIM_SRCS	=	main.c \
+				color_convert.c \
+				display_errors.c display_geometry.c display_material.c \
+				display_simple.c display_world.c \
+				geom_basic_translate.c geom_basic_rotate.c \
+				geom_object_transform.c \
+				geom_special_build_con.c geom_special_build_other.c\
+				httbl_box.c httbl_cone.c httbl_create.c httbl_cylinder.c \
+				httbl_dice.c httbl_disc.c httbl_pencil.c \
+				httbl_plane.c httbl_point.c httbl_quad.c httbl_safe_cone.c \
+				httbl_sphere.c \
+				mat_create.c mat_diff_light.c mat_dielectric.c \
+				mat_lambertian.c mat_metal.c mat_scatter.c \
+				parsing_env.c \
+				parsing_extra.c parsing_tranformation.c parsing_material.c\
+				parsing_file.c parsing_general.c \
+				parsing_geom_1.c parsing_geom_2.c parsing_geom_3.c \
+				parsing_types_1.c parsing_types_2.c \
+				ray_color.c ray_compute.c \
+				rt_camera.c rt_hit_record.c rt_initialize.c rt_world.c \
+				rt_render.c \
+				utils_array.c utils_convert_1.c utils_convert_2.c \
+				utils_interval.c utils_math.c utils_memory.c utils_mlx.c \
+				utils_numbers_1.c utils_numbers_2.c \
+				utils_quadratic_solve.c utils_parsing.c \
+				utils_random_1.c utils_random_2.c utils_ray.c \
+				utils_vec3_1.c utils_vec3_2.c utils_vec3_3.c utils_vec3_4.c
 PRIM_SRCDIR	=	src
 PRIM_PATH	=	$(addprefix $(PRIM_SRCDIR)/, $(PRIM_SRCS))
 PRIM_OBJDIR	=	obj

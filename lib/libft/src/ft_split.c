@@ -6,11 +6,11 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 21:40:11 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 03:09:37 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/18 00:32:52 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 static	size_t	ft_count_words(char const *s, int c)
 {

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 21:56:25 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/22 16:53:27 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,60 +14,18 @@
 
 int	parse_extra(t_rt *rt)
 {
-	int	ret;
-
-	printf("metal parsing %d\n", rt->p_count);
-	if (ft_strcmp(rt->temp_params[rt->p_count], "ttr") == 0)
-		ret = parse_transform(rt);
-	if (ft_strcmp(rt->temp_params[rt->p_count], "die") == 0)
-		ret = parse_dielectric(rt);
-	if (ft_strcmp(rt->temp_params[rt->p_count], "met") == 0)
-		ret = parse_metal(rt);
-	if (ft_strcmp(rt->temp_params[rt->p_count], "dif") == 0)
-		ret = parse_diff_light(rt);
-	return (ret);
-}
-
-int	parse_transform(t_rt *rt)
-{
-	t_vec3	rot;
-
-	if (parse_dbl_vec3(rt->temp_params[rt->p_count + 1], &rt->temp_geom->trans))
-		return (1);
-	if (parse_dbl_vec3(rt->temp_params[rt->p_count + 2], &rot))
-		return (1);
-	rt->temp_geom->theta = deg2rad_vec3(rot);
-	rt->p_count += 3;
-	return (0);
-}
-
-int	parse_dielectric(t_rt *rt)
-{
-	double	idx_refract;
-
-	if (parse_dbl(rt->temp_params[rt->p_count + 1], &idx_refract))
-		return (1);
-	rt->temp_mat = mat_dielec(dielec(rt->temp_color, idx_refract));
-	return (0);
-}
-
-int	parse_metal(t_rt *rt)
-{
-	double	fuzz;
-
-	if (parse_dbl(rt->temp_params[rt->p_count + 1], &fuzz))
-		return (1);
-	rt->temp_mat = mat_metal(metal(rt->temp_color, fuzz));
-	return (0);
-}
-
-int	parse_diff_light(t_rt *rt)
-{
-	double	ratio;
-
-	printf("metal parsing %d\n", rt->p_count);
-	if (parse_dbl(rt->temp_params[rt->p_count + 1], &ratio))
-		return (1);
-	rt->temp_mat = mat_diff_light(diff_light(ratio, rt->temp_color));
-	return (0);
+	rt->tp_count++;
+	if (ft_strcmp(rt->tp_params[rt->tp_count], "tra") == 0)
+		return (parse_translation(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "rot") == 0)
+		return (parse_rotation(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "die") == 0)
+		return (parse_dielectric(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "met") == 0)
+		return (parse_metal(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "dif") == 0)
+		return (parse_diff_light(rt));
+	else
+		return (display_error_plus(ERR_INFO_TYPE,
+				rt->tp_params[rt->tp_count]));
 }

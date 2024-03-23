@@ -6,21 +6,21 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 21:19:01 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 10:10:00 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-t_cylinder	cylinder(const t_vec3 base_center, t_vec3 generator, double radius, double height)
+t_cylinder	cylinder(t_vec3 ctr, t_vec3 gen, double rd, double h)
 {
 	t_cylinder	cyl;
 
-	cyl.base_center = base_center;
-	cyl.generator = vec3_unit(generator);
-	cyl.radius = radius;
-	cyl.height = height;
-	cyl.interval_z = interval(0, height);
+	cyl.ctr = ctr;
+	cyl.gen = vec3_unit(gen);
+	cyl.rd = rd;
+	cyl.h = h;
+	cyl.itv_z = itv(-h / 2, h / 2);
 	return (cyl);
 }
 
@@ -30,52 +30,71 @@ t_geometry	*geom_cylinder(t_cylinder cyl)
 
 	geom = ft_calloc(1, sizeof(t_geometry));
 	geom->type = CYLINDER;
-	geom->trans = cyl.base_center;
-	geom->theta = new_vec3(-atan2(cyl.generator.y, cyl.generator.z),
-			atan2(cyl.generator.x, cyl.generator.z),0);
-			//atan2(cyl.generator.x, cyl.generator.y));
+	geom->trsf.tra = cyl.ctr;
+	geom->trsf.rot_an = acos(vec3_dot(cyl.gen, new_vec3(0, 0, 1)));
+	geom->trsf_i.rot_an = acos(vec3_dot(new_vec3(0, 0, 1), cyl.gen));
+	if (fabs(geom->trsf.rot_an - PI) < EPSILON)
+	{
+		geom->trsf.rot_ax = new_vec3(0, 1, 0);
+		geom->trsf_i.rot_ax = new_vec3(0, -1, 0);
+	}
+	else
+	{
+		geom->trsf.rot_ax = vec3_unit(vec3_cross(cyl.gen, new_vec3(0, 0, 1)));
+		geom->trsf_i.rot_ax = vec3_unit(vec3_cross(new_vec3(0, 0, 1), cyl.gen));
+	}
 	geom->cyl = cyl;
-	geom->cyl.base_center = new_vec3(0, 0, 0);
-	geom->cyl.generator = new_vec3(0, 0, 1.0);
+	geom->cyl.ctr = new_vec3(0, 0, 0);
+	geom->cyl.gen = new_vec3(0, 0, 1.0);
 	return (geom);
 }
 
-bool	hit_cylinder_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
+void	reverse_geom_cylinder(t_geometry *geom)
 {
-	t_half_poly	half_poly;
-	t_vec3		oc;
-	double		root;
+	geom->cyl.ctr = geom->trsf.tra;
+	rot_1v(geom->trsf_i, &geom->cyl.gen);
+	geom->trsf.tra = new_vec3(0, 0, 0);
+	geom->trsf.rot_ax = new_vec3(0, 0, 0);
+	geom->trsf_i.rot_ax = new_vec3(0, 0, 0);
+	geom->trsf.rot_an = 0;
+	geom->trsf_i.rot_an = 0;
+}
 
-	// To determine where the ray r hits the sphere surface we use
-	// oc: radius from center of sphere to camera	
-	// center: center of the sphere
-	// radius: radius of the sphere
-	// We simplify the quadratic equation noticing that we can devide
-	// everything by a factor 2 and that a dot product of a vector
-	// with itself is the length squared of that vector
-	oc = vec3_substract2(r.orig, rt->world.httbl->geom->cyl.base_center);
-	half_poly.a = vec3_length_squared(vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)));
-	half_poly.half_b = 2 * vec3_dot(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0)), vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)));
-	half_poly.c = vec3_length_squared(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0))) - (rt->world.httbl->geom->cyl.radius * rt->world.httbl->geom->cyl.radius);
+bool	hit_cylinder_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
+{
+	t_h_pol		h_pol;
+	double		root_1;
+	double		root_2;
 
-	if (!search_poly_root(&half_poly, tray, &root))
+	set_poly_cylinder(rt, r, &h_pol);
+	if (!search_poly_root_2(&h_pol, tray, &root_1, &root_2))
 		return (0);
-	rec->t = root;
-	rec->p = hit_point(r, rec->t);
-	if (!surrounds(rt->world.httbl->geom->cyl.interval_z, rec->p.z))
+	if (root_1 && srs(rt->world.httbl->geom->cyl.itv_z, (hit_pt(r, root_1)).z))
+	{
+		rec->t = root_1;
+		rec->p = hit_pt(r, rec->t);
+	}
+	else if (root_2 && srs(rt->world.httbl->geom->cyl.itv_z,
+			(hit_pt(r, root_2)).z))
+	{
+		rec->t = root_2;
+		rec->p = hit_pt(r, rec->t);
+	}
+	else
 		return (0);
-	// CHECK THIS
-	rec->mat = rt->world.httbl->mat->type;
-	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat->lamber;
-	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat->metal;
-	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat->dielec;
-	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat->diff_light;
-	//rec->color = rt->world.httbl->mat->color;
-	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom->cyl.radius, vec3_substract2(new_vec3(rec->p.x, rec->p.y, 0),
-					new_vec3(rt->world.httbl->geom->cyl.base_center.x, rt->world.httbl->geom->cyl.base_center.y, 0))), rec);
+	set_rec_mat(rt, rec);
+	set_face_nrm(r, vec3_unit(vec3_prd(
+				vec3_sub2(rec->p, rt->world.httbl->geom->cyl.ctr),
+				new_vec3(1, 1, 0))), rec);
 	return (1);
+}
+
+void	set_poly_cylinder(t_rt *rt, t_ray r, t_h_pol *h_pol)
+{
+	h_pol->oc = vec3_sub2(r.orig, rt->world.httbl->geom->cyl.ctr);
+	h_pol->a = vec3_len_sq(vec3_prd(r.dir, new_vec3(1, 1, 0)));
+	h_pol->h_b = vec3_dot(vec3_prd(h_pol->oc, new_vec3(1, 1, 0)),
+			vec3_prd(r.dir, new_vec3(1, 1, 0)));
+	h_pol->c = vec3_len_sq(vec3_prd(h_pol->oc, new_vec3(1, 1, 0)))
+		- (rt->world.httbl->geom->cyl.rd * rt->world.httbl->geom->cyl.rd);
 }

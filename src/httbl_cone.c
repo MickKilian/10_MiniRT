@@ -6,22 +6,22 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 16:37:37 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 10:10:06 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-t_cone	cone(const t_vec3 base_center, t_vec3 generator, double radius_min, double radius_max, double height)
+t_cone	cone(t_vec3 b_ctr, t_vec3 gen, double r_max, double r_min)
 {
 	t_cone	con;
 
-	con.base_center = base_center;
-	con.generator = vec3_unit(generator);
-	con.radius_min = radius_min;
-	con.radius_max = radius_max;
-	con.height = height;
-	con.interval_z = interval(0, height);
+	con.b_ctr = b_ctr;
+	con.h = vec3_len(gen);
+	con.gen = vec3_unit(gen);
+	con.r_max = r_max;
+	con.r_min = r_min;
+	con.itv_z = itv(0, con.h);
 	return (con);
 }
 
@@ -31,66 +31,83 @@ t_geometry	*geom_cone(t_cone con)
 
 	geom = ft_calloc(1, sizeof(t_geometry));
 	geom->type = CONE;
-	geom->trans = con.base_center;
-	geom->theta = new_vec3(-atan2(con.generator.y, con.generator.z),
-			atan2(con.generator.x, con.generator.z),
-			0);
+	geom->trsf.tra = con.b_ctr;
+	geom->trsf.rot_an = acos(vec3_dot(con.gen,
+				new_vec3(0, 0, 1)));
+	geom->trsf_i.rot_an = acos(vec3_dot(new_vec3(0, 0, 1), con.gen));
+	if (fabs(geom->trsf.rot_an - PI) < EPSILON)
+	{
+		geom->trsf.rot_ax = new_vec3(0, 1, 0);
+		geom->trsf_i.rot_ax = new_vec3(0, -1, 0);
+	}
+	else
+	{
+		geom->trsf.rot_ax = vec3_unit(vec3_cross(con.gen, new_vec3(0, 0, 1)));
+		geom->trsf_i.rot_ax = vec3_unit(vec3_cross(new_vec3(0, 0, 1), con.gen));
+	}
 	geom->con = con;
-	geom->con.base_center = new_vec3(0, 0, 0);
-	geom->con.tip = new_vec3(0, 0, -con.radius_min / (con.radius_max - con.radius_min) * con.height);
-	geom->con.generator = new_vec3(0, 0, 1.0);
+	geom->con.b_ctr = new_vec3(0, 0, 0);
+	geom->con.tip = new_vec3(0, 0, con.r_max / (con.r_max - con.r_min) * con.h);
+	geom->con.gen = new_vec3(0, 0, 1);
 	return (geom);
 }
 
-bool	hit_cone_finite(const t_rt *rt, const t_ray r, const t_interval tray, t_hit_rec *rec)
+void	reverse_geom_cone(t_geometry *geom)
 {
-	t_half_poly	half_poly;
-	t_vec3		oc;
-	double		root, h_squared, r_squared;
+	geom->con.b_ctr = geom->trsf.tra;
+	rot_1v(geom->trsf_i, &geom->con.gen);
+	geom->trsf.tra = new_vec3(0, 0, 0);
+	geom->trsf.rot_ax = new_vec3(0, 0, 0);
+	geom->trsf_i.rot_ax = new_vec3(0, 0, 0);
+	geom->trsf.rot_an = 0;
+	geom->trsf_i.rot_an = 0;
+}
 
-	// To determine where the ray r hits the sphere surface we use
-	// oc: radius from center of sphere to camera	
-	// center: center of the sphere
-	// radius: radius of the sphere
-	// We simplify the quadratic equation noticing that we can devide
-	// everything by a factor 2 and that a dot product of a vector
-	// with itself is the length squared of that vector
-	//printf("radius : %f, height : %f", rt->world.httbl->geom->con.radius, rt->world.httbl->geom->con.height);
-	//printf("z : %f\n", r.dir.z);
-	oc = vec3_substract2(r.orig, rt->world.httbl->geom->con.tip);
-	//oc.z = rt->world.httbl->geom->con.height - oc.z;
-	//half_poly.a = vec3_length_squared(vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)));
-	//half_poly.half_b = 2 * vec3_dot(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0)), vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)));
-	//half_poly.c = vec3_length_squared(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0))) - (rt->world.httbl->geom->con.radius * rt->world.httbl->geom->con.radius);
+bool	hit_cone_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
+{
+	t_h_pol		h_pol;
+	double		root_1;
+	double		root_2;
 
-	h_squared = rt->world.httbl->geom->con.height * rt->world.httbl->geom->con.radius_max / (rt->world.httbl->geom->con.radius_max - rt->world.httbl->geom->con.radius_min);
-	h_squared *= h_squared;
-	r_squared = rt->world.httbl->geom->con.radius_max * rt->world.httbl->geom->con.radius_max;
-	half_poly.a = h_squared * vec3_length_squared(vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)))
-		- r_squared * vec3_length_squared(vec3_prod_comp_by_comp(r.dir, new_vec3(0, 0, 1)));
-	half_poly.half_b = 2 * h_squared * vec3_dot(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0)), vec3_prod_comp_by_comp(r.dir, new_vec3(1, 1, 0)))
-		- 2 * r_squared * vec3_dot(vec3_prod_comp_by_comp(oc, new_vec3(0, 0, 1)), vec3_prod_comp_by_comp(r.dir, new_vec3(0, 0, 1)));
-	half_poly.c = h_squared * vec3_length_squared(vec3_prod_comp_by_comp(oc, new_vec3(1, 1, 0)))
-		- r_squared * vec3_length_squared(vec3_prod_comp_by_comp(oc, new_vec3(0, 0, 1)));
-
-	if (!search_poly_root(&half_poly, tray, &root))
+	set_poly_cone(rt, r, &h_pol);
+	if (!search_poly_root_2(&h_pol, tray, &root_1, &root_2))
 		return (0);
-	rec->t = root;
-	rec->p = hit_point(r, rec->t);
-	if (!surrounds(rt->world.httbl->geom->con.interval_z, rec->p.z))
+	if (root_1 && srs(rt->world.httbl->geom->con.itv_z, (hit_pt(r, root_1)).z))
+	{
+		rec->t = root_1;
+		rec->p = hit_pt(r, rec->t);
+	}
+	else if (root_2 && srs(rt->world.httbl->geom->con.itv_z,
+			(hit_pt(r, root_2)).z))
+	{
+		rec->t = root_2;
+		rec->p = hit_pt(r, rec->t);
+	}
+	else
 		return (0);
-	// CHECK THIS
-	rec->mat = rt->world.httbl->mat->type;
-	if (rec->mat == LAMBERTIAN)
-		rec->lamber = rt->world.httbl->mat->lamber;
-	if (rec->mat == METAL)
-		rec->metal = rt->world.httbl->mat->metal;
-	if (rec->mat == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat->dielec;
-	if (rec->mat == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat->diff_light;
-	//rec->color = rt->world.httbl->mat->color;
-	set_face_normal(r, vec3_scale(1 / rt->world.httbl->geom->con.radius_max, vec3_substract2(new_vec3(rec->p.x, rec->p.y, 0),
-					new_vec3(rt->world.httbl->geom->con.tip.x, rt->world.httbl->geom->con.tip.y, 0))), rec);
+	set_rec_mat(rt, rec);
+	set_face_nrm(r, vec3_unit(new_vec3(rec->p.x, rec->p.y,
+				vec3_len(new_vec3(rec->p.x, rec->p.y, 0))
+				/ rt->world.httbl->geom->con.h)), rec);
 	return (1);
+}
+
+void	set_poly_cone(t_rt *rt, t_ray r, t_h_pol *h_pol)
+{
+	h_pol->oc = vec3_sub2(r.orig, rt->world.httbl->geom->con.tip);
+	h_pol->h_sq = rt->world.httbl->geom->con.h
+		* rt->world.httbl->geom->con.r_max
+		/ (rt->world.httbl->geom->con.r_max
+			- rt->world.httbl->geom->con.r_min);
+	h_pol->h_sq *= h_pol->h_sq;
+	h_pol->r_sq = rt->world.httbl->geom->con.r_max
+		* rt->world.httbl->geom->con.r_max;
+	h_pol->a = h_pol->h_sq * vec3_len_sq(vec3_prd(r.dir, new_vec3(1, 1, 0)))
+		- h_pol->r_sq * vec3_len_sq(vec3_prd(r.dir, new_vec3(0, 0, 1)));
+	h_pol->h_b = h_pol->h_sq * vec3_dot(vec3_prd(h_pol->oc, new_vec3(1, 1, 0)),
+			vec3_prd(r.dir, new_vec3(1, 1, 0)))
+		- h_pol->r_sq * vec3_dot(vec3_prd(h_pol->oc, new_vec3(0, 0, 1)),
+			vec3_prd(r.dir, new_vec3(0, 0, 1)));
+	h_pol->c = h_pol->h_sq * vec3_len_sq(vec3_prd(h_pol->oc, new_vec3(1, 1, 0)))
+		- h_pol->r_sq * vec3_len_sq(vec3_prd(h_pol->oc, new_vec3(0, 0, 1)));
 }

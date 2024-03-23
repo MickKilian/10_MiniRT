@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 17:54:01 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/23 00:17:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,29 @@
 
 int	parse_resolution_params(t_rt *rt)
 {
-	double	width;
-	double	height;
+	double	w;
+	double	h;
 
-	if (rt->p_avail < NB_PARAMS_RESOLUTION || rt->p_avail > NB_PARAMS_RESOLUTION + 1)
-	{
-		free(rt->temp_params);
-		return (display_error_plus(ERR_NB_PARAMS_RESOLUTION, ft_itoa(NB_PARAMS_RESOLUTION - 1)));
-	}
-	if (parse_int_pos(rt->temp_params[1], &width))
+	rt->tp_option = 1;
+	if ((rt->set_resolution && display_error(ERR_DUPLICATE_RESOLUTION))
+		|| check_nb_params(rt, NB_PARAMS_RESOLUTION, ERR_PARAMS_RESOLUTION)
+		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
+				rt->tp_params[rt->tp_count])))
 		return (1);
-	if (rt->p_avail > NB_PARAMS_RESOLUTION) {
-		if (parse_int_pos(rt->temp_params[2], &height))
+	else if (parse_int_pos(rt->tp_params[++rt->tp_count], &w))
+		return (1);
+	else if (rt->tp_count < rt->tp_end)
+	{
+		if (parse_int_pos(rt->tp_params[++rt->tp_count], &h))
 			return (1);
 	}
 	else
-		height = width / ASPECT_RATIO;
-	rt->img_width = (int)width;
-	rt->img_height = (int)height;
-	rt->aspect_ratio = (double)rt->img_height/(double)rt->img_height;
+		h = w / ASPECT_RATIO;
+	rt->img_w = (int)w;
+	rt->img_h = (int)h;
+	rt->aspect_ratio = (double)rt->img_h / (double)rt->img_h;
 	rt->set_resolution = 1;
-	if (rt->temp_params)
-		free(rt->temp_params);
+	rt->tp_option = 0;
 	return (0);
 }
 
@@ -44,76 +45,73 @@ int	parse_algo_params(t_rt *rt)
 	double	spp;
 	double	depth;
 
-	if (rt->p_avail != NB_PARAMS_ALGO)
-	{
-		free(rt->temp_params);
-		return (display_error_plus(ERR_NB_PARAMS_ALGO, ft_itoa(NB_PARAMS_ALGO - 1)));
-	}
-	if (parse_int_pos(rt->temp_params[1], &spp))
+	if ((rt->set_algo && display_error(ERR_DUPLICATE_ALGO))
+		|| check_nb_params(rt, NB_PARAMS_ALGO, ERR_PARAMS_ALGO)
+		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
+				rt->tp_params[rt->tp_count])))
 		return (1);
-	if (parse_int_pos(rt->temp_params[2], &depth))
+	else if (parse_int_pos(rt->tp_params[++rt->tp_count], &spp))
 		return (1);
-	rt->cam.samples_per_pixel = (int)spp;
-	rt->cam.max_depth = (int)depth;
+	else if (parse_int_pos(rt->tp_params[++rt->tp_count], &depth))
+		return (1);
+	rt->spp = (int)spp;
+	rt->max_depth = (int)depth;
 	rt->set_algo = 1;
-	if (rt->temp_params)
-		free(rt->temp_params);
 	return (0);
 }
 
 int	parse_ambient_params(t_rt *rt)
 {
-	if (rt->p_avail != NB_PARAMS_AMBIENT_LIGHT)
-	{
-		free(rt->temp_params);
-		return (display_error_plus(ERR_NB_PARAMS_AMBIENT, ft_itoa(NB_PARAMS_AMBIENT_LIGHT - 1)));
-	}
-	if (parse_dbl_01(rt->temp_params[1], &rt->ambient.ratio))
+	if ((rt->ambient.set && display_error(ERR_DUPLICATE_AMBIENT))
+		|| check_nb_params(rt, NB_PARAMS_AMBIENT, ERR_PARAMS_AMBIENT)
+		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
+				rt->tp_params[rt->tp_count])))
 		return (1);
-	if (parse_color(rt->temp_params[2], &rt->temp_color))
+	else if (parse_dbl_01(rt->tp_params[++rt->tp_count],
+			&rt->ambient.ratio))
 		return (1);
-	rt->ambient.color = rgb2vec(rt->temp_color);
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
+		return (1);
+	rt->ambient.color = rgb2vec(rt->tp_color);
 	rt->ambient.set = 1;
-	if (rt->temp_params)
-		free(rt->temp_params);
 	return (0);
 }
 
 int	parse_light_params(t_rt *rt)
 {
-	if (rt->p_avail != NB_PARAMS_LIGHT)
-	{
-		free(rt->temp_params);
-		return (display_error_plus(ERR_NB_PARAMS_LIGHT, ft_itoa(NB_PARAMS_LIGHT - 1)));
-	}
-	if (parse_dbl_vec3(rt->temp_params[1], &rt->light.pos))
+	if (check_nb_params(rt, NB_PARAMS_POINT_LIGHT, ERR_PARAMS_POINT_LIGHT)
+		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
+				rt->tp_params[rt->tp_count])))
 		return (1);
-	if (parse_dbl_01(rt->temp_params[2], &rt->light.ratio))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count],
+			&rt->tp_light.pos))
 		return (1);
-	if (parse_color(rt->temp_params[3], &rt->temp_color))
+	else if (parse_dbl_01(rt->tp_params[++rt->tp_count],
+			&rt->tp_light.ratio))
 		return (1);
-	rt->light.color = rgb2vec(rt->temp_color);
-	rt->light.set = 1;
-	if (rt->temp_params)
-		free(rt->temp_params);
+	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
+		return (1);
+	rt->tp_light.color = rgb2vec(rt->tp_color);
+	rt->set_point_light = 1;
+	rt->tp_geom = geom_point(point(rt->tp_light.pos));
+	rt->tp_mat = mat_diff_light(diff_light(rt->tp_light.ratio,
+				rt->tp_light.color));
 	return (0);
 }
 
 int	parse_camera_params(t_rt *rt)
 {
-	if (rt->p_avail != NB_PARAMS_CAMERA)
-	{
-		free(rt->temp_params);
-		return (display_error_plus(ERR_NB_PARAMS_CAMERA, ft_itoa(NB_PARAMS_CAMERA - 1)));
-	}
-	if (parse_dbl_vec3(rt->temp_params[1], &rt->cam.center))
+	if ((rt->cam.set && display_error(ERR_DUPLICATE_CAMERA))
+		|| check_nb_params(rt, NB_PARAMS_CAMERA, ERR_PARAMS_CAMERA)
+		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
+				rt->tp_params[rt->tp_count])))
 		return (1);
-	if (parse_dbl_vec3(rt->temp_params[2], &rt->cam.dir))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &rt->cam.ctr))
 		return (1);
-	if (parse_dbl_0180(rt->temp_params[3], &rt->cam.hfov))
+	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &rt->cam.dir))
+		return (1);
+	else if (parse_dbl_0180(rt->tp_params[++rt->tp_count], &rt->cam.hfov))
 		return (1);
 	rt->cam.set = 1;
-	if (rt->temp_params)
-		free(rt->temp_params);
 	return (0);
 }
