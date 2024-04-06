@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 06:38:45 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 01:42:57 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,21 @@ bool	hit_disc(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 {
 	t_vec3	nrm;
 	double	d;
+	t_vec3	p_temp;
 
 	nrm = vec3_unit(rt->world.httbl->geom->dsc.nrm);
 	d = vec3_dot(nrm, rt->world.httbl->geom->dsc.ctr);
-	if (fabs(vec3_dot(nrm, r.dir)) < EPSILON)
+	if (ft_abs(vec3_dot(nrm, r.dir)) < EPSILON)
 		return (0);
 	rec->t = (d - vec3_dot(nrm, r.orig)) / vec3_dot(nrm, r.dir);
 	if (!cts(tray, rec->t))
 		return (0);
-	rec->p = hit_pt(r, rec->t);
-	if (vec3_len(vec3_sub2(rec->p, rt->world.httbl->geom->dsc.ctr))
+	p_temp = hit_pt(r, rec->t);
+	if (vec3_len(vec3_sub2(p_temp, rt->world.httbl->geom->dsc.ctr))
 		> rt->world.httbl->geom->dsc.rd)
 		return (0);
+	rec->p = p_temp;
+	rec->httbl = rt->world.httbl;
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, nrm, rec);
 	return (1);

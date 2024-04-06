@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 09:43:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:24:29 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,8 @@ void	rt_re_init(t_rt *rt)
 	rt->tp_trsf.tra = new_vec3(0, 0, 0);
 	rt->tp_trsf.rot_ax = new_vec3(0, 0, 0);
 	rt->tp_trsf.rot_an = 0;
+	rt->tp_has_txm = false;
+	rt->tp_has_bmp = false;
+	rt->tp_has_pat = false;
+	rt->tp_pat = 0;
 }

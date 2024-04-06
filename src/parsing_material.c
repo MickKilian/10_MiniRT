@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 14:23:03 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/27 12:19:14 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,3 +47,5 @@ int	parse_diff_light(t_rt *rt)
 	rt->tp_mat = mat_diff_light(diff_light(ratio, rgb2vec(rt->tp_color)));
 	return (0);
 }
+
+

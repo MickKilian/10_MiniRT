@@ -6,7 +6,7 @@
 /*   By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 10:46:05 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 12:30:34 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include "../lib/libft/inc/libft.h"
 # include "../lib/gnl/inc/get_next_line.h"
 
+# define	ERR_MLX_INIT				"Mlx could not be initialized"
+# define	ERR_IMG_CREATE				"Image could not be created"
 # define	NB_PARAMS_RESOLUTION		1
 # define	ERR_PARAMS_RESOLUTION		"Resolution WIDTH(int[>0]) (OPT)HEIGHT(int[>0])"
 # define	NB_PARAMS_ALGO				2
@@ -67,6 +69,12 @@
 # define	ERR_PARAMS_DIELECTRIC		"Material type Dielectric INDEX_REFRACT(double[>0])"
 # define	NB_PARAMS_DIFF_LIGHT		1
 # define	ERR_PARAMS_DIFF_LIGHT		"Material type Diffuse Light FACTOR(double[0-1])"
+# define	NB_PARAMS_TXM				1
+# define	ERR_PARAMS_TXM				".xpm texture file FILENAME(string[.xpm])"
+# define	NB_PARAMS_BUMP				1
+# define	ERR_PARAMS_BUMP				".xpm bump file FILENAME(string[.xpm])"
+# define	NB_PARAMS_PAT				2
+# define	ERR_PARAMS_PAT				"Pattern TYPE(int[0_chk, 1_lines, 2_spr_2_col, 3_spr_grad]) RATIO([int[>0]])"
 # define	ERR_INFO_TYPE				"Invalid information type"
 # define	ERR_GEOM_TYPE				"Geometry type not implemented"
 # define	ERR_NB_COMPS_VEC			"Vector should have 3 components"
@@ -75,6 +83,7 @@
 # define	ERR_NUM						"Not a valid number"
 # define	ERR_INT						"Not a valid int number"
 # define	ERR_DEC						"Not a valid decimal number"
+# define	ERR_PAT						"Not a valid pattern number"
 # define	ERR_NEGATIVE_NUM			"Input should be a positive number"
 # define	ERR_OUT_OF_INT				"Input is out of range"
 # define	ERR_OUT_OF_RATIO			"Ratio should be in range [0.0-1.0]"
@@ -91,8 +100,12 @@
 # define	ERR_NO_PARAMS_LIGHT			"Missing light parameters"
 # define	ERR_NO_PARAMS_CAMERA		"Missing camera parameters"
 # define	ERR_DUPLICATE_CAMERA		"Camera parameters were already set"
-# define	ERR_OPEN_FILE				"File could not be open"
+# define	ERR_OPEN_RT_FILE			".rt file could not be open"
+# define	ERR_OPEN_XPM_FILE			".xpm file could not be open"
 # define	ERR_IS_NOT_RT_FILE			"File is not an .rt file"
+# define	ERR_IS_NOT_XPM_FILE			"File is not an .xpm file"
+# define	ERR_LOADING_XPM_TEXT		".xpm texture image could not be loaded"
+# define	ERR_LOADING_XPM_BUMP		".xpm bump image could not be loaded"
 # define	ERR_NB_ARGUMENTS			"Program requires 1 argument: the scene info as an .rt file"
 
 # define	PI	3.1415926535897932385
@@ -103,6 +116,8 @@
 # define	SAMPLES_PER_PIXEL 20
 # define	REFRESH_FREQ 20
 # define	NORMAL_MODE 0
+# define	SHADOW_BIAS 0.01
+# define	CLOSE_VOLUMES 0
 
 typedef struct s_httbl	t_httbl;
 
@@ -128,6 +143,15 @@ typedef enum	e_mat_types {
 	DIFF_LIGHT,
 	LEN_MAT_TYPES
 }	t_mat_types;
+
+typedef enum	e_pat_types {
+	CHECKBOARD,
+	LINES_LONG,
+	LINES_LAT,
+	SPIRAL_2_COLORS,
+	//SPIRAL_GRADIENT,
+	LEN_PAT_TYPES
+}	t_pat_types;
 
 typedef struct	s_vec3
 {
@@ -177,9 +201,9 @@ typedef struct	s_quad
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	nrm;
-	double	d;
 	t_vec3	q;
 	t_vec3	w;
+	double	d;
 }	t_quad;
 
 typedef struct	s_box
@@ -201,6 +225,7 @@ typedef struct	s_sphere
 {
 	t_vec3	ctr;
 	double	rd;
+	t_vec3	ax;
 }	t_sphere;
 
 typedef struct	s_cylinder
@@ -280,9 +305,40 @@ typedef struct	s_diff_light
 	double	ratio;
 }	t_diff_light;
 
+typedef struct	s_image {
+	void	*ptr;
+	char	*addr;
+	int		w;
+	int		h;
+	int		bpp;
+	int		line_length;
+	int		endian;
+}	t_image;
+
+typedef struct	s_texture {
+	bool	is_present;
+	char	*path;
+	t_image	img;
+}	t_texture;
+
+typedef struct	s_pattern {
+	bool		is_present;
+	t_pat_types	type;
+	int			ratio;
+}	t_pattern;
+
+typedef struct	s_bump {
+	bool	is_present;
+	char	*path;
+	t_image	img;
+}	t_bump;
+
 typedef struct	s_material
 {
 	t_mat_types			type;
+	t_texture			txm;
+	t_bump				bmp;
+	t_pattern			pat;
 	union
 	{
 		t_lamber		lamber;
@@ -327,12 +383,14 @@ typedef struct	s_httbl {
 }	t_httbl;
 
 typedef struct	s_hit_rec {
-	t_geom_types	geom_type;
+	//t_geom_types	geom_type;
+	t_httbl			*httbl;
 	t_vec3			p;
+	t_vec3			uv;
 	t_vec3			nrm;
 	double			t;
 	bool			front_face;
-	t_mat_types		mat;
+	t_mat_types		mat_type;
 	t_vec3 			att;
 	t_ray			sctt;
 	union
@@ -343,14 +401,6 @@ typedef struct	s_hit_rec {
 		t_diff_light	diff_light;
 	};
 }	t_hit_rec;
-
-typedef struct	s_image {
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian;
-}	t_image;
 
 typedef struct	s_camera {
 	bool	set;
@@ -392,7 +442,6 @@ typedef struct	s_mlx
 {
 	void	*ptr;
 	void	*win_ptr;
-	t_image	image;
 }	t_mlx;
 
 typedef struct	s_ambient
@@ -416,8 +465,7 @@ typedef struct	s_rt
 	bool			set_resolution;
 	bool			set_algo;
 	bool			set_point_light;
-	int				img_w;
-	int				img_h;
+	t_image			img;
 	t_mlx			mlx;
 	t_camera		cam;
 	t_world			world;
@@ -425,6 +473,7 @@ typedef struct	s_rt
 	int				max_depth;
 	int				estim_sec;
 	struct timeval	begin_time;
+	t_httbl			*cur_httbl;
 	int				tp_expect;
 	int				tp_count;
 	int				tp_avail;
@@ -440,10 +489,19 @@ typedef struct	s_rt
 	t_light			tp_light;
 	int				tp_ret;
 	t_trsf			tp_trsf;
+	bool			tp_has_txm;
+	char			*tp_txm_path;
+	bool			tp_has_bmp;
+	char			*tp_bmp_path;
+	bool			tp_has_pat;
+	int				tp_pat;
+	int				tp_pat_ratio;
+	bool			tp_shadow_comp;
 }	t_rt;
 
 //parsing_file.c
 bool		is_rt_file(char *file_path);
+bool		is_xpm_file(char *file_path);
 int			read_file(t_rt *rt, int fd);
 char		*clean_line(char *line);
 bool		is_incomplete_file(t_rt *rt);
@@ -464,6 +522,7 @@ int	parse_dbl_0180(char* str, double *num);
 //parsing_types_2.c
 int	parse_dbl_vec3(char* str, t_vec3 *vec);
 int	parse_color(char* str, t_vec3 *color);
+int	parse_pat(char *str, int *num);
 //char	*get_info_type(char *line);
 
 //parsing_geom.c
@@ -497,35 +556,41 @@ int	parse_dielectric(t_rt *rt);
 int	parse_metal(t_rt *rt);
 int	parse_diff_light(t_rt *rt);
 
+//parsing_txm_pat.c
+int	parse_texture(t_rt *rt);
+int	parse_bump(t_rt *rt);
+int	parse_pattern(t_rt *rt);
+
 //main.c
 int	mini_rt(t_rt *rt);
 int	ft_exit(t_rt *rt);
 
-//mlx.c
-int			mlx_initialize(t_mlx *mlx, int img_w, int img_h);
-int			image_create(t_mlx *mlx, int img_w, int img_h);
-int			image_update(t_mlx *mlx);
-int			my_mlx_pixel_put(t_image img, int x, int y, int color);
-
-//color_convert.c
-t_vec3		vec2rgb(t_vec3 color);
-t_vec3		rgb2vec(t_vec3 color);
-t_vec3		lin2gam_vec(t_vec3 lin);
-double		rgb2val(t_vec3 color);
-
 //test.c
-int			test_vec3_operations(void);
+int		test_vec3_operations(void);
 
-//ray_color.c
-t_vec3		ray_color(t_rt *rt, int depth, t_ray r);
-t_vec3		ray_color_grad_blue(t_ray r);
-t_vec3		ray_color_grad_red(t_ray r);
-t_vec3		ray_color_grad_violet(t_ray r);
-t_vec3		ray_color_grad_yellow(t_ray r);
-t_vec3		ray_color_grad_sunset(t_ray r);
-t_vec3		ray_color_red();
+//rt_mlx.c
+int	on_key_press(int keycode, t_mlx *mlx_data);
+int	mlx_initialize(t_mlx *mlx, int w, int h);
 
-//ray_compute.c
+//rt_image.c
+int		image_create(t_mlx *mlx, t_image *img, int w, int h);
+int		image_update(t_mlx *mlx, t_image img);
+int		my_mlx_pixel_put(t_image img, int x, int y, int color);
+t_vec3	get_pixel_color(t_image *img, t_vec3 uv);
+double	get_bump_gradient(t_image *img, t_vec3 uv, int dir, double coeff);
+
+//rt_bumps.c
+void	modify_bump_normal(t_vec3 *nrm, t_vec3 ref, double grad_u, double grad_v);
+void	alter_normal_with_bump(t_rt *rt, t_hit_rec *rec);
+
+//rt_ray_color.c
+t_vec3	ray_color(t_rt *rt, int depth, t_ray r);
+
+//rt_lights.c
+t_vec3	reflected_lights(t_rt *rt, t_hit_rec *rec);
+t_vec3	ray_color_grad_blue(t_ray r);
+
+//rt_ray_compute.c
 t_vec3		reflect(t_vec3 v, t_vec3 n);
 t_vec3		refract(t_vec3 r_in, t_vec3 n, double eta_in_over_out);
 double		reflectance(double cosine, double ref_idx);
@@ -535,7 +600,7 @@ t_ray		get_ray(t_camera *cam, int i, int j);
 void	cam_initialize(t_rt *rt);
 void	cam_viewport_compute(t_rt *rt);
 
-//rt_render.c
+//rt_render.cj
 int		render(t_rt *rt);
 int		render_innerloop(t_rt *rt, int j);
 void	time_estimation(t_rt *rt);
@@ -543,10 +608,11 @@ void	progress_compute(t_rt *rt, int j);
 
 //rt_hit_record.c
 void	set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
+void	set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr, double rd);
 void	set_rec_mat(t_rt *rt, t_hit_rec *rec);
 
 //rt_initialize.c
-void		rt_initialize(t_rt *rt);
+int		rt_initialize(t_rt *rt);
 
 //rt_world.c
 int		world_populate(t_world *world);
@@ -554,19 +620,20 @@ bool	check_hit_httbl(t_rt *rt, t_ray *r, t_itv *tray, t_hit_rec *rec);
 bool	world_hit(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //geom_special_build.c
-void		add_box_quads(t_world *world, t_box *box, t_material *mat);
-void		add_dice_dots(t_world *world, t_box *box);
-void		add_dice_face(t_world *world, t_box *box, t_dice_dots dice_dots);
-void		add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat);
-void		add_con_discs(t_world *world, t_geometry *geom, t_material *mat);
-void		create_safe_cone(t_world *world, t_safe_cone *sfc);
-void		create_safe_cone_base(t_world *world, t_safe_cone *sfc, t_vec3 rot_ax, double rot_an);
+void add_box_quads(t_world *world, t_box *box, t_material *mat);
+void add_dice_dots(t_world *world, t_box *box);
+void add_dice_face(t_world *world, t_box *box, t_dice_dots dice_dots);
+void add_cyl_discs(t_world *world, t_geometry *geom, t_material *mat);
+void add_con_discs(t_world *world, t_geometry *geom, t_material *mat);
+void create_safe_cone(t_world *world, t_safe_cone *sfc);
+void create_safe_cone_base(t_world *world, t_safe_cone *sfc, t_vec3 rot_ax, double rot_an);
 
 //geom_object_transform.c
 void	geom_translate(t_rt *rt);
 void	geom_rotate(t_rt *rt);
 void	cylinder_rotate(t_rt *rt);
 void	cone_rotate(t_rt *rt);
+void	sphere_rotate(t_rt *rt);
 
 //httbl_create.c
 t_httbl		*new_httbl(t_geometry *geom, t_material *mat);
@@ -602,6 +669,7 @@ bool		hit_disc(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 //httbl_sphere.c
 t_sphere	sphere(t_vec3 ctr, double r);
 t_geometry	*geom_sphere(t_sphere sph);
+void		reverse_geom_sphere(t_geometry *geom);
 bool		hit_sphere(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
 //httbl_cylinder.c
@@ -634,6 +702,9 @@ t_geometry	*geom_pencil(t_pencil pnc);
 //utils_math.c
 double		ft_min(double n1, double n2);
 double		ft_max(double n1, double n2);
+double		ft_abs(double a);
+double		ft_modulo(double x, double y);
+int			next_modulo(int x, int mod);
 
 //utils_convert_1.c
 double		deg2rad(double deg);
@@ -660,16 +731,16 @@ int	is_in_range0180 (double num);
 double	array_size(char **params);
 
 //utils_random_1.c
-t_vec3	get_random_dev(t_camera *cam);
-double	random_double(void);
-double	random_double_interval(double min, double max);
-t_vec3	random_vec3_interval(double min, double max);
-t_vec3	random_in_unit_sphere(void);
+t_vec3	get_rdm_dev(t_camera *cam);
+double	rdm_dbl(void);
+double	rdm_dbl_itv(double min, double max);
+t_vec3	rdm_vec3_itv(double min, double max);
+t_vec3	rdm_in_unit_sphere(void);
 
 //utils_random_2.c
-t_vec3	random_unit_vector(void);
-t_vec3	random_in_same_hemisphere(t_vec3 nrm);
-t_vec3	random_in_unit_disk(void);
+t_vec3	rdm_unit_vector(void);
+t_vec3	rdm_in_same_hemisphere(t_vec3 nrm);
+t_vec3	rdm_in_unit_disk(void);
 t_vec3	pixel_sample_square(t_camera *cam);
 t_vec3	defocus_disk_sample(t_camera *cam);
 
@@ -704,7 +775,7 @@ bool	search_poly_root_2(t_h_pol *h_pol, t_itv tray, double *root_1, double *root
 bool	solve_h_pol(t_h_pol *h_pol);
 
 //utils_memory.c
-void	free_httbls(t_httbl *httbl);
+void	free_httbls(t_world *world);
 void	free_split_vec(char **vec);
 
 //utils_parsing.c
@@ -716,12 +787,28 @@ void	rt_re_init(t_rt *rt);
 t_vec3	hit_pt(t_ray r, double t);
 t_ray	new_ray(t_vec3 orig, t_vec3 dir);
 
-//itv.c
+//utils_colors.c
+t_vec3		vec2rgb(t_vec3 col);
+t_vec3		vec2hsv(t_vec3 col);
+t_vec3		rgb2vec(t_vec3 col);
+t_vec3		lin2gam_vec(t_vec3 lin);
+double		rgb2val(t_vec3 col);
+t_vec3		val2rgb(int rgb);
+t_vec3		compl_color(t_vec3 col);
+t_vec3		hsv2rgb(t_vec3 hsv);
+t_vec3		mix_colors(t_vec3 col_1, t_vec3 col_2, double a);
+t_vec3		shaded_3_colors(t_vec3 col_1, t_vec3 col_2, t_vec3 col_3, double b, double a);
+
+//utils_debug.c
+void	debug(char *msg);
+
+//utils_interval.c
 t_itv	itv(double min, double max);
-bool	cts(t_itv intrvl, double x);
-bool	srs(t_itv intrvl, double x);
-int		sts(t_itv intrvl, double x);
-double	clamp(t_itv intrvl, double x);
+t_itv	itv_rdm_span(double min, double max, double span);
+bool	cts(t_itv itv, double x);
+bool	srs(t_itv itv, double x);
+int		sts(t_itv itv, double x);
+double	clamp(t_itv itv, double x);
 
 //mat_lambertian.c
 t_lamber	lamber(t_vec3 color);
@@ -740,8 +827,10 @@ t_diff_light	diff_light(double ratio, t_vec3 color);
 t_material	*mat_diff_light(t_diff_light diff_light);
 
 //mat_create.c
-void		mat_create(t_rt *rt);
+void		mat_finalize(t_rt *rt);
 t_material	*duplicate_mat(t_material *src);
+int			handle_textures(t_rt *rt);
+int			handle_bumps(t_rt *rt);
 
 //mat_scatter.c
 bool		lambertian_scatter(t_hit_rec *rec);
@@ -792,8 +881,20 @@ void	display_httbl(t_httbl *httbl, int id);
 //scene_random_logo42_create.c
 bool	is_inside(double x, double r, double min, double max);
 bool	is_in_logo42(t_sphere sph, t_vec3 p, double h);
-void	random_logo42_sphere(t_world *world, double h, int nb_spheres);
+void	rdm_logo42_sphere(t_world *world, double h, int nb_spheres);
 bool	is_overlaying(t_httbl *httbl, t_sphere sph);
 bool	is_overlaying_xz(t_httbl *httbl, t_sphere sph);
+
+//rt_patterns.c
+bool	checkboard_zone(t_vec3 uv, double scale);
+bool	long_zone(t_vec3 uv, double scale);
+bool	lat_zone(t_vec3 uv, double scale);
+bool	spiral_zone(t_vec3 uv, double scale);
+t_vec3	pattern_color(bool zone_pattern, t_vec3 color_even, t_vec3 color_odd);
+t_vec3	checkboard_pattern(t_vec3 uv, double scale, t_vec3 color_even, t_vec3 color_odd);
+t_vec3	spiral_pattern(t_vec3 uv, double scale, t_vec3 color_even, t_vec3 color_odd);
+t_vec3	spiral_colors(t_vec3 uv, double scale);
+t_vec3	gradient_color_spiral(t_vec3 uv, double scale, t_itv itv);
+t_vec3	spiral_3_colors(t_vec3 uv, double b, double scale);
 
 #endif // MINI_RT_H

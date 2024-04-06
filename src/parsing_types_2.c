@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 05:28:46 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:16:07 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,12 @@ int	parse_color(char *str, t_vec3 *color)
 	}
 	free_split_vec(params);
 	return (ret);
+}
+
+int	parse_pat(char *str, int *num)
+{
+	if (!is_long(str) || str2dbl(str) >= LEN_PAT_TYPES)
+		return (display_error_plus(ERR_PAT, str));
+	*num = str2dbl(str);
+	return (0);
 }

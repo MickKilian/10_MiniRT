@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 04:57:28 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/28 01:58:25 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	parse_line(t_rt *rt, char *line)
 		rt->tp_ret = parse_extra(rt);
 	if (!rt->tp_ret && rt->tp_geom)
 	{
-		mat_create(rt);
+		mat_finalize(rt);
 		httbl_create(rt);
 	}
 	if (rt->tp_params)

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 02:25:58 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 18:35:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/28 11:05:28 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	lambertian_scatter(t_hit_rec *rec)
 {
 	t_vec3	sctt_dir;
 
-	sctt_dir = vec3_add2(rec->nrm, random_unit_vector());
+	sctt_dir = vec3_add2(rec->nrm, rdm_unit_vector());
 	if (vec3_is_nz(sctt_dir))
 		sctt_dir = rec->nrm;
 	rec->sctt = new_ray(rec->p, sctt_dir);
@@ -30,7 +30,7 @@ bool	metal_scatter(t_ray r_in, t_hit_rec *rec)
 
 	refl = reflect(vec3_unit(r_in.dir), rec->nrm);
 	rec->sctt = new_ray(rec->p, vec3_add2(refl, vec3_scale(rec->metal.fuzz,
-					random_unit_vector())));
+					rdm_unit_vector())));
 	rec->att = rec->metal.color;
 	return (1);
 }
@@ -51,7 +51,7 @@ bool	dielectric_scatter(t_ray r_in, t_hit_rec *rec)
 					vec3_unit(r_in.dir)), rec->nrm), 1.0);
 	sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 	cannot_refract = refr_ratio * sin_theta > 1.0;
-	if (cannot_refract || reflectance(cos_theta, refr_ratio) > random_double())
+	if (cannot_refract || reflectance(cos_theta, refr_ratio) > rdm_dbl())
 		dir = reflect(vec3_unit(r_in.dir), rec->nrm);
 	else
 	dir = refract(vec3_unit(r_in.dir), rec->nrm, refr_ratio);

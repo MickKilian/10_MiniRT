@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:21:16 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 14:06:49 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 05:13:57 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,24 @@ void	httbl_record(t_world *world, t_geometry *geom, t_material *mat)
 		add_dice_dots(world, &geom->box);
 		return ;
 	}
-	else if (geom->type == CYLINDER)
-		add_cyl_discs(world, geom, mat);
-	else if (geom->type == CONE)
-		add_con_discs(world, geom, mat);
+
+	else if (CLOSE_VOLUMES)
+	{
+		if (geom->type == CYLINDER)
+			add_cyl_discs(world, geom, mat);
+		else if (geom->type == CONE)
+			add_con_discs(world, geom, mat);
+	}
 	else if (geom->type == SAFE_CONE)
 	{
 		create_safe_cone(world, &geom->sfc);
 		return ;
 	}
+	//if (geom->type == POINT)
+	//{
+	//	display_vec3(mat->diff_light.color);
+	//	printf("\n");
+	//}
 	httbl_addback(world, new_httbl(geom, mat));
 }
 

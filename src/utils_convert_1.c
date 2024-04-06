@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 20:41:26 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 06:35:21 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/25 11:57:17 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,9 @@ t_vec3	deg2rad_vec3(t_vec3 vec)
 double	lin2gam_double(double linear)
 {
 	return (sqrt(linear));
+}
+
+t_vec3	compl_color(t_vec3 clr)
+{
+	return (vec3_sub2(new_vec3(1, 1, 1), clr));
 }

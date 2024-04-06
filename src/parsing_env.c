@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 00:17:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/02 01:33:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	parse_resolution_params(t_rt *rt)
 	}
 	else
 		h = w / ASPECT_RATIO;
-	rt->img_w = (int)w;
-	rt->img_h = (int)h;
-	rt->aspect_ratio = (double)rt->img_h / (double)rt->img_h;
+	rt->img.w = (int)w;
+	rt->img.h = (int)h;
+	rt->aspect_ratio = (double)rt->img.w / (double)rt->img.h;
 	rt->set_resolution = 1;
 	rt->tp_option = 0;
 	return (0);

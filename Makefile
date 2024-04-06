@@ -6,14 +6,13 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/03/23 07:01:06 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/06 09:27:23 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .DEFAULT_GOAL	= all
 
 PRIM_SRCS	=	main.c \
-				color_convert.c \
 				display_errors.c display_geometry.c display_material.c \
 				display_simple.c display_world.c \
 				geom_basic_translate.c geom_basic_rotate.c \
@@ -30,15 +29,18 @@ PRIM_SRCS	=	main.c \
 				parsing_file.c parsing_general.c \
 				parsing_geom_1.c parsing_geom_2.c parsing_geom_3.c \
 				parsing_types_1.c parsing_types_2.c \
-				ray_color.c ray_compute.c \
+				parsing_txm_pat.c \
+				rt_ray_color.c rt_ray_compute.c rt_lights.c \
 				rt_camera.c rt_hit_record.c rt_initialize.c rt_world.c \
-				rt_render.c \
+				rt_render.c rt_mlx.c rt_image.c \
+				rt_patterns.c rt_bumps.c \
 				utils_array.c utils_convert_1.c utils_convert_2.c \
-				utils_interval.c utils_math.c utils_memory.c utils_mlx.c \
-				utils_numbers_1.c utils_numbers_2.c \
+				utils_interval.c utils_math.c utils_memory.c \
+				utils_numbers_1.c utils_numbers_2.c utils_colors.c \
 				utils_quadratic_solve.c utils_parsing.c \
 				utils_random_1.c utils_random_2.c utils_ray.c \
-				utils_vec3_1.c utils_vec3_2.c utils_vec3_3.c utils_vec3_4.c
+				utils_vec3_1.c utils_vec3_2.c utils_vec3_3.c utils_vec3_4.c \
+				utils_debug.c
 PRIM_SRCDIR	=	src
 PRIM_PATH	=	$(addprefix $(PRIM_SRCDIR)/, $(PRIM_SRCS))
 PRIM_OBJDIR	=	obj

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 06:41:05 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/02 04:40:23 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,13 @@ bool	hit_plane(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 
 	nrm = vec3_unit(rt->world.httbl->geom->pln.d);
 	d = vec3_dot(nrm, rt->world.httbl->geom->pln.q);
-	if (fabs(vec3_dot(nrm, r.dir)) < EPSILON)
+	if (ft_abs(vec3_dot(nrm, r.dir)) < EPSILON)
 		return (0);
 	rec->t = (d - vec3_dot(nrm, r.orig)) / vec3_dot(nrm, r.dir);
 	if (!cts(tray, rec->t))
 		return (0);
 	rec->p = hit_pt(r, rec->t);
+	rec->httbl = rt->world.httbl;
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, nrm, rec);
 	return (1);

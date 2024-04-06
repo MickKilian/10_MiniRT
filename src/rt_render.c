@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 04:41:21 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/02 04:01:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	render(t_rt *rt)
 	j = 0;
 	time_estimation(rt);
 	progress_compute(rt, j);
-	while (j < rt->img_h)
+	while (j < rt->img.h)
 	{
-		while (j < rt->img_h && j / 10 == (j + 1) / 10)
+		while (j < rt->img.h && j / 10 == (j + 1) / 10)
 		{
 			render_innerloop(rt, j);
 			j++;
@@ -31,6 +31,7 @@ int	render(t_rt *rt)
 		j++;
 	}
 	printf("\rDone in  : \n");
+	image_update(&rt->mlx, rt->img);
 	return (0);
 }
 
@@ -42,9 +43,9 @@ void	progress_compute(t_rt *rt, int j)
 	gettimeofday(&cur_time, NULL);
 	cur_sec = (int)(((cur_time.tv_sec - rt->begin_time.tv_sec) * 1000000
 				+ cur_time.tv_usec - rt->begin_time.tv_usec) / 1000000);
-	if (j > rt->img_h * 0.75)
-		rt->estim_sec = cur_sec * rt->img_h / j;
-	printf("\rProgress : %d / %d sec", cur_sec, rt->estim_sec);
+	if (j > rt->img.h * 0.75)
+		rt->estim_sec = cur_sec * rt->img.h / j;
+	printf("\rProgress : %d / %d sec ", cur_sec, rt->estim_sec);
 	fflush(stdout);
 }
 
@@ -55,7 +56,7 @@ int	render_innerloop(t_rt *rt, int j)
 	int		k;
 
 	i = 0;
-	while (i < rt->img_w)
+	while (i < rt->img.w)
 	{
 		pixel_color = new_vec3(0, 0, 0);
 		k = 0;
@@ -66,7 +67,7 @@ int	render_innerloop(t_rt *rt, int j)
 			k++;
 		}
 		pixel_color = vec3_scale(1.0 / (double)rt->spp, pixel_color);
-		my_mlx_pixel_put(rt->mlx.image, i, j,
+		my_mlx_pixel_put(rt->img, i, j,
 			rgb2val(vec2rgb(lin2gam_vec(pixel_color))));
 		i++;
 	}
@@ -84,17 +85,17 @@ void	time_estimation(t_rt *rt)
 	gettimeofday(&b_time, NULL);
 	render_innerloop(rt, 0);
 	gettimeofday(&e_time, NULL);
-	estim = (int)((rt->img_h) * ((e_time.tv_sec - b_time.tv_sec)
+	estim = (int)((rt->img.h) * ((e_time.tv_sec - b_time.tv_sec)
 				* 1000000 + e_time.tv_usec - b_time.tv_usec) / 1000000);
 	gettimeofday(&b_time, NULL);
-	render_innerloop(rt, rt->img_h / 3);
+	render_innerloop(rt, rt->img.h / 3);
 	gettimeofday(&e_time, NULL);
-	estim += (int)((rt->img_h) * ((e_time.tv_sec - b_time.tv_sec)
+	estim += (int)((rt->img.h) * ((e_time.tv_sec - b_time.tv_sec)
 				* 1000000 + e_time.tv_usec - b_time.tv_usec) / 1000000);
 	gettimeofday(&b_time, NULL);
-	render_innerloop(rt, rt->img_h * 0.666);
+	render_innerloop(rt, rt->img.h * 0.666);
 	gettimeofday(&e_time, NULL);
-	estim += (int)((rt->img_h) * ((e_time.tv_sec - b_time.tv_sec)
+	estim += (int)((rt->img.h) * ((e_time.tv_sec - b_time.tv_sec)
 				* 1000000 + e_time.tv_usec - b_time.tv_usec) / 1000000);
 	rt->estim_sec = estim / 3;
 }

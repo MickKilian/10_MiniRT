@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 09:55:14 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/25 13:36:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	geom_translate(t_rt *rt)
 void	geom_rotate(t_rt *rt)
 {
 	if (rt->tp_geom->type == SPHERE)
-		;
+		sphere_rotate(rt);
 	else if (rt->tp_geom->type == QUAD)
 		rot_2v(rt->tp_trsf, &rt->tp_geom->qud.u, &rt->tp_geom->qud.v);
 	else if (rt->tp_geom->type == DISC)
@@ -78,5 +78,17 @@ void	cone_rotate(t_rt *rt)
 	rt->tp_geom->con.gen = rot_v(rt->tp_geom->con.gen, rt->tp_trsf.rot_ax,
 			rt->tp_trsf.rot_an);
 	rt->tp_geom = geom_cone(rt->tp_geom->con);
+	free (tp_ptr);
+}
+
+void	sphere_rotate(t_rt *rt)
+{
+	t_geometry	*tp_ptr;
+
+	tp_ptr = rt->tp_geom;
+	reverse_geom_sphere(rt->tp_geom);
+	rt->tp_geom->sph.ax = rot_v(rt->tp_geom->sph.ax, rt->tp_trsf.rot_ax,
+			rt->tp_trsf.rot_an);
+	rt->tp_geom = geom_sphere(rt->tp_geom->sph);
 	free (tp_ptr);
 }

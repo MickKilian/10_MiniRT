@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 10:03:59 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/03/28 07:40:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	create_safe_cone(t_world *world, t_safe_cone *sfc)
 
 	i = 5;
 	rot_an = acos(vec3_dot(new_vec3(0, 0, 1), sfc->gen));
-	if (fabs(rot_an - PI) < EPSILON)
+	if (ft_abs(rot_an - PI) < EPSILON)
 		create_safe_cone_base(world, sfc, new_vec3(0, 1, 0), rot_an);
 	else
 		create_safe_cone_base(world, sfc, vec3_unit(

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 16:53:27 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/06 09:28:31 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ int	parse_extra(t_rt *rt)
 		return (parse_metal(rt));
 	else if (ft_strcmp(rt->tp_params[rt->tp_count], "dif") == 0)
 		return (parse_diff_light(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "pat") == 0)
+		return (parse_pattern(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "txm") == 0)
+		return (parse_texture(rt));
+	else if (ft_strcmp(rt->tp_params[rt->tp_count], "bmp") == 0)
+		return (parse_bump(rt));
 	else
 		return (display_error_plus(ERR_INFO_TYPE,
 				rt->tp_params[rt->tp_count]));

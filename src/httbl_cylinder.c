@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 10:10:00 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/02 04:39:54 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ bool	hit_cylinder_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 	}
 	else
 		return (0);
+	rec->httbl = rt->world.httbl;
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, vec3_unit(vec3_prd(
 				vec3_sub2(rec->p, rt->world.httbl->geom->cyl.ctr),
