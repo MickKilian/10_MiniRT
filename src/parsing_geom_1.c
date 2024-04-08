@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 07:04:16 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 06:33:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 int	parse_sphere(t_rt *rt)
 {
 	t_vec3	q;
-	double	rd;
+	double	dia;
 
 	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &rd))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &dia))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->tp_geom = geom_sphere(sphere(q, rd));
+	rt->tp_geom = geom_sphere(sphere(q, dia / 2));
 	return (0);
 }
 
@@ -34,7 +34,7 @@ int	parse_plane(t_rt *rt)
 
 	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
+	else if (parse_dbl_vec3_n1_1_norm(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
@@ -46,20 +46,20 @@ int	parse_cylinder(t_rt *rt)
 {
 	t_vec3	q;
 	t_vec3	dir;
-	double	rd;
+	double	dia;
 	double	h;
 
 	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
+	else if (parse_dbl_vec3_n1_1_norm(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &rd))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &dia))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &h))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &h))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->tp_geom = geom_cylinder(cylinder(q, dir, rd, h));
+	rt->tp_geom = geom_cylinder(cylinder(q, dir, dia / 2, h));
 	return (0);
 }
 
@@ -67,23 +67,23 @@ int	parse_cone(t_rt *rt)
 {
 	t_vec3	q;
 	t_vec3	dir;
-	double	r_min;
-	double	r_max;
+	double	d_min;
+	double	d_max;
 	double	h;
 
 	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
-	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
+	else if (parse_dbl_vec3_n1_1_norm(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &r_min))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &d_min))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &r_max))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &d_max))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &h))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &h))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->tp_geom = geom_cone(cone(q, vec3_scale(h, dir), r_min, r_max));
+	rt->tp_geom = geom_cone(cone(q, vec3_scale(h, dir), d_min / 2, d_max / 2));
 	return (0);
 }
 

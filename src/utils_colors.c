@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:51:59 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/28 14:37:29 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 06:56:06 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,28 @@ t_vec3	vec2rgb(const t_vec3 col)
 
 t_vec3	vec2hsv(t_vec3 col)
 {
-	t_vec3	col_hsv;
+	t_vec3	hsv;
+	double	cmin;
+	double	cmax;
+	double	delta;
 
-	col_hsv.x = 360 * col.x;
-	col_hsv.y = col.y;
-	col_hsv.z = col.z;
-	return (col_hsv);
+	cmin = ft_min3(col.x, col.y, col.z);
+	cmax = ft_max3(col.x, col.y, col.z);
+    delta = cmax - cmin;
+	if (delta == 0)
+		hsv.x = 0;
+	else if (cmax == col.x)
+		hsv.x = 60 * ft_modulo((col.y - col.z) / delta, 6);
+	else if (cmax == col.y)
+		hsv.x = 60 * (((col.z - col.x) / delta) + 2);
+	else
+		hsv.x = 60 * (((col.x - col.y) / delta) + 4);
+	if (cmax == 0)
+		hsv.y = 0;
+	else
+		hsv.y = delta / cmax;
+	hsv.z = cmax;
+	return (hsv);
 }
 
 t_vec3	rgb2vec(const t_vec3 col)
@@ -100,18 +116,13 @@ t_vec3	mix_colors(t_vec3 col_1, t_vec3 col_2, double a)
 	return (vec3_add2(vec3_scale(a, col_1), vec3_scale(1 - a, col_2)));
 }
 
-t_vec3	shaded_3_colors(t_vec3 col_1, t_vec3 col_2, t_vec3 col_3, double b, double a)
+t_vec3	limit_color_vec(t_vec3 col)
 {
-	if (a < b / 2.0)
-		return (col_1);
-	else if (a >= b / 2.0 && a < 0.5 - b / 2.0)
-		return (mix_colors(col_1, col_2, 1 - ((a - b / 2.0) / (0.5 - b))));
-	else if (a >= 0.5 - b / 2.0 && a < 0.5 + b / 2.0)
-		return (col_2);
-	else if (a >= 0.5 + b / 2.0 && a < 1.0 - b / 2.0)
-		return (mix_colors(col_2, col_3, 1 - ((a - 0.5 - b / 2.0) / (0.5 - b))));
-	else if (a >= 1.0 - b / 2.0)
-		return (col_3);
+	double	factor;
+
+	factor = ft_max3(col.x, col.y, col.z);
+	if (factor > 1)
+		return (vec3_scale(1 / factor, col));
 	else
-		return (col_3);
+		return (col);
 }

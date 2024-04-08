@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 18:06:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 06:33:06 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ int	parse_disc(t_rt *rt)
 {
 	t_vec3	q;
 	t_vec3	dir;
-	double	rd;
+	double	dia;
 
 	if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &q))
 		return (1);
 	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &rd))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &dia))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
-	rt->tp_geom = geom_disc(disc(q, dir, rd));
+	rt->tp_geom = geom_disc(disc(q, dir, dia / 2));
 	return (0);
 }
 
@@ -65,7 +65,7 @@ int	parse_dce(t_rt *rt)
 		return (1);
 	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir_2))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &size))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &size))
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
@@ -86,7 +86,7 @@ int	parse_safe_cone(t_rt *rt)
 		return (1);
 	else if (parse_dbl_vec3(rt->tp_params[++rt->tp_count], &dir))
 		return (1);
-	else if (parse_dbl(rt->tp_params[++rt->tp_count], &h))
+	else if (parse_dbl_pos(rt->tp_params[++rt->tp_count], &h))
 		return (1);
 	rt->tp_geom = geom_safe_cone(safe_cone(q, vec3_unit(dir), h));
 	return (0);

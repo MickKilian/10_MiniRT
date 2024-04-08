@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 01:45:29 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 01:01:23 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_vec3	ray_color(t_rt *rt, int depth, t_ray r)
 			metal_scatter(r, &rec);
 		else if (rec.mat_type == DIELECTRIC)
 			dielectric_scatter(r, &rec);
-		lighting_color = reflected_lights(rt, &rec);
+		lighting_color = point_lights(rt, &rec);
 		//printf("type : %d\n", rec.geom_type);
 		if (!NORMAL_MODE)
 			return (vec3_add2(lighting_color, vec3_prd(rec.att, ray_color(rt, depth - 1, rec.sctt))));

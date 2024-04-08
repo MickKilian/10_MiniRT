@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/02 03:46:58 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 04:28:19 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ void	cam_initialize(t_rt *rt)
 	rt->cam.defocus_angle = 0.0;
 	rt->cam.focus_dist = 10;
 	rt->cam.look_from = rt->cam.ctr;
-	rt->cam.look_at = vec3_add2(rt->cam.ctr, rt->cam.dir);
+	rt->cam.look_at = rt->cam.dir;
 	rt->cam.vup = new_vec3(0.0, 0.0, 1.0);
 	cam_viewport_compute(rt);
 	rt->cam.defocus_radius = rt->cam.focus_dist
 		* tan(deg2rad(rt->cam.defocus_angle / 2));
 	rt->cam.defocus_disk_u = vec3_scale(rt->cam.defocus_radius, rt->cam.u);
 	rt->cam.defocus_disk_v = vec3_scale(rt->cam.defocus_radius, rt->cam.v);
+	rt->cam.sampling = rt->spp > 1;
 }
 
 void	cam_viewport_compute(t_rt *rt)

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 19:45:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 12:31:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/07 15:48:09 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	set_rec_mat(t_rt *rt, t_hit_rec *rec)
 				rec->lamber.color = pattern_color(lat_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
 			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == SPIRAL_2_COLORS)
 				rec->lamber.color = pattern_color(spiral_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
-			//else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == SPIRAL_GRADIENT)
-			//	rec->lamber.color = gradient_color_spiral(rec->uv, rt->world.httbl->mat->pat.ratio,
-			//			itv_rdm_span(vec2hsv(rec->lamber.color).x, vec2hsv(rec->lamber.color).x, 60));
+			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == SPIRAL_GRADIENT)
+				rec->lamber.color = gradient_color_spiral(rec->uv, rt->world.httbl->mat->pat.ratio,
+						rec->lamber.color);
 		}
 	}
 	if (rec->mat_type == METAL)

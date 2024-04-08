@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/02 04:01:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 01:42:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	render_innerloop(t_rt *rt, int j)
 			k++;
 		}
 		pixel_color = vec3_scale(1.0 / (double)rt->spp, pixel_color);
+		pixel_color = limit_color_vec(pixel_color);
 		my_mlx_pixel_put(rt->img, i, j,
 			rgb2val(vec2rgb(lin2gam_vec(pixel_color))));
 		i++;

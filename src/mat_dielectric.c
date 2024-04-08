@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 03:19:19 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/22 07:22:35 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 01:27:42 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ t_material	*mat_dielec(t_dielec dielec)
 
 	mat = ft_calloc(1, sizeof(t_material));
 	mat->type = DIELECTRIC;
+	mat->color = dielec.color;
+	mat->light_conc = 0;
+	mat->k_d = 0;
+	mat->k_s = 0;
 	mat->dielec = dielec;
 	return (mat);
 }

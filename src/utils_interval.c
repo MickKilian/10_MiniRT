@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 01:29:53 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 12:18:14 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/07 16:05:53 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,10 @@ t_itv	itv(double min, double max)
 	return (itv);
 }
 
-t_itv	itv_rdm_span(double min, double max, double span)
+t_itv	itv_span(double min, double max, double span)
 {
 	double	ctr;
 
-	printf("min : %f %f\n", min, max);
 	ctr = (min + max) / 2;
 	return (itv(ctr - span / 2, ctr + span / 2));
 }

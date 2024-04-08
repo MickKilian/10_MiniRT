@@ -1,42 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_numbers_2.c                                  :+:      :+:    :+:   */
+/*   utils_math_1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 20:41:26 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 03:31:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/07 15:27:44 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-int	is_in_int_range(char *str)
+double	ft_min(double n1, double n2)
 {
-	if (ft_strlen(str) > 11 || str2dbl(str) < -2147483648
-		|| str2dbl(str) > 2147483647)
-		return (0);
-	return (1);
+	if (n1 <= n2)
+		return (n1);
+	else
+		return (n2);
 }
 
-int	is_in_range01(double num)
+double	ft_max(double n1, double n2)
 {
-	if (num < 0.0 || num > 1.0)
-		return (0);
-	return (1);
+	if (n1 >= n2)
+		return (n1);
+	else
+		return (n2);
 }
 
-int	is_in_range_n1_1(double num)
+double	ft_min3(double n1, double n2, double n3)
 {
-	if (num < -1.0 || num > 1.0)
-		return (0);
-	return (1);
+	return (ft_min(ft_min(n1, n2), n3));
 }
 
-int	is_in_range0180(double num)
+double	ft_max3(double n1, double n2, double n3)
 {
-	if (num < 0.0 || num > 180.0)
-		return (0);
-	return (1);
+	return (ft_max(ft_max(n1, n2), n3));
 }

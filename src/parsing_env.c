@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/02 01:33:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 06:19:26 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int	parse_ambient_params(t_rt *rt)
 
 int	parse_light_params(t_rt *rt)
 {
-	if (check_nb_params(rt, NB_PARAMS_POINT_LIGHT, ERR_PARAMS_POINT_LIGHT)
+	if ((!MULTI_LIGHTS && rt->set_point_light && display_error(ERR_DUPLICATE_PT_LIGHT))
+		|| check_nb_params(rt, NB_PARAMS_POINT_LIGHT, ERR_PARAMS_POINT_LIGHT)
 		|| (rt->tp_extra && display_error_plus(ERR_EXTRA_INFO,
 				rt->tp_params[rt->tp_count])))
 		return (1);
