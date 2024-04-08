@@ -3,120 +3,106 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/16 00:47:14 by mbourgeo          #+#    #+#             */
-/*   Updated: 2022/12/02 03:57:25 by mbourgeo         ###   ########.fr       */
+/*   Created: 2022/01/16 14:11:19 by aumarin           #+#    #+#             */
+/*   Updated: 2022/10/28 00:55:36 by aumarin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-char	*ft_read(char *buff, int fd)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		ret;
-	char	*tmp;
-
-	ret = 1;
-	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	while (ret != 0 && !ft_strchr(buff, '\n'))
-	{
-		ret = read(fd, tmp, BUFFER_SIZE);
-		if (ret == -1)
-		{
-			free(tmp);
-			return (NULL);
-		}
-		tmp[ret] = '\0';
-		buff = ft_strjoin_gnl(buff, tmp);
-	}
-	free(tmp);
-	return (buff);
-}
-
-char	*ft_next_line(char *str)
-{
-	char	*tmp;
-	int		i;
-	int		j;
+	char	*new_str;
+	size_t	total_len;
+	size_t	i;
+	size_t	s1_len;
 
 	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	if (!str[i])
-	{
-		free(str);
+	s1_len = ft_strlen(s1);
+	total_len = (s1_len + ft_strlen(s2));
+	new_str = malloc(sizeof(char) * (total_len + 1));
+	if (new_str == NULL)
 		return (NULL);
-	}
-	tmp = malloc(sizeof(char) * (ft_strlen(str) - i) + 1);
-	i++;
-	j = 0;
-	while (str[i + j])
+	while (i < total_len)
 	{
-		tmp[j] = str[i + j];
-		j++;
+		if (i < s1_len)
+			new_str[i] = s1[i];
+		else
+			new_str[i] = s2[i - s1_len];
+		i++;
 	}
-	tmp[j] = '\0';
-	free(str);
-	return (tmp);
+	new_str[i] = '\0';
+	free((char *)s1);
+	return (new_str);
 }
 
-char	*ft_get_line(char *str)
+char	*wrap_line(char *line)
 {
-	char	*line;
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
+	char	*wrapped_line;
 
 	i = 0;
 	j = 0;
-	while (str[i] && str[i] != '\n')
+	while (line[i] != '\n' && line[i])
 		i++;
-	if (str[i] == '\n')
-		line = malloc(sizeof(char) * (i + 2));
+	wrapped_line = malloc(sizeof(char) * (i + 2));
+	if (wrapped_line == NULL)
+		return (NULL);
+	while (line[j] != '\n' && line[j])
+	{
+		wrapped_line[j] = line[j];
+		j++;
+	}
+	wrapped_line[j] = '\n';
+	wrapped_line[j + 1] = '\0';
+	free(line);
+	return (wrapped_line);
+}
+
+void	update_buffer(char *buffer)
+{
+	char	*tmp;
+	char	*strchr_result;
+
+	strchr_result = ft_strchr(buffer, '\n');
+	if (strchr_result)
+	{
+		tmp = ft_strdup(strchr_result + 1);
+		ft_bzero(buffer, BUFFER_SIZE);
+		ft_strlcpy(buffer, tmp, BUFFER_SIZE);
+		free(tmp);
+	}
 	else
-		line = malloc(sizeof(char) * (i + 1));
-	while (str[j] && str[j] != '\n')
-	{
-		line[j] = str[j];
-		j++;
-	}
-	if (str[j] == '\n')
-	{
-		line[j] = '\n';
-		j++;
-	}
-	line[j] = '\0';
-	return (line);
+		ft_bzero(buffer, BUFFER_SIZE);
 }
 
 char	*get_next_line(int fd)
 {
+	static char	buffer[BUFFER_SIZE + 1];
 	char		*line;
-	static char	*buff;
 
-	if (fd == 42)
+	if (fd < 0)
+		return (NULL);
+	line = NULL;
+	if (ft_strlen(buffer) > 0)
 	{
-		free(buff);
-		return (NULL);
+		line = ft_strjoin(line, buffer);
+		update_buffer(buffer);
 	}
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	buff = ft_read(buff, fd);
-	if (!buff)
-		return (NULL);
-	if (!buff[0])
+	while (!ft_strchr(line, '\n'))
 	{
-		free(buff);
-		buff = NULL;
-		return (NULL);
+		if (read(fd, buffer, BUFFER_SIZE) < 1)
+		{
+			if (!line)
+				return (NULL);
+			return (ft_strjoin(line, buffer));
+		}
+		buffer[BUFFER_SIZE] = '\0';
+		line = ft_strjoin(line, buffer);
+		update_buffer(buffer);
 	}
-	line = ft_get_line(buff);
-	buff = ft_next_line(buff);
-	return (line);
+	return (wrap_line(line));
 }

@@ -3,87 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/16 00:44:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/02/23 03:22:43 by mbourgeo         ###   ########.fr       */
+/*   Created: 2022/01/16 14:11:05 by aumarin           #+#    #+#             */
+/*   Updated: 2022/03/19 23:44:33 by aumarin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < n)
+		((char *)s)[i] = 0;
+}
+
+size_t	ft_strlen(const char *s)
 {
 	int	i;
 
 	if (!s)
-		return (NULL);
+		return (0);
 	i = 0;
 	while (s[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	if (c == 0)
+		return ((char *)((s + ft_strlen(s))));
+	while (s[i])
 	{
-		if (s[i] == (char)c)
-			return ((char *)&s[i]);
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return ((char *)((s + i)));
 		i++;
 	}
-	if (c == s[i])
-		return ((char *)&s[i]);
 	return (NULL);
 }
 
-void	ft_bzero(void *s, size_t n)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	while (n > 0)
+	size_t	i;
+
+	i = 0;
+	if (dstsize == 0)
+		return (ft_strlen(src));
+	while (i < dstsize - 1 && src[i])
 	{
-		*(char *)s = '\0';
-		n--;
-		s++;
+		dst[i] = src[i];
+		i++;
 	}
+	dst[i] = '\0';
+	return (ft_strlen(src));
 }
 
-char	*ft_strjoin2(char *s1, char *s2, char *res)
+char	*ft_strdup(const char *s1)
 {
-	int	i;
-	int	j;
+	char	*str;
+	size_t	i;
+	size_t	len;
 
-	i = -1;
-	j = 0;
-	while (s1[++i])
-	{
-		res[j] = s1[i];
-		j++;
-	}
-	i = -1;
-	while (s2[++i])
-	{
-		res[j] = s2[i];
-		j++;
-	}
-	res[j] = '\0';
-	return (res);
-}
-
-char	*ft_strjoin_gnl(char *s1, char *s2)
-{
-	char	*res;
-
-	if (!s1)
-	{
-		s1 = malloc(1);
-		s1[0] = '\0';
-	}
-	if (!s1 || !s2)
-	{
-		free(s1);
+	len = ft_strlen(s1);
+	str = malloc(sizeof(char) * (len + 1));
+	if (str == NULL)
 		return (NULL);
-	}
-	res = malloc(sizeof(char) * ((ft_strlen((char *)s1)
-					+ ft_strlen((char *)s2)) + 1));
-	if (!res)
+	i = 0;
+	while (i < len)
 	{
-		free(s1);
-		return (0);
+		str[i] = s1[i];
+		i++;
 	}
-	res = ft_strjoin2(s1, s2, res);
-	free(s1);
-	return (res);
+	str[i] = '\0';
+	return (str);
 }
