@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 06:56:15 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 09:00:19 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@
 	"Cylinder CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
 	DIAMETER(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_CONE				6
+# define ERR_DIAS_CONE "Cone min and max diameters cannot be equal"
 # define ERR_PARAMS_CONE\
 	"Cone BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
 	MAX_DIAMETER(double[>=0]) MIN_DIAMETER(double[>=0]) HEIGHT(double[>=0]) \
@@ -159,7 +160,7 @@
 # define REFRESH_FREQ 20
 # define NORMAL_MODE 0
 # define SHADOW_BIAS 0.01
-# define CLOSE_VOLUMES 0
+# define CLOSE_VOLUMES 1
 # define MULTI_LIGHTS 0
 
 typedef struct s_httbl	t_httbl;
@@ -672,7 +673,9 @@ void			progress_compute(t_rt *rt, int j);
 
 //rt_hit_record.c
 void			set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
-void			set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr, double rd);
+void			set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr);
+void			set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h);
+void			set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h);
 void			set_rec_mat(t_rt *rt, t_hit_rec *rec);
 
 //rt_initialize.c

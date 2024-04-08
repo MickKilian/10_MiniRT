@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 19:45:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/07 15:48:09 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 08:15:07 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,36 @@ void	set_face_nrm(const t_ray r, const t_vec3 out_nrm, t_hit_rec *rec)
 		rec->nrm = vec3_unit(vec3_scale(-1.0, out_nrm));
 }
 
-void	set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr, double rd)
+void	set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr)
 {
-	double theta;
-	double phi;
+	double	theta;
+	double	phi;
 	t_vec3	unit_vec;
 
-	unit_vec = vec3_scale(1 / rd, vec3_sub2(rec->p, ctr));
+	unit_vec = vec3_unit(vec3_sub2(rec->p, ctr));
 	theta = acos(-unit_vec.z);
 	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
 	rec->uv = new_vec3(phi / (2 * PI), theta / PI, 0);
+}
+
+void	set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h)
+{
+	double	phi;
+	t_vec3	unit_vec;
+
+	unit_vec = vec3_unit(vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(ctr.x, ctr.y, 0)));
+	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
+	rec->uv = new_vec3(phi / (2 * PI), (rec->p.z - (ctr.z - (h / 2))) / h, 0);
+}
+
+void	set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h)
+{
+	double	phi;
+	t_vec3	unit_vec;
+
+	unit_vec = vec3_unit(vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(ctr.x, ctr.y, 0)));
+	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
+	rec->uv = new_vec3(phi / (2 * PI), (rec->p.z - (ctr.z - (h / 2))) / h, 0);
 }
 
 void	set_rec_mat(t_rt *rt, t_hit_rec *rec)
@@ -39,7 +59,7 @@ void	set_rec_mat(t_rt *rt, t_hit_rec *rec)
 	if (rec->mat_type == LAMBERTIAN)
 	{
 		rec->lamber = rt->world.httbl->mat->lamber;
-		if (rt->world.httbl->geom->type == SPHERE)
+		if (rt->world.httbl->geom->type == SPHERE || rt->world.httbl->geom->type == CYLINDER || rt->world.httbl->geom->type == CONE)
 		{
 			if (rt->world.httbl->mat->txm.is_present)
 				rec->lamber.color = get_pixel_color(&rt->world.httbl->mat->txm.img, rec->uv);

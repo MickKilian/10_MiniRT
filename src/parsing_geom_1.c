@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:49:27 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 06:33:26 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 08:50:02 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int	parse_cone(t_rt *rt)
 		return (1);
 	else if (parse_color(rt->tp_params[++rt->tp_count], &rt->tp_color))
 		return (1);
+	else if (d_min == d_max)
+		return (display_error(ERR_DIAS_CONE));
 	rt->tp_geom = geom_cone(cone(q, vec3_scale(h, dir), d_min / 2, d_max / 2));
 	return (0);
 }
