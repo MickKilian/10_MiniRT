@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 15:27:54 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 21:31:39 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ void	add_box_quads(t_world *world, t_box *box, t_material *mat)
 					vec3_add2(box->ctr,
 						vec3_scale(-1, box->v)), box->u, box->w)),
 			duplicate_mat(mat)));
+	if (mat->txm.is_present)
+		free(mat->txm.path);
+	if (mat->bmp.is_present)
+		free(mat->bmp.path);
 	free(mat);
 }
 
