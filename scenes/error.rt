@@ -1,0 +1,17 @@
+R	1200
+P	20				10
+A	0.1				255,255,255
+C	0,-20,5			0,0,0			70
+#L	-10,-3,0	1		255,255,255
+L	0,0,3	1		255,255,255
+
+#sp	0,0,-1000		1000			235,235,235	met	0.02 1	rot 0,1,0 90
+#sp	0,0,0		10			255,255,255 txm ./images/venusmap.xpm bmp ./images/venusbump.xpm
+#sp	0,0,0		10			255,255,0 txm ./images/earthmap1k.xpm 720 bmp ./images/earthbump1k.xpm 0
+#co	0,0,-5	0,0,1	10	5	10	255,255,0	txm ./images/earthmap1k.xpm 120 bmp ./images/earthbump1k.xpm 0
+#cy	0,0,0		0,0,1	10	10			255,0,0 pat 0 1 120 txm ./images/earthmap1k.xpm 120 bmp ./images/earthbump1k.xpm 0
+#cy	0,0,0		0,0,1	10	10			255,0,0 pat 0 1 120 bmp ./images/earthbump1k.xpm 0
+#sp	0,50,5		5			255,255,0 txm ./images/marsmap1k.xpm 0
+#sp	0,0,0		10			255,255,255 bmp ./images/venusbump.xpm
+#ds	0,0,0			0,0,1		20			50,0,255 txm ./images/earthmap1k.xpm 0 bmp ./images/earthbump1k.xpm 0
+bx	0,0,0			10,0,0	0,10,0	0,0,10		50,0,255 txm ./images/earthmap1k.xpm 0 bmp ./images/earthbump1k.xpm 0

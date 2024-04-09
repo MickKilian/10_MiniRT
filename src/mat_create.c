@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:34:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 09:04:35 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:56:27 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	mat_finalize(t_rt *rt)
 	{
 		rt->tp.mat->txm.is_present = true;
 		rt->tp.mat->txm.path = ft_strdup(rt->tp.txm_path);
+		rt->tp.mat->txm.rot_an = rt->tp.txm_rot_an;
 	}
 	else
 		rt->tp.mat->txm.is_present = false;
@@ -27,6 +28,7 @@ void	mat_finalize(t_rt *rt)
 	{
 		rt->tp.mat->bmp.is_present = true;
 		rt->tp.mat->bmp.path = ft_strdup(rt->tp.bmp_path);
+		rt->tp.mat->bmp.rot_an = rt->tp.bmp_rot_an;
 	}
 	else
 		rt->tp.mat->bmp.is_present = false;
@@ -35,9 +37,23 @@ void	mat_finalize(t_rt *rt)
 		rt->tp.mat->pat.is_present = true;
 		rt->tp.mat->pat.type = rt->tp.pat;
 		rt->tp.mat->pat.ratio = rt->tp.pat_ratio;
+		rt->tp.mat->pat.rot_an = rt->tp.pat_rot_an;
 	}
 	else
 		rt->tp.mat->pat.is_present = false;
+	mat_rot_choice(rt);
+}
+
+void mat_rot_choice(t_rt *rt)
+{
+	if (rt->tp.has_txm)
+		rt->tp.mat->rot_an = rt->tp.txm_rot_an;
+	else if (rt->tp.has_pat)
+		rt->tp.mat->rot_an = rt->tp.pat_rot_an;
+	else if (rt->tp.has_bmp)
+		rt->tp.mat->rot_an = rt->tp.bmp_rot_an;
+	else
+		rt->tp.mat->rot_an = 0;
 }
 
 t_material	*duplicate_mat(t_material *src)
@@ -46,6 +62,8 @@ t_material	*duplicate_mat(t_material *src)
 
 	dest = ft_calloc(1, sizeof(t_material));
 	dest = memcpy(dest, src, sizeof(t_material));
+	dest->txm.path = ft_strdup(src->txm.path);
+	dest->bmp.path = ft_strdup(src->bmp.path);
 	return (dest);
 }
 

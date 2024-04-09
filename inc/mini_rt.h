@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 11:51:59 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 17:01:56 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,16 @@ RATIO(double[0-1])"
 # define NB_PARAMS_DIFF_LIGHT		1
 # define ERR_PARAMS_DIFF_LIGHT\
 	"Material type Diffuse Light FACTOR(double[0-1])"
-# define NB_PARAMS_TXM				1
-# define ERR_PARAMS_TXM				".xpm texture file FILENAME(string[.xpm])"
-# define NB_PARAMS_BUMP				1
-# define ERR_PARAMS_BUMP				".xpm bump file FILENAME(string[.xpm])"
-# define NB_PARAMS_PAT				2
+# define NB_PARAMS_TXM				2
+# define ERR_PARAMS_TXM				".xpm texture file FILENAME(string[.xpm]) \
+ROTATION_ANGLE(double[DEG])"
+# define NB_PARAMS_BUMP				2
+# define ERR_PARAMS_BUMP				".xpm bump file FILENAME(string[.xpm]) \
+ROTATION_ANGLE(double[DEG])"
+# define NB_PARAMS_PAT				3
 # define ERR_PARAMS_PAT\
 	"Pattern TYPE(int[0: chk, 1: lines_long, 2: lines_lat, 3: sprl_2_col, \
-4: sprl_grad]) RATIO([int[>0]])"
+4: sprl_grad]) RATIO([int[>0]]) ROTATION_ANGLE(double[DEG])"
 # define ERR_INFO_TYPE				"Invalid information type"
 # define ERR_GEOM_TYPE				"Geometry type not implemented"
 # define ERR_NB_COMPS_VEC			"Vector should have 3 components"
@@ -129,7 +131,7 @@ RATIO(double[0-1])"
 # define ERR_OUT_OF_N1_1\
 	"Vector must have its components in the range [-1,1]"
 # define ERR_OUT_OF_VIEW_ANGLE\
-	"Horizontral view angle should be in range [0-180]"
+	"Horizontal view angle should be in range [0-180]"
 # define ERR_NB_PARAMS				"Wrong number of parameters for"
 # define ERR_TL_PARAMS				"Less parameters than expected for"
 # define ERR_TM_PARAMS				"More parameters than expected for"
@@ -161,8 +163,8 @@ RATIO(double[0-1])"
 # define REFRESH_FREQ 20
 # define NORMAL_MODE 0
 # define SHADOW_BIAS 0.01
-# define CLOSE_VOLUMES 0
-# define MULTI_LIGHTS 0
+# define CLOSE_VOLUMES 1
+# define MULTI_LIGHTS 1
 
 typedef struct s_httbl	t_httbl;
 
@@ -370,6 +372,7 @@ typedef struct s_texture
 	bool	is_present;
 	char	*path;
 	t_image	img;
+	double	rot_an;
 }	t_texture;
 
 typedef struct s_pattern
@@ -377,6 +380,7 @@ typedef struct s_pattern
 	bool		is_present;
 	t_pat_types	type;
 	int			ratio;
+	double		rot_an;
 }	t_pattern;
 
 typedef struct s_bump
@@ -384,6 +388,7 @@ typedef struct s_bump
 	bool	is_present;
 	char	*path;
 	t_image	img;
+	double	rot_an;
 }	t_bump;
 
 typedef struct s_material
@@ -396,6 +401,7 @@ typedef struct s_material
 	t_texture			txm;
 	t_bump				bmp;
 	t_pattern			pat;
+	double				rot_an;
 	union
 	{
 		t_lamber			lamber;
@@ -451,6 +457,7 @@ typedef struct s_hit_rec
 	bool			front_face;
 	t_geom_types	geom_type;
 	t_mat_types		mat_type;
+	double			mat_rot_an;
 	t_vec3			att;
 	t_ray			sctt;
 	t_vec3			col;
@@ -539,11 +546,14 @@ typedef struct s_temp
 	t_trsf			trsf;
 	bool			has_txm;
 	char			*txm_path;
+	double			txm_rot_an;
 	bool			has_bmp;
 	char			*bmp_path;
+	double			bmp_rot_an;
 	bool			has_pat;
 	int				pat;
 	int				pat_ratio;
+	double			pat_rot_an;
 	bool			shadow_comp;
 
 }	t_temp;
@@ -916,6 +926,7 @@ t_material		*mat_diff_light(t_diff_light diff_light);
 
 //mat_create.c
 void			mat_finalize(t_rt *rt);
+void 			mat_rot_choice(t_rt *rt);
 t_material		*duplicate_mat(t_material *src);
 int				handle_textures(t_rt *rt);
 int				handle_bumps(t_rt *rt);

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 02:18:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 13:08:19 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	parse_texture(t_rt *rt)
 {
 	int		fd;
 	char	*xpm_file_path;
+	double	rot_an;
 
 	if (check_nb_params(rt, NB_PARAMS_TXM, ERR_PARAMS_TXM))
 		return (1);
@@ -25,8 +26,11 @@ int	parse_texture(t_rt *rt)
 		return (display_error_plus(ERR_IS_NOT_XPM_FILE, xpm_file_path));
 	else if (fd == -1)
 		return (display_error_plus(ERR_OPEN_XPM_FILE, xpm_file_path));
+	else if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
+		return (1);
 	rt->tp.has_txm = true;
 	rt->tp.txm_path = xpm_file_path;
+	rt->tp.txm_rot_an = deg2rad(rot_an);
 	return (0);
 }
 
@@ -34,6 +38,7 @@ int	parse_bump(t_rt *rt)
 {
 	int		fd;
 	char	*xpm_file_path;
+	double	rot_an;
 
 	if (check_nb_params(rt, NB_PARAMS_BUMP, ERR_PARAMS_BUMP))
 		return (1);
@@ -43,14 +48,18 @@ int	parse_bump(t_rt *rt)
 		return (display_error_plus(ERR_IS_NOT_XPM_FILE, xpm_file_path));
 	else if (fd == -1)
 		return (display_error_plus(ERR_OPEN_XPM_FILE, xpm_file_path));
+	else if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
+		return (1);
 	rt->tp.has_bmp = true;
 	rt->tp.bmp_path = xpm_file_path;
+	rt->tp.bmp_rot_an = deg2rad(rot_an);
 	return (0);
 }
 
 int	parse_pattern(t_rt *rt)
 {
 	double	ratio;
+	double	rot_an;
 
 	if (check_nb_params(rt, NB_PARAMS_PAT, ERR_PARAMS_PAT))
 		return (1);
@@ -58,7 +67,10 @@ int	parse_pattern(t_rt *rt)
 		return (1);
 	else if (parse_int_pos(rt->tp.params[++rt->tp.count], &ratio))
 		return (1);
+	else if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
+		return (1);
 	rt->tp.has_pat = true;
 	rt->tp.pat_ratio = (int)ratio;
+	rt->tp.pat_rot_an = deg2rad(rot_an);
 	return (0);
 }

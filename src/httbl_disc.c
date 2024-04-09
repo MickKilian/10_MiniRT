@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 01:42:57 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:02:21 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,11 @@ bool	hit_disc(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 		return (0);
 	rec->p = p_temp;
 	rec->httbl = rt->world.httbl;
+	rec->mat_rot_an = rt->world.httbl->mat->rot_an;
+	set_map_coord_dsc(rec);
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, nrm, rec);
+	if (rt->world.httbl->mat->bmp.is_present)
+		alter_normal_with_bump(rt, rec);
 	return (1);
 }
