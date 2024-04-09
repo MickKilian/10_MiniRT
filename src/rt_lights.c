@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 23:56:44 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:57:59 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_vec3	point_lights(t_rt *rt, t_hit_rec *rec)
 			if (!world_hit(rt, shadow_ray, itv(0.001, 0.95), &light_rec))
 			{
 				light_intensity = vec3_scale(1.25 / PI, vec3_scale(light->mat->diff_light.ratio, light->mat->diff_light.color));
-				light_o_diff = vec3_prd(vec3_scale(1, rec->httbl->mat->color),
+				light_o_diff = vec3_prd(vec3_scale(1, rec->col),
 						vec3_scale(ft_max(0, vec3_dot(rec->nrm, vec3_unit(shadow_ray.dir))), light_intensity));
 				if (vec3_dot(vec3_unit(vec3_sub2(rec->p, rt->cam.ctr)), reflect(vec3_unit(shadow_ray.dir), rec->nrm)) > 0)
 					light_o_spec = vec3_scale(ft_max(0, pow(vec3_dot(vec3_unit(vec3_sub2(rec->p, rt->cam.ctr)), reflect(vec3_unit(shadow_ray.dir), rec->nrm)), rec->httbl->mat->light_conc)), light_intensity);
@@ -48,16 +48,4 @@ t_vec3	point_lights(t_rt *rt, t_hit_rec *rec)
 	}
 	rt->tp.shadow_comp = false;
 	return (light_o);
-}
-
-t_vec3	ray_color_grad_blue(t_ray r)
-{
-	t_vec3	pixel_color;
-	double	a;
-
-	ft_bzero(&pixel_color, sizeof(t_vec3));
-	a = 0.5 * (vec3_unit(r.dir).y + 1.0);
-	pixel_color = vec3_add2(vec3_scale(1.0 - a, new_vec3(1.0, 1.0, 1.0)),
-			vec3_scale(a, new_vec3(0.5, 0.7, 1.0)));
-	return (pixel_color);
 }

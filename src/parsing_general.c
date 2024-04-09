@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 00:18:32 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 08:11:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	parse_line(t_rt *rt, char *line)
 {
-	rt_re_init(rt);
+	ft_bzero(&rt->tp, sizeof(t_temp));
 	rt->tp.params = ft_split(line, ' ');
 	rt->tp.avail = array_size(rt->tp.params) - 1;
 	if (ft_strcmp(rt->tp.params[rt->tp.count], "R") == 0)
@@ -33,7 +33,8 @@ int	parse_line(t_rt *rt, char *line)
 		rt->tp.ret = parse_extra(rt);
 	if (!rt->tp.ret && rt->tp.geom)
 	{
-		mat_finalize(rt);
+		if (rt->tp.geom->type != SAFE_CONE)
+			mat_finalize(rt);
 		httbl_create(rt);
 	}
 	if (rt->tp.ret)

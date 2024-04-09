@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 05:58:39 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:51:59 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@
 # define ERR_PARAMS_CAMERA\
 	"Camera LOCATION(vector[3Xdouble]) DIRECTION(3Xvector[double]) \
 	HFOV(double[0-180])"
-# define NB_PARAMS_POINT				2
-# define NB_PARAMS_PLANE				3
+# define NB_PARAMS_POINT			2
+# define NB_PARAMS_PLANE			3
 # define ERR_PARAMS_PLANE\
 	"Plane POINT(vector[3Xdouble]) DIR_1(vector[3Xdouble]) \
 	DIR_2(vector[3Xdouble])"
@@ -57,47 +57,47 @@
 # define NB_PARAMS_QUAD				4
 # define ERR_PARAMS_QUAD\
 	"Quad CENTER(vector[3Xdouble]) VEC_1(vector[3Xdouble]) \
-	VEC_2(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
+VEC_2(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_DISC				4
 # define ERR_PARAMS_DISC\
 	"Disc CENTER(vector[3Xdouble]) NORMAL(vector[3Xdouble]) \
-	DIAMETER(double[>=0]) COLOR(vector[3Xint0-255])"
+DIAMETER(double[>=0]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_BOX				5
 # define ERR_PARAMS_BOX\
 	"Box CENTER(vector[3Xdouble]) VEC_1(vector[3Xdouble]) \
-	VEC_2(vector[3Xdouble]) VEC_3(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
+VEC_2(vector[3Xdouble]) VEC_3(vector[3Xdouble]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_CYLINDER			5
 # define ERR_PARAMS_CYLINDER\
 	"Cylinder CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
-	DIAMETER(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
+DIAMETER(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_CONE				6
 # define ERR_DIAS_CONE "Cone min and max diameters cannot be equal"
 # define ERR_DIAS_ORDER_CONE "Cone diameters should be max followed min"
 # define ERR_PARAMS_CONE\
 	"Cone BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
-	MAX_DIAMETER(double[>=0]) MIN_DIAMETER(double[>=0]) HEIGHT(double[>=0]) \
-	COLOR(vector[3Xint0-255])"
+MAX_DIAMETER(double[>=0]) MIN_DIAMETER(double[>=0]) HEIGHT(double[>=0]) \
+COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_DICE				5
 # define ERR_PARAMS_DICE\
 	"Dice BASE_CENTER(vector[3Xdouble]) DIR_FACE_1(vector[3Xdouble]) \
-	DIR_FACE_2(vector[3Xdouble]) SIZE(double[>=0]) COLOR(vector[3Xint0-255])"
-# define NB_PARAMS_SAFE_CONE			3
+DIR_FACE_2(vector[3Xdouble]) SIZE(double[>=0]) COLOR(vector[3Xint0-255])"
+# define NB_PARAMS_SAFE_CONE		3
 # define ERR_PARAMS_SAFE_CONE\
 	"Safety cone BASE_CENTER(vector[3Xdouble]) \
-	GENERATOR(vector[3Xdouble]) HEIGHT(double[>=0])"
+GENERATOR(vector[3Xdouble]) HEIGHT(double[>=0])"
 # define NB_PARAMS_PENCIL			3
 # define ERR_PARAMS_PENCIL\
 	"Pencil BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
-	HEIGHT(double[>=0])"
+HEIGHT(double[>=0])"
 # define NB_PARAMS_TRANSLATION		1
 # define ERR_PARAMS_TRANSLATION\
 	"Translation TRANSLATION_VECTOR(vector[3Xdouble])"
 # define NB_PARAMS_ROTATION			2
 # define ERR_PARAMS_ROTATION\
 	"Rotation ROTATION_AXIS(vector[3Xdouble]) ROTATION_ANGLE[double[DEG]]"
-# define NB_PARAMS_METAL				2
+# define NB_PARAMS_METAL			2
 # define ERR_PARAMS_METAL			"Material type Metal FUZZ(double[0-1]) \
-	RATIO(double[0-1])"
+RATIO(double[0-1])"
 # define NB_PARAMS_DIELECTRIC		1
 # define ERR_PARAMS_DIELECTRIC\
 	"Material type Dielectric INDEX_REFRACT(double[>=0])"
@@ -161,7 +161,7 @@
 # define REFRESH_FREQ 20
 # define NORMAL_MODE 0
 # define SHADOW_BIAS 0.01
-# define CLOSE_VOLUMES 1
+# define CLOSE_VOLUMES 0
 # define MULTI_LIGHTS 0
 
 typedef struct s_httbl	t_httbl;
@@ -663,7 +663,6 @@ t_vec3			ray_color(t_rt *rt, int depth, t_ray r);
 
 //rt_lights.c
 t_vec3			point_lights(t_rt *rt, t_hit_rec *rec);
-t_vec3			ray_color_grad_blue(t_ray r);
 
 //rt_ray_compute.c
 t_vec3			reflect(t_vec3 v, t_vec3 n);
@@ -855,6 +854,7 @@ bool			vec3_is_nz(t_vec3 vec);
 //utils_vec3_4.c
 t_vec3			vec3_cos(t_vec3 theta);
 t_vec3			vec3_sin(t_vec3 theta);
+t_vec3			vec3_cpy(t_vec3 vec);
 
 //utils_quadratic_solve.c
 bool			search_poly_root(t_h_pol *h_pol, t_itv tray, double *root);
@@ -863,14 +863,13 @@ bool			search_poly_root_2(t_h_pol *h_pol, t_itv tray, double *root_1, \
 bool			solve_h_pol(t_h_pol *h_pol);
 
 //utils_memory.c
-void			free_httbls(t_world *world);
+void			free_httbls(t_rt *rt, t_world *world);
 void			free_split_vec(char **vec);
+void			free_tp(t_temp tp);
 
 //utils_parsing.c
 int				check_nb_params(t_rt *rt, int expect, char *err_msg);
 void			get_end_idx(t_rt *rt);
-void			free_tp(t_temp tp);
-void			rt_re_init(t_rt *rt);
 
 //utils_ray.c
 t_vec3			hit_pt(t_ray r, double t);

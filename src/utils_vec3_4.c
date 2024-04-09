@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 03:03:50 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/23 06:59:30 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:52:49 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,9 @@ t_vec3	vec3_cos(t_vec3 theta)
 t_vec3	vec3_sin(t_vec3 theta)
 {
 	return (new_vec3(sin(theta.x), sin(theta.y), sin(theta.z)));
+}
+
+t_vec3			vec3_cpy(t_vec3 vec)
+{
+	return (new_vec3(vec.x, vec.y, vec.z));
 }

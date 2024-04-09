@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 22:19:34 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 00:06:21 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 08:18:53 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	mini_rt(t_rt *rt)
 
 int	ft_exit(t_rt *rt)
 {
-	free_httbls(&rt->world);
+	free_httbls(rt, &rt->world);
 	if (rt->mlx.ptr)
 	{
 		mlx_loop_end(rt->mlx.ptr);

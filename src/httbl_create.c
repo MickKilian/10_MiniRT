@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:21:16 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 23:54:01 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 06:58:04 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,32 +49,26 @@ void	httbl_record(t_world *world, t_geometry *geom, t_material *mat)
 	else if (geom->type == BOX)
 	{
 		add_box_quads(world, &geom->box, mat);
+		free(geom);
 		return ;
 	}
 	else if (geom->type == DICE)
 	{
 		add_box_quads(world, &geom->box, mat);
 		add_dice_dots(world, &geom->box);
+		free(geom);
 		return ;
 	}
-
-	else if (CLOSE_VOLUMES)
-	{
-		if (geom->type == CYLINDER)
-			add_cyl_discs(world, geom, mat);
-		else if (geom->type == CONE)
-			add_con_discs(world, geom, mat);
-	}
+	else if (geom->type == CYLINDER && CLOSE_VOLUMES)
+		add_cyl_discs(world, geom, mat);
+	else if (geom->type == CONE && CLOSE_VOLUMES)
+		add_con_discs(world, geom, mat);
 	else if (geom->type == SAFE_CONE)
 	{
 		create_safe_cone(world, &geom->sfc);
+		free(geom);
 		return ;
 	}
-	//if (geom->type == POINT)
-	//{
-	//	display_vec3(mat->diff_light.color);
-	//	printf("\n");
-	//}
 	httbl_addback(world, new_httbl(geom, mat));
 }
 
