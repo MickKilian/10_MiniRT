@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 03:56:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 01:09:04 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	parse_dbl_vec3_n1_1(char *str, t_vec3 *vec)
 	while (!ret && params && params[i])
 	{
 		if (!is_dec(params[i]))
-			ret = display_error_plus(ERR_DEC, params[i - 1]);
+			ret = display_error_plus(ERR_DEC, params[i]);
 		if (!is_in_range_n1_1(str2dbl(params[i++])))
 			ret = display_error_plus(ERR_OUT_OF_N1_1, params[i - 1]);
 	}
@@ -78,7 +78,7 @@ int	parse_dbl_vec3_n1_1_norm(char *str, t_vec3 *vec)
 	while (!ret && params && params[i])
 	{
 		if (!is_dec(params[i]))
-			ret = display_error_plus(ERR_DEC, params[i - 1]);
+			ret = display_error_plus(ERR_DEC, params[i]);
 		if (!is_in_range_n1_1(str2dbl(params[i++])))
 			ret = display_error_plus(ERR_OUT_OF_N1_1, params[i - 1]);
 	}
@@ -107,8 +107,9 @@ int	parse_color(char *str, t_vec3 *color)
 	params = ft_split(str, ',');
 	while (!ret && params && params[i])
 	{
-		if (!is_long(params[i]) || !is_valid_color_comp(params[i++]))
-			ret = display_error_plus(ERR_INVALID_COLOR_COMP, params[i - 1]);
+		if (!is_long(params[i]) || !is_valid_color_comp(params[i]))
+			ret = display_error_plus(ERR_INVALID_COLOR_COMP, params[i]);
+		i++;
 	}
 	if (!ret && i != 3)
 		ret = display_error_plus(ERR_NB_COMPS_COLOR, str);

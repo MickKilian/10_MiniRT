@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 19:45:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 08:15:07 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 11:01:11 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,39 @@ void	set_face_nrm(const t_ray r, const t_vec3 out_nrm, t_hit_rec *rec)
 		rec->nrm = vec3_unit(out_nrm);
 	else
 		rec->nrm = vec3_unit(vec3_scale(-1.0, out_nrm));
+}
+
+void	set_map_coord_pln(t_hit_rec *rec)
+{
+	t_plane	*pln;
+	t_vec3	w;
+
+	pln = &rec->httbl->geom->pln;
+	if (vec3_dot(pln->d, new_vec3(1, 0, 0)) != 0)
+		w = vec3_unit(vec3_cross(pln->d, new_vec3(1, 0, 0)));
+	else
+		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 1, 0)));
+	rec->uv = vec3_scale(0.1, new_vec3(vec3_dot(rec->p, w), vec3_dot(rec->p, vec3_unit(vec3_cross(pln->d, w))), 0));
+}
+
+void	set_map_coord_qud(t_hit_rec *rec)
+{
+	t_quad	*qud;
+
+	qud = &rec->httbl->geom->qud;
+	rec->uv = new_vec3(vec3_dot(rec->p, vec3_unit(qud->u)) / 2 / vec3_len(qud->u), vec3_dot(rec->p, vec3_unit(qud->v)) / 2 / vec3_len(qud->v), 0);
+}
+
+void	set_map_coord_dsc(t_hit_rec *rec)
+{
+	t_disc	*dsc;
+	double	phi;
+	t_vec3	vec;
+
+	dsc = &rec->httbl->geom->dsc;
+	vec = vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(dsc->ctr.x, dsc->ctr.y, 0));
+	phi = atan2(-vec3_unit(vec).y, vec3_unit(vec).x) + PI;
+	rec->uv = new_vec3(phi / (2 * PI), vec3_len(vec) / dsc->rd, 0);
 }
 
 void	set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr)
@@ -59,7 +92,12 @@ void	set_rec_mat(t_rt *rt, t_hit_rec *rec)
 	if (rec->mat_type == LAMBERTIAN)
 	{
 		rec->lamber = rt->world.httbl->mat->lamber;
-		if (rt->world.httbl->geom->type == SPHERE || rt->world.httbl->geom->type == CYLINDER || rt->world.httbl->geom->type == CONE)
+		if (rt->world.httbl->geom->type == SPHERE
+				|| rt->world.httbl->geom->type == CYLINDER
+				|| rt->world.httbl->geom->type == CONE
+				|| rt->world.httbl->geom->type == PLANE
+				|| rt->world.httbl->geom->type == QUAD
+				|| rt->world.httbl->geom->type == DISC)
 		{
 			if (rt->world.httbl->mat->txm.is_present)
 				rec->lamber.color = get_pixel_color(&rt->world.httbl->mat->txm.img, rec->uv);

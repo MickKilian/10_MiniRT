@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 01:22:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/29 12:24:47 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 02:52:07 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	rt_initialize(t_rt *rt)
 		if (rt->img.h < 1)
 			rt->img.h = 1;
 	}
-	if (mlx_initialize(&rt->mlx, rt->img.w, rt->img.h))
+	if (mlx_initialize(&rt->mlx))
 		return (display_error(ERR_MLX_INIT));
 	if (image_create(&rt->mlx, &rt->img, rt->img.w, rt->img.h))
 		return (display_error(ERR_IMG_CREATE));

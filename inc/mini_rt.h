@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 09:00:19 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 02:51:42 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@
 	DIAMETER(double[>=0]) HEIGHT(double[>=0]) COLOR(vector[3Xint0-255])"
 # define NB_PARAMS_CONE				6
 # define ERR_DIAS_CONE "Cone min and max diameters cannot be equal"
+# define ERR_DIAS_ORDER_CONE "Cone diameters should be max followed min"
 # define ERR_PARAMS_CONE\
 	"Cone BASE_CENTER(vector[3Xdouble]) GENERATOR(vector[3Xdouble]) \
 	MAX_DIAMETER(double[>=0]) MIN_DIAMETER(double[>=0]) HEIGHT(double[>=0]) \
@@ -109,8 +110,8 @@
 # define ERR_PARAMS_BUMP				".xpm bump file FILENAME(string[.xpm])"
 # define NB_PARAMS_PAT				2
 # define ERR_PARAMS_PAT\
-	"Pattern TYPE(int[0_chk, 1_lines, 2_spr_2_col, 3_spr_grad]) \
-	RATIO([int[>0]])"
+	"Pattern TYPE(int[0: chk, 1: lines_1, 2: lines_2, 3: sprl_2_col, \
+4: sprl_grad]) RATIO([int[>0]])"
 # define ERR_INFO_TYPE				"Invalid information type"
 # define ERR_GEOM_TYPE				"Geometry type not implemented"
 # define ERR_NB_COMPS_VEC			"Vector should have 3 components"
@@ -145,7 +146,7 @@
 # define ERR_OPEN_RT_FILE			".rt file could not be open"
 # define ERR_OPEN_XPM_FILE			".xpm file could not be open"
 # define ERR_IS_NOT_RT_FILE			"File is not an .rt file"
-# define ERR_IS_NOT_XPM_FILE			"File is not an .xpm file"
+# define ERR_IS_NOT_XPM_FILE			"Not a valid specification for .xpm file"
 # define ERR_LOADING_XPM_TEXT		".xpm texture image could not be loaded"
 # define ERR_LOADING_XPM_BUMP		".xpm bump image could not be loaded"
 # define ERR_NB_ARGUMENTS\
@@ -516,6 +517,34 @@ typedef struct s_light
 	t_vec3	color;
 }	t_light;
 
+typedef struct s_temp
+{
+	int				expect;
+	int				count;
+	int				avail;
+	int				end;
+	int				option;
+	bool			extra;
+	char			**params;
+	t_geometry		*geom;
+	t_material		*mat;
+	t_ray			ray;
+	int				type;
+	t_vec3			color;
+	t_light			light;
+	int				ret;
+	t_trsf			trsf;
+	bool			has_txm;
+	char			*txm_path;
+	bool			has_bmp;
+	char			*bmp_path;
+	bool			has_pat;
+	int				pat;
+	int				pat_ratio;
+	bool			shadow_comp;
+
+}	t_temp;
+
 typedef struct s_rt
 {
 	t_ambient		ambient;
@@ -532,29 +561,7 @@ typedef struct s_rt
 	int				estim_sec;
 	struct timeval	begin_time;
 	t_httbl			*cur_httbl;
-	int				tp_expect;
-	int				tp_count;
-	int				tp_avail;
-	int				tp_end;
-	int				tp_option;
-	bool			tp_extra;
-	char			**tp_params;
-	t_geometry		*tp_geom;
-	t_material		*tp_mat;
-	t_ray			tp_ray;
-	int				tp_type;
-	t_vec3			tp_color;
-	t_light			tp_light;
-	int				tp_ret;
-	t_trsf			tp_trsf;
-	bool			tp_has_txm;
-	char			*tp_txm_path;
-	bool			tp_has_bmp;
-	char			*tp_bmp_path;
-	bool			tp_has_pat;
-	int				tp_pat;
-	int				tp_pat_ratio;
-	bool			tp_shadow_comp;
+	t_temp			tp;
 }	t_rt;
 
 //parsing_file.c
@@ -633,7 +640,7 @@ int				test_vec3_operations(void);
 
 //rt_mlx.c
 int				on_key_press(int keycode, t_mlx *mlx_data);
-int				mlx_initialize(t_mlx *mlx, int w, int h);
+int				mlx_initialize(t_mlx *mlx);
 
 //rt_image.c
 int				image_create(t_mlx *mlx, t_image *img, int w, int h);
@@ -673,6 +680,9 @@ void			progress_compute(t_rt *rt, int j);
 
 //rt_hit_record.c
 void			set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
+void			set_map_coord_pln(t_hit_rec *rec);
+void			set_map_coord_qud(t_hit_rec *rec);
+void			set_map_coord_dsc(t_hit_rec *rec);
 void			set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr);
 void			set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h);
 void			set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h);
@@ -860,6 +870,7 @@ void			free_split_vec(char **vec);
 //utils_parsing.c
 int				check_nb_params(t_rt *rt, int expect, char *err_msg);
 void			get_end_idx(t_rt *rt);
+void			free_tp(t_temp tp);
 void			rt_re_init(t_rt *rt);
 
 //utils_ray.c

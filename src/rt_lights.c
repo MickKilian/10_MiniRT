@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 01:25:24 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 23:56:44 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_vec3	point_lights(t_rt *rt, t_hit_rec *rec)
 	light_o = new_vec3(0, 0, 0);
 	light = rt->world.httbl_head;
 	rt->cur_httbl = rec->httbl;
-	rt->tp_shadow_comp = true;
+	rt->tp.shadow_comp = true;
 	while (light)
 	{
 		if (light->geom->type == POINT)
@@ -46,7 +46,7 @@ t_vec3	point_lights(t_rt *rt, t_hit_rec *rec)
 		}
 		light = light->next;
 	}
-	rt->tp_shadow_comp = false;
+	rt->tp.shadow_comp = false;
 	return (light_o);
 }
 

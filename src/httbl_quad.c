@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 22:23:12 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 01:42:45 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 10:31:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ bool	hit_quad(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 	//	printf("HIT QUAD\n");
 	//}
 	rec->httbl = rt->world.httbl;
+	set_map_coord_qud(rec);
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, qud.nrm, rec);
 	return (1);

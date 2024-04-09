@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:54:17 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 01:42:02 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 02:53:13 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ int	render(t_rt *rt)
 		j++;
 	}
 	printf("\rDone in  : \n");
+	rt->mlx.win_ptr = mlx_new_window(rt->mlx.ptr, rt->img.w, rt->img.h, "42 mini_rt");
+    mlx_key_hook(rt->mlx.win_ptr, on_key_press, &rt->mlx.ptr);
+    mlx_hook(rt->mlx.win_ptr, 17, 0L, mlx_loop_end, rt->mlx.ptr);
 	image_update(&rt->mlx, rt->img);
 	return (0);
 }

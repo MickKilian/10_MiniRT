@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:34:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/07 20:10:26 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 02:34:15 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,30 @@
 
 void	mat_finalize(t_rt *rt)
 {
-	if (!rt->tp_mat)
-		rt->tp_mat = mat_lamber(lamber(rgb2vec(rt->tp_color)));
-	if (rt->tp_has_txm)
+	if (!rt->tp.mat)
+		rt->tp.mat = mat_lamber(lamber(rgb2vec(rt->tp.color)));
+	if (rt->tp.has_txm)
 	{
-		rt->tp_mat->txm.is_present = true;
-		rt->tp_mat->txm.path = ft_strdup(rt->tp_txm_path);
+		rt->tp.mat->txm.is_present = true;
+		rt->tp.mat->txm.path = ft_strdup(rt->tp.txm_path);
 	}
 	else
-		rt->tp_mat->txm.is_present = false;
-	if (rt->tp_has_bmp)
+		rt->tp.mat->txm.is_present = false;
+	if (rt->tp.has_bmp)
 	{
-		rt->tp_mat->bmp.is_present = true;
-		rt->tp_mat->bmp.path = ft_strdup(rt->tp_bmp_path);
+		rt->tp.mat->bmp.is_present = true;
+		rt->tp.mat->bmp.path = ft_strdup(rt->tp.bmp_path);
 	}
 	else
-		rt->tp_mat->bmp.is_present = false;
-	if (rt->tp_has_pat)
+		rt->tp.mat->bmp.is_present = false;
+	if (rt->tp.has_pat)
 	{
-		rt->tp_mat->pat.is_present = true;
-		rt->tp_mat->pat.type = rt->tp_pat;
-		rt->tp_mat->pat.ratio = rt->tp_pat_ratio;
+		rt->tp.mat->pat.is_present = true;
+		rt->tp.mat->pat.type = rt->tp.pat;
+		rt->tp.mat->pat.ratio = rt->tp.pat_ratio;
 	}
 	else
-		rt->tp_mat->pat.is_present = false;
+		rt->tp.mat->pat.is_present = false;
 }
 
 t_material	*duplicate_mat(t_material *src)
@@ -54,14 +54,15 @@ int	handle_textures(t_rt *rt)
 	rt->world.httbl = rt->world.httbl_head;
 	while (rt->world.httbl)
 	{
-		if (!rt->tp_ret && rt->world.httbl->mat->txm.is_present)
+		if (!rt->tp.ret && rt->world.httbl->mat->txm.is_present)
 		{
 			rt->world.httbl->mat->txm.img.ptr = mlx_xpm_file_to_image(rt->mlx.ptr, rt->world.httbl->mat->txm.path,
 					&rt->world.httbl->mat->txm.img.w, &rt->world.httbl->mat->txm.img.h);
 			if (!rt->world.httbl->mat->txm.img.ptr)
 			{
 				rt->world.httbl->mat->txm.is_present = false;
-				rt->tp_ret = display_error_plus(ERR_LOADING_XPM_TEXT, rt->world.httbl->mat->txm.path);
+				rt->tp.ret = display_error_plus(ERR_LOADING_XPM_TEXT, rt->world.httbl->mat->txm.path);
+				free(rt->world.httbl->mat->txm.path);
 				break;
 			}
 			else
@@ -74,7 +75,7 @@ int	handle_textures(t_rt *rt)
 		rt->world.httbl = rt->world.httbl->next;
 	}
 	rt->world.httbl = rt->world.httbl_head;
-	return (rt->tp_ret);
+	return (rt->tp.ret);
 }
 
 int	handle_bumps(t_rt *rt)
@@ -82,14 +83,15 @@ int	handle_bumps(t_rt *rt)
 	rt->world.httbl = rt->world.httbl_head;
 	while (rt->world.httbl)
 	{
-		if (!rt->tp_ret && rt->world.httbl->mat->bmp.is_present)
+		if (!rt->tp.ret && rt->world.httbl->mat->bmp.is_present)
 		{
 			rt->world.httbl->mat->bmp.img.ptr = mlx_xpm_file_to_image(rt->mlx.ptr, rt->world.httbl->mat->bmp.path,
 					&rt->world.httbl->mat->bmp.img.w, &rt->world.httbl->mat->bmp.img.h);
 			if (!rt->world.httbl->mat->bmp.img.ptr)
 			{
 				rt->world.httbl->mat->bmp.is_present = false;
-				rt->tp_ret = display_error_plus(ERR_LOADING_XPM_TEXT, rt->world.httbl->mat->bmp.path);
+				rt->tp.ret = display_error_plus(ERR_LOADING_XPM_TEXT, rt->world.httbl->mat->bmp.path);
+				free(rt->world.httbl->mat->bmp.path);
 				break;
 			}
 			else
@@ -102,5 +104,5 @@ int	handle_bumps(t_rt *rt)
 		rt->world.httbl = rt->world.httbl->next;
 	}
 	rt->world.httbl = rt->world.httbl_head;
-	return (rt->tp_ret);
+	return (rt->tp.ret);
 }

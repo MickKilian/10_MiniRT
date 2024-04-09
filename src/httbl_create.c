@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:21:16 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/06 05:13:57 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/08 23:54:01 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,5 @@ void	httbl_record(t_world *world, t_geometry *geom, t_material *mat)
 
 void	httbl_create(t_rt *rt)
 {
-	httbl_record(&rt->world, rt->tp_geom, rt->tp_mat);
+	httbl_record(&rt->world, rt->tp.geom, rt->tp.mat);
 }
