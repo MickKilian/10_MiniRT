@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 00:07:15 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 01:28:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:48:05 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ t_diff_light	diff_light(double ratio, t_vec3 color)
 	return (diff_light);
 }
 
-t_material	*mat_diff_light(t_diff_light diff_light)
+t_material	*mat_diff_light(t_temp tp, t_diff_light diff_light)
 {
 	t_material	*mat;
-
+	
+	if (tp.mat)
+		free(tp.mat);
 	mat = ft_calloc(1, sizeof(t_material));
 	mat->type = DIFF_LIGHT;
 	mat->color = diff_light.color;

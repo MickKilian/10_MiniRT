@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/04/09 05:56:30 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/09 19:40:28 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,12 +28,12 @@ PRIM_SRCS	=	main.c \
 				parsing_extra.c parsing_tranformation.c parsing_material.c\
 				parsing_file.c parsing_general.c \
 				parsing_geom_1.c parsing_geom_2.c parsing_geom_3.c \
-				parsing_types_1.c parsing_types_2.c \
+				parsing_types_1.c parsing_types_2.c parsing_types_3.c \
 				parsing_txm_pat.c \
 				rt_ray_color.c rt_ray_compute.c rt_lights.c \
 				rt_camera.c rt_hit_record.c rt_initialize.c rt_world.c \
 				rt_render.c rt_mlx.c rt_image.c \
-				rt_patterns.c rt_bumps.c \
+				rt_patterns_1.c rt_patterns_2.c rt_bumps.c \
 				utils_array.c utils_convert_1.c utils_convert_2.c \
 				utils_interval.c utils_math_1.c utils_math_2.c \
 				utils_memory.c \

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 09:50:07 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 23:54:57 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:48:57 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int	parse_ambient_params(t_rt *rt)
 
 int	parse_light_params(t_rt *rt)
 {
-	if ((!MULTI_LIGHTS && rt->set_point_light && display_error(ERR_DUPLICATE_PT_LIGHT))
+	if ((!MULTI_LIGHTS && rt->set_point_light
+			&& display_error(ERR_DUPLICATE_PT_LIGHT))
 		|| check_nb_params(rt, NB_PARAMS_POINT_LIGHT, ERR_PARAMS_POINT_LIGHT)
 		|| (rt->tp.extra && display_error_plus(ERR_EXTRA_INFO,
 				rt->tp.params[rt->tp.count])))
@@ -95,7 +96,7 @@ int	parse_light_params(t_rt *rt)
 	rt->tp.light.color = rgb2vec(rt->tp.color);
 	rt->set_point_light = 1;
 	rt->tp.geom = geom_point(point(rt->tp.light.pos));
-	rt->tp.mat = mat_diff_light(diff_light(rt->tp.light.ratio,
+	rt->tp.mat = mat_diff_light(rt->tp, diff_light(rt->tp.light.ratio,
 				rt->tp.light.color));
 	return (0);
 }

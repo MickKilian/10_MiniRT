@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 17:01:56 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:55:17 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -596,17 +596,18 @@ int				parse_dbl(char *str, double *num);
 int				parse_dbl_pos(char *str, double *num);
 int				parse_int_pos(char *str, double *num);
 int				parse_dbl_01(char *str, double *num);
+
+//parsing_types_3.c
 int				parse_dbl_n1_1(char *str, double *num);
 int				parse_dbl_vec3_n1_1(char *str, t_vec3 *vec);
 int				parse_dbl_vec3_n1_1_norm(char *str, t_vec3 *vec);
 int				parse_dbl_0180(char	*str, double *num);
 
-//parsing_types_2.c
+//parsing_types_3.c
 int				parse_dbl_vec3(char *str, t_vec3 *vec);
 int				check_range_vec_n1_1(t_vec3 *vec);
 int				parse_color(char *str, t_vec3 *color);
 int				parse_pat(char *str, int *num);
-//char	*get_info_type(char *line);
 
 //parsing_geom.c
 int				parse_sphere(t_rt *rt);
@@ -914,15 +915,15 @@ t_material		*mat_lamber(t_lamber lamber);
 
 //mat_metal.c
 t_metal			metal(t_vec3 color, double fuzz, double ratio);
-t_material		*mat_metal(t_metal metal);
+t_material		*mat_metal(t_temp tp, t_metal metal);
 
 //mat_dielectric.c
 t_dielec		dielec(t_vec3 color, double ir);
-t_material		*mat_dielec(t_dielec dielec);
+t_material		*mat_dielec(t_temp tp, t_dielec dielec);
 
 //mat_diff_light.c
 t_diff_light	diff_light(double ratio, t_vec3 color);
-t_material		*mat_diff_light(t_diff_light diff_light);
+t_material		*mat_diff_light(t_temp tp, t_diff_light diff_light);
 
 //mat_create.c
 void			mat_finalize(t_rt *rt);
@@ -994,18 +995,20 @@ void			rdm_logo42_sphere(t_world *world, double h, int nb_spheres);
 bool			is_overlaying(t_httbl *httbl, t_sphere sph);
 bool			is_overlaying_xz(t_httbl *httbl, t_sphere sph);
 
-//rt_patterns.c
+//rt_patterns_1.c
 bool			checkboard_zone(t_vec3 uv, double scale);
 bool			long_zone(t_vec3 uv, double scale);
 bool			lat_zone(t_vec3 uv, double scale);
 bool			spiral_zone(t_vec3 uv, double scale);
+t_vec3			spiral_colors(t_vec3 uv, double scale);
+
+//rt_patterns_2.c
 t_vec3			pattern_color(bool zone_pattern, t_vec3 color_even, \
 	t_vec3 color_odd);
 t_vec3			checkboard_pattern(t_vec3 uv, double scale, t_vec3 color_even, \
 	t_vec3 color_odd);
 t_vec3			spiral_pattern(t_vec3 uv, double scale, t_vec3 color_even, \
 	t_vec3 color_odd);
-t_vec3			spiral_colors(t_vec3 uv, double scale);
 t_vec3			gradient_color_spiral(t_vec3 uv, double scale, t_vec3 col);
 
 #endif // MINI_RT_H

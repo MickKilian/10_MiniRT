@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 06:38:28 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:37:42 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,5 @@ int	parse_dbl_n1_1(char *str, double *num)
 	*num = str2dbl(str);
 	if (!is_in_range_n1_1(*num))
 		return (display_error_plus(ERR_OUT_OF_N1_1, str));
-	return (0);
-}
-
-int	parse_dbl_0180(char *str, double *num)
-{
-	if (!is_dec(str))
-		return (display_error_plus(ERR_DEC, str));
-	*num = str2dbl(str);
-	if (!is_in_range0180(*num))
-		return (display_error_plus(ERR_OUT_OF_VIEW_ANGLE, str));
 	return (0);
 }

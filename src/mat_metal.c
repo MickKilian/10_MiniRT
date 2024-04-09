@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 03:22:09 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 01:42:52 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:54:41 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ t_metal	metal(t_vec3 color, double fuzz, double ratio)
 	return (metal);
 }
 
-t_material	*mat_metal(t_metal metal)
+t_material	*mat_metal(t_temp tp, t_metal metal)
 {
 	t_material	*mat;
 
+	if (tp.mat)
+		free(tp.mat);
 	mat = ft_calloc(1, sizeof(t_material));
 	mat->type = METAL;
 	mat->color = metal.color;

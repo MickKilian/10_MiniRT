@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:34:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 15:56:27 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:12:32 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ t_material	*duplicate_mat(t_material *src)
 
 	dest = ft_calloc(1, sizeof(t_material));
 	dest = memcpy(dest, src, sizeof(t_material));
-	dest->txm.path = ft_strdup(src->txm.path);
-	dest->bmp.path = ft_strdup(src->bmp.path);
+	if (src->txm.is_present)
+		dest->txm.path = ft_strdup(src->txm.path);
+	if (src->bmp.is_present)
+		dest->bmp.path = ft_strdup(src->bmp.path);
 	return (dest);
 }
 

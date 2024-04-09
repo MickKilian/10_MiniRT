@@ -6,11 +6,22 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 03:57:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:41:54 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
+
+
+int	parse_dbl_0180(char *str, double *num)
+{
+	if (!is_dec(str))
+		return (display_error_plus(ERR_DEC, str));
+	*num = str2dbl(str);
+	if (!is_in_range0180(*num))
+		return (display_error_plus(ERR_OUT_OF_VIEW_ANGLE, str));
+	return (0);
+}
 
 int	parse_dbl_vec3(char *str, t_vec3 *vec)
 {
@@ -84,7 +95,8 @@ int	parse_dbl_vec3_n1_1_norm(char *str, t_vec3 *vec)
 	}
 	if (!ret && i != 3)
 		ret = display_error_plus(ERR_NB_COMPS_VEC, str);
-	if (!ret && vec3_len(new_vec3(str2dbl(params[0]), str2dbl(params[1]), str2dbl(params[2]))) != 1)
+	if (!ret && vec3_len(new_vec3(str2dbl(params[0]),
+				str2dbl(params[1]), str2dbl(params[2]))) != 1)
 		ret = display_error_plus(ERR_NORMALIZED, str);
 	if (!ret)
 	{
