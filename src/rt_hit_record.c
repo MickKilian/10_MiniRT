@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 19:45:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 11:01:11 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 05:49:00 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,106 +21,70 @@ void	set_face_nrm(const t_ray r, const t_vec3 out_nrm, t_hit_rec *rec)
 		rec->nrm = vec3_unit(vec3_scale(-1.0, out_nrm));
 }
 
-void	set_map_coord_pln(t_hit_rec *rec)
-{
-	t_plane	*pln;
-	t_vec3	w;
-
-	pln = &rec->httbl->geom->pln;
-	if (vec3_dot(pln->d, new_vec3(1, 0, 0)) != 0)
-		w = vec3_unit(vec3_cross(pln->d, new_vec3(1, 0, 0)));
-	else
-		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 1, 0)));
-	rec->uv = vec3_scale(0.1, new_vec3(vec3_dot(rec->p, w), vec3_dot(rec->p, vec3_unit(vec3_cross(pln->d, w))), 0));
-}
-
-void	set_map_coord_qud(t_hit_rec *rec)
-{
-	t_quad	*qud;
-
-	qud = &rec->httbl->geom->qud;
-	rec->uv = new_vec3(vec3_dot(rec->p, vec3_unit(qud->u)) / 2 / vec3_len(qud->u), vec3_dot(rec->p, vec3_unit(qud->v)) / 2 / vec3_len(qud->v), 0);
-}
-
-void	set_map_coord_dsc(t_hit_rec *rec)
-{
-	t_disc	*dsc;
-	double	phi;
-	t_vec3	vec;
-
-	dsc = &rec->httbl->geom->dsc;
-	vec = vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(dsc->ctr.x, dsc->ctr.y, 0));
-	phi = atan2(-vec3_unit(vec).y, vec3_unit(vec).x) + PI;
-	rec->uv = new_vec3(phi / (2 * PI), vec3_len(vec) / dsc->rd, 0);
-}
-
-void	set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr)
-{
-	double	theta;
-	double	phi;
-	t_vec3	unit_vec;
-
-	unit_vec = vec3_unit(vec3_sub2(rec->p, ctr));
-	theta = acos(-unit_vec.z);
-	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
-	rec->uv = new_vec3(phi / (2 * PI), theta / PI, 0);
-}
-
-void	set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h)
-{
-	double	phi;
-	t_vec3	unit_vec;
-
-	unit_vec = vec3_unit(vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(ctr.x, ctr.y, 0)));
-	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
-	rec->uv = new_vec3(phi / (2 * PI), (rec->p.z - (ctr.z - (h / 2))) / h, 0);
-}
-
-void	set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h)
-{
-	double	phi;
-	t_vec3	unit_vec;
-
-	unit_vec = vec3_unit(vec3_sub2(new_vec3(rec->p.x, rec->p.y, 0), new_vec3(ctr.x, ctr.y, 0)));
-	phi = atan2(-unit_vec.y, unit_vec.x) + PI;
-	rec->uv = new_vec3(phi / (2 * PI), (rec->p.z - (ctr.z - (h / 2))) / h, 0);
-}
-
 void	set_rec_mat(t_rt *rt, t_hit_rec *rec)
 {
-	rec->mat_type = rt->world.httbl->mat->type;
+	t_material	*mat;
+
+	mat = rt->world.httbl->mat;
+	rec->mat_type = mat->type;
 	if (rec->mat_type == LAMBERTIAN)
 	{
-		rec->lamber = rt->world.httbl->mat->lamber;
-		if (rt->world.httbl->geom->type == SPHERE
-				|| rt->world.httbl->geom->type == CYLINDER
-				|| rt->world.httbl->geom->type == CONE
-				|| rt->world.httbl->geom->type == PLANE
-				|| rt->world.httbl->geom->type == QUAD
-				|| rt->world.httbl->geom->type == DISC)
-		{
-			if (rt->world.httbl->mat->txm.is_present)
-				rec->lamber.color = get_pixel_color(&rt->world.httbl->mat->txm.img, rec->uv);
-			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == CHECKBOARD)
-				rec->lamber.color = pattern_color(checkboard_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
-			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == LINES_LONG)
-				rec->lamber.color = pattern_color(long_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
-			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == LINES_LAT)
-				rec->lamber.color = pattern_color(lat_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
-			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == SPIRAL_2_COLORS)
-				rec->lamber.color = pattern_color(spiral_zone(rec->uv, rt->world.httbl->mat->pat.ratio), rec->lamber.color, compl_color(rec->lamber.color));
-			else if (rt->world.httbl->mat->pat.is_present && rt->world.httbl->mat->pat.type == SPIRAL_GRADIENT)
-				rec->lamber.color = gradient_color_spiral(rec->uv, rt->world.httbl->mat->pat.ratio,
-						rec->lamber.color);
-		}
+		rec->lamber = mat->lamber;
+		rec->col = mat->lamber.color;
 	}
 	if (rec->mat_type == METAL)
 	{
-		rec->metal = rt->world.httbl->mat->metal;
-		//rec->metal.color = color_pattern(rec->uv, 10, rec->metal.color, compl_color(rec->metal.color));
+		rec->metal = mat->metal;
+		rec->col = mat->metal.color;
 	}
 	if (rec->mat_type == DIELECTRIC)
-		rec->dielec = rt->world.httbl->mat->dielec;
+	{
+		rec->dielec = mat->dielec;
+		rec->col = mat->dielec.color;
+	}
 	if (rec->mat_type == DIFF_LIGHT)
-		rec->diff_light = rt->world.httbl->mat->diff_light;
+	{
+		rec->diff_light = mat->diff_light;
+		rec->col = mat->diff_light.color;
+	}
+	set_rec_color(rt, rec);
+	set_rec_mat_color(rec);
+}
+
+void	set_rec_mat_color(t_hit_rec *rec)
+{
+	if (rec->mat_type == LAMBERTIAN)
+		rec->lamber.color = rec->col;
+	if (rec->mat_type == METAL)
+		rec->metal.color = rec->col;
+	if (rec->mat_type == DIELECTRIC)
+		rec->dielec.color = rec->col;
+	if (rec->mat_type == DIFF_LIGHT)
+		rec->diff_light.color = rec->col;
+}
+
+void	set_rec_color(t_rt *rt, t_hit_rec *rec)
+{
+	t_material	*mat;
+	t_geometry	*geom;
+
+	mat = rt->world.httbl->mat;
+	geom = rt->world.httbl->geom;
+	if ((rec->mat_type == LAMBERTIAN || rec->mat_type == METAL)
+			&& (geom->type == SPHERE || geom->type == CYLINDER || geom->type == CONE
+				|| geom->type == PLANE || geom->type == QUAD || geom->type == DISC))
+	{
+		if (mat->txm.is_present)
+			rec->col = get_pixel_color(&mat->txm.img, rec->uv);
+		else if (mat->pat.is_present && mat->pat.type == CHECKBOARD)
+			rec->col = pattern_color(checkboard_zone(rec->uv, mat->pat.ratio), rec->col, compl_color(rec->col));
+		else if (mat->pat.is_present && mat->pat.type == LINES_LONG)
+			rec->col = pattern_color(long_zone(rec->uv, mat->pat.ratio), rec->col, compl_color(rec->col));
+		else if (mat->pat.is_present && mat->pat.type == LINES_LAT)
+			rec->col = pattern_color(lat_zone(rec->uv, mat->pat.ratio), rec->col, compl_color(rec->col));
+		else if (mat->pat.is_present && mat->pat.type == SPIRAL_2_COLORS)
+			rec->col = pattern_color(spiral_zone(rec->uv_cyl, mat->pat.ratio), rec->col, compl_color(rec->col));
+		else if (mat->pat.is_present && mat->pat.type == SPIRAL_GRADIENT)
+			rec->col = gradient_color_spiral(rec->uv_cyl, mat->pat.ratio, rec->col);
+	}
 }

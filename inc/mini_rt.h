@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 02:51:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 05:58:39 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@
 # define ERR_PARAMS_BUMP				".xpm bump file FILENAME(string[.xpm])"
 # define NB_PARAMS_PAT				2
 # define ERR_PARAMS_PAT\
-	"Pattern TYPE(int[0: chk, 1: lines_1, 2: lines_2, 3: sprl_2_col, \
+	"Pattern TYPE(int[0: chk, 1: lines_long, 2: lines_lat, 3: sprl_2_col, \
 4: sprl_grad]) RATIO([int[>0]])"
 # define ERR_INFO_TYPE				"Invalid information type"
 # define ERR_GEOM_TYPE				"Geometry type not implemented"
@@ -139,14 +139,14 @@
 # define ERR_AT_LEAST_A_OR_L		"Missing a light source (ambient or point)"
 # define ERR_NO_PARAMS_AMBIENT		"Missing ambient light parameters"
 # define ERR_DUPLICATE_AMBIENT		"Ambient light was already set"
-# define ERR_NO_PARAMS_PT_LIGHT			"Missing point light parameters"
+# define ERR_NO_PARAMS_PT_LIGHT		"Missing point light parameters"
 # define ERR_DUPLICATE_PT_LIGHT		"Point light was already set"
 # define ERR_NO_PARAMS_CAMERA		"Missing camera parameters"
 # define ERR_DUPLICATE_CAMERA		"Camera parameters were already set"
 # define ERR_OPEN_RT_FILE			".rt file could not be open"
 # define ERR_OPEN_XPM_FILE			".xpm file could not be open"
 # define ERR_IS_NOT_RT_FILE			"File is not an .rt file"
-# define ERR_IS_NOT_XPM_FILE			"Not a valid specification for .xpm file"
+# define ERR_IS_NOT_XPM_FILE		"Not a valid specification for .xpm file"
 # define ERR_LOADING_XPM_TEXT		".xpm texture image could not be loaded"
 # define ERR_LOADING_XPM_BUMP		".xpm bump image could not be loaded"
 # define ERR_NB_ARGUMENTS\
@@ -445,12 +445,15 @@ typedef struct s_hit_rec
 	t_httbl			*httbl;
 	t_vec3			p;
 	t_vec3			uv;
+	t_vec3			uv_cyl;
 	t_vec3			nrm;
 	double			t;
 	bool			front_face;
+	t_geom_types	geom_type;
 	t_mat_types		mat_type;
 	t_vec3			att;
 	t_ray			sctt;
+	t_vec3			col;
 	union
 	{
 		t_lamber		lamber;
@@ -680,13 +683,9 @@ void			progress_compute(t_rt *rt, int j);
 
 //rt_hit_record.c
 void			set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
-void			set_map_coord_pln(t_hit_rec *rec);
-void			set_map_coord_qud(t_hit_rec *rec);
-void			set_map_coord_dsc(t_hit_rec *rec);
-void			set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr);
-void			set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h);
-void			set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h);
 void			set_rec_mat(t_rt *rt, t_hit_rec *rec);
+void			set_rec_color(t_rt *rt, t_hit_rec *rec);
+void			set_rec_mat_color(t_hit_rec *rec);
 
 //rt_initialize.c
 int				rt_initialize(t_rt *rt);
@@ -940,6 +939,16 @@ void			rot_1v(t_trsf trsf, t_vec3 *u1);
 void			rot_2v(t_trsf trsf, t_vec3 *u1, t_vec3 *u2);
 void			rot_3v(t_trsf trsf, t_vec3 *u1, t_vec3 *u2, t_vec3 *u3);
 t_ray			rot_r(t_ray r, t_vec3 v, double a);
+
+//geom_map_coord_1.c
+void			set_map_coord_pln(t_hit_rec *rec);
+void			set_map_coord_qud(t_hit_rec *rec);
+void			set_map_coord_dsc(t_hit_rec *rec);
+void			set_map_coord_sph(t_hit_rec *rec, t_vec3 ctr);
+void			set_map_coord_cyl(t_hit_rec *rec, t_vec3 ctr, double h);
+
+//geom_map_coord_2.c
+void			set_map_coord_con(t_hit_rec *rec, t_vec3 ctr, double h);
 
 //display_errors.c
 bool			display_error(char *error);

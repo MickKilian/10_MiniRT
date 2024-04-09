@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/04/07 15:17:02 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/09 05:56:30 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ PRIM_SRCS	=	main.c \
 				display_errors.c display_geometry.c display_material.c \
 				display_simple.c display_world.c \
 				geom_basic_translate.c geom_basic_rotate.c \
-				geom_object_transform.c \
+				geom_object_transform.c geom_map_coord_1.c geom_map_coord_2.c \
 				geom_special_build_con.c geom_special_build_other.c\
 				httbl_box.c httbl_cone.c httbl_create.c httbl_cylinder.c \
 				httbl_dice.c httbl_disc.c httbl_pencil.c \

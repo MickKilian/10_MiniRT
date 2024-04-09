@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 01:09:04 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 03:57:42 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	parse_color(char *str, t_vec3 *color)
 
 int	parse_pat(char *str, int *num)
 {
-	if (!is_long(str) || str2dbl(str) >= LEN_PAT_TYPES)
+	if (!is_long(str) || str2dbl(str) < 0 || str2dbl(str) >= LEN_PAT_TYPES)
 		return (display_error_plus(ERR_PAT, str));
 	*num = str2dbl(str);
 	return (0);

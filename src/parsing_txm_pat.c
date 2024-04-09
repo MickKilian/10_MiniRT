@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
-#include <errno.h>
 
 int	parse_texture(t_rt *rt)
 {
