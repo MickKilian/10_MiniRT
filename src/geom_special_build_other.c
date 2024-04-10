@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 21:31:39 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:00:37 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	add_dice_face(t_world *world, t_box *box, t_dice_dots dice_dots)
 						vec3_add2(vec3_add2(
 								vec3_scale(0.66 * (i % 3 - 1), dice_dots.u),
 								vec3_scale(0.66 * (i / 3 - 1), dice_dots.v)),
-							vec3_cross(dice_dots.u, dice_dots.v))),
+							vec3_scale(1.01 * vec3_len(dice_dots.u), vec3_unit(vec3_cross(dice_dots.u, dice_dots.v))))),
 					vec3_unit(vec3_cross(dice_dots.u, dice_dots.v)),
 					vec3_len(dice_dots.u) / 5);
 			httbl_addback(world, new_httbl(geom_disc(new_disc),
