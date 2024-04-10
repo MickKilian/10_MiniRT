@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 15:02:29 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:56:20 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ bool	hit_cone_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 	rec->httbl = rt->world.httbl;
 	rec->mat_rot_an = rt->world.httbl->mat->rot_an;
 	set_map_coord_con(rec, rt->world.httbl->geom->con.b_ctr,
-			rt->world.httbl->geom->con.h);
+		rt->world.httbl->geom->con.h);
 	set_rec_mat(rt, rec);
 	set_face_nrm(r, vec3_unit(new_vec3(rec->p.x, rec->p.y,
 				vec3_len(new_vec3(rec->p.x, rec->p.y, 0))

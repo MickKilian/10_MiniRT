@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 20:41:26 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 03:31:06 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:24:16 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	is_in_range_n1_1(double num)
 
 int	is_in_range0180(double num)
 {
-	if (num < 0.0 || num > 180.0)
+	if (num < 0.0 || num >= 180.0)
 		return (0);
 	return (1);
 }

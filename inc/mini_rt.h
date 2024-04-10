@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 20:55:17 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 01:07:31 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@
 # define NB_PARAMS_CAMERA			3
 # define ERR_PARAMS_CAMERA\
 	"Camera LOCATION(vector[3Xdouble]) DIRECTION(3Xvector[double]) \
-	HFOV(double[0-180])"
+	HFOV(double[>=0<180[)"
 # define NB_PARAMS_POINT			2
 # define NB_PARAMS_PLANE			3
 # define ERR_PARAMS_PLANE\
@@ -131,7 +131,7 @@ ROTATION_ANGLE(double[DEG])"
 # define ERR_OUT_OF_N1_1\
 	"Vector must have its components in the range [-1,1]"
 # define ERR_OUT_OF_VIEW_ANGLE\
-	"Horizontal view angle should be in range [0-180]"
+	"Horizontal view angle should be positive and less than 180 deg"
 # define ERR_NB_PARAMS				"Wrong number of parameters for"
 # define ERR_TL_PARAMS				"Less parameters than expected for"
 # define ERR_TM_PARAMS				"More parameters than expected for"
@@ -360,6 +360,7 @@ typedef struct s_image
 {
 	void	*ptr;
 	char	*addr;
+	bool	is_set;
 	int		w;
 	int		h;
 	int		bpp;
@@ -596,16 +597,16 @@ int				parse_dbl(char *str, double *num);
 int				parse_dbl_pos(char *str, double *num);
 int				parse_int_pos(char *str, double *num);
 int				parse_dbl_01(char *str, double *num);
-
-//parsing_types_3.c
 int				parse_dbl_n1_1(char *str, double *num);
+
+//parsing_types_2.c
+int				parse_dbl_0180(char	*str, double *num);
+int				parse_dbl_vec3(char *str, t_vec3 *vec);
 int				parse_dbl_vec3_n1_1(char *str, t_vec3 *vec);
 int				parse_dbl_vec3_n1_1_norm(char *str, t_vec3 *vec);
-int				parse_dbl_0180(char	*str, double *num);
+int				parse_dbl_vec3_n1_1_norm_cont(char *str, t_vec3 *vec, int ret);
 
 //parsing_types_3.c
-int				parse_dbl_vec3(char *str, t_vec3 *vec);
-int				check_range_vec_n1_1(t_vec3 *vec);
 int				parse_color(char *str, t_vec3 *color);
 int				parse_pat(char *str, int *num);
 
@@ -694,8 +695,9 @@ void			progress_compute(t_rt *rt, int j);
 //rt_hit_record.c
 void			set_face_nrm(t_ray r, t_vec3 out_nrm, t_hit_rec *rec);
 void			set_rec_mat(t_rt *rt, t_hit_rec *rec);
-void			set_rec_color(t_rt *rt, t_hit_rec *rec);
 void			set_rec_mat_color(t_hit_rec *rec);
+void			check_rec_color(t_rt *rt, t_hit_rec *rec);
+void			set_rec_color(t_rt *rt, t_hit_rec *rec);
 
 //rt_initialize.c
 int				rt_initialize(t_rt *rt);

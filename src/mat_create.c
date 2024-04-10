@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 05:34:23 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 20:12:32 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 03:16:28 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	mat_finalize(t_rt *rt)
 	{
 		rt->tp.mat->bmp.is_present = true;
 		rt->tp.mat->bmp.path = ft_strdup(rt->tp.bmp_path);
-		rt->tp.mat->bmp.rot_an = rt->tp.bmp_rot_an;
 	}
 	else
 		rt->tp.mat->bmp.is_present = false;
@@ -86,9 +85,12 @@ int	handle_textures(t_rt *rt)
 				break;
 			}
 			else
+			{
+				rt->world.httbl->mat->txm.img.is_set = true;
 				rt->world.httbl->mat->txm.img.addr = mlx_get_data_addr(rt->world.httbl->mat->txm.img.ptr,
 						&rt->world.httbl->mat->txm.img.bpp, &rt->world.httbl->mat->txm.img.line_length,
 						&rt->world.httbl->mat->txm.img.endian);
+			}
 			free(rt->world.httbl->mat->txm.path);
 			rt->world.httbl->mat->txm.path = NULL;
 		}
@@ -115,9 +117,12 @@ int	handle_bumps(t_rt *rt)
 				break;
 			}
 			else
+			{
+				rt->world.httbl->mat->bmp.img.is_set = true;
 				rt->world.httbl->mat->bmp.img.addr = mlx_get_data_addr(rt->world.httbl->mat->bmp.img.ptr,
 						&rt->world.httbl->mat->bmp.img.bpp, &rt->world.httbl->mat->bmp.img.line_length,
 						&rt->world.httbl->mat->bmp.img.endian);
+			}
 			free(rt->world.httbl->mat->bmp.path);
 			rt->world.httbl->mat->bmp.path = NULL;
 		}

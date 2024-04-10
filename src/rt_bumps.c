@@ -6,22 +6,23 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 11:37:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:54:25 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
 
-void	modify_bump_normal(t_vec3 *nrm, t_vec3 ref, double grad_u, double grad_v)
+void	modify_bump_normal(t_vec3 *nrm, t_vec3 ref, double grad_u,
+		double grad_v)
 {
-	 t_vec3	u;
-	 t_vec3	v;
+	t_vec3	u;
+	t_vec3	v;
 
-	 u = vec3_cross(*nrm, ref);
-	 v = vec3_cross(*nrm, u);
-	 *nrm = vec3_add2(*nrm, vec3_scale(grad_v, u));
-	 *nrm = vec3_add2(*nrm, vec3_scale(grad_u, v));
-	 *nrm = vec3_unit(*nrm);
+	u = vec3_cross(*nrm, ref);
+	v = vec3_cross(*nrm, u);
+	*nrm = vec3_add2(*nrm, vec3_scale(grad_v, u));
+	*nrm = vec3_add2(*nrm, vec3_scale(grad_u, v));
+	*nrm = vec3_unit(*nrm);
 }
 
 void	alter_normal_with_bump(t_rt *rt, t_hit_rec *rec)
