@@ -1,0 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_general.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
+/*   Updated: 2024/04/10 23:02:36 by mbourgeo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/mini_rt.h"
+
+int	parse_line(t_rt *rt, char *line)
+{
+	ft_bzero(&rt->tp, sizeof(t_temp));
+	rt->tp.params = ft_split(line, ' ');
+	rt->tp.avail = array_size(rt->tp.params) - 1;
+	if (ft_strcmp(rt->tp.params[rt->tp.count], "R") == 0)
+		rt->tp.ret = parse_resolution_params(rt);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "P") == 0)
+		rt->tp.ret = parse_algo_params(rt);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "A") == 0)
+		rt->tp.ret = parse_ambient_params(rt);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "L") == 0)
+		rt->tp.ret = parse_light_params(rt);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "C") == 0)
+		rt->tp.ret = parse_camera_params(rt);
+	else
+		parse_line_cont(rt);
+	while (!rt->tp.ret && rt->tp.count < rt->tp.avail)
+		rt->tp.ret = parse_extra(rt);
+	if (!rt->tp.ret && rt->tp.geom)
+	{
+		if (rt->tp.geom->type == SAFE_CONE || !mat_finalize(rt))
+			httbl_create(rt);
+	}
+	if (rt->tp.params)
+		free_split_vec(rt->tp.params);
+	return (rt->tp.ret && !free_tp(rt->tp));
+}
+
+void	parse_line_cont(t_rt *rt)
+{
+	if (ft_strcmp(rt->tp.params[rt->tp.count], "sp") == 0)
+		rt->tp.ret = parse_httbl(rt, SPHERE, NB_PARAMS_SPHERE);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "pl") == 0)
+		rt->tp.ret = parse_httbl(rt, PLANE, NB_PARAMS_PLANE);
+	else if (ft_strcmp(rt->tp.params[rt->tp.count], "cy") == 0)
+		rt->tp.ret = parse_httbl(rt, CYLINDER, NB_PARAMS_CYLINDER);
+	else
+		rt->tp.ret = display_error_plus(ERR_INFO_TYPE,
+				rt->tp.params[rt->tp.count]);
+}
+
+int	parse_httbl(t_rt *rt, t_geom_types geom_type, int expect)
+{
+	if (check_nb_params(rt, expect,
+			get_error_message(rt->tp.params[rt->tp.count])))
+		return (1);
+	else
+		parse_httbl_cont(rt, geom_type);
+	return (rt->tp.ret);
+}
+
+void	parse_httbl_cont(t_rt *rt, t_geom_types geom_type)
+{
+	if (geom_type == SPHERE)
+		rt->tp.ret = parse_sphere(rt);
+	else if (geom_type == PLANE)
+		rt->tp.ret = parse_plane(rt);
+	else if (geom_type == CYLINDER)
+		rt->tp.ret = parse_cylinder(rt);
+	else
+		rt->tp.ret = display_error_plus(ERR_GEOM_TYPE,
+				ft_itoa(geom_type));
+}
