@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 23:56:20 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 03:46:58 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ t_geometry	*geom_cone(t_cone con)
 	geom = ft_calloc(1, sizeof(t_geometry));
 	geom->type = CONE;
 	geom->trsf.tra = con.b_ctr;
-	geom->trsf.rot_an = acos(vec3_dot(con.gen,
-				new_vec3(0, 0, 1)));
+	geom->trsf.rot_an = acos(vec3_dot(con.gen, new_vec3(0, 0, 1)));
 	geom->trsf_i.rot_an = acos(vec3_dot(new_vec3(0, 0, 1), con.gen));
 	if (ft_abs(geom->trsf.rot_an - PI) < EPSILON)
 	{
@@ -73,16 +72,10 @@ bool	hit_cone_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 	if (!search_poly_root_2(&h_pol, tray, &root_1, &root_2))
 		return (0);
 	if (root_1 && srs(rt->world.httbl->geom->con.itv_z, (hit_pt(r, root_1)).z))
-	{
-		rec->t = root_1;
-		rec->p = hit_pt(r, rec->t);
-	}
+		rec->p = hit_pt(r, root_1);
 	else if (root_2 && srs(rt->world.httbl->geom->con.itv_z,
 			(hit_pt(r, root_2)).z))
-	{
-		rec->t = root_2;
 		rec->p = hit_pt(r, rec->t);
-	}
 	else
 		return (0);
 	rec->httbl = rt->world.httbl;

@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 02:56:04 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 10:14:37 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,12 @@ int	parse_line(t_rt *rt, char *line)
 		rt->tp.ret = parse_extra(rt);
 	if (!rt->tp.ret && rt->tp.geom)
 	{
-		if (rt->tp.geom->type != SAFE_CONE)
-			mat_finalize(rt);
-		httbl_create(rt);
-	}
-	if (rt->tp.ret)
-	{
-	//	if (rt->tp.mat->txm.is_present)
-	//		free(rt->tp.mat->txm.path);
-	//	if (rt->tp.mat->bmp.is_present)
-	//		free(rt->tp.mat->bmp.path);
-		free_tp(rt->tp);
+		if (rt->tp.geom->type == SAFE_CONE || !mat_finalize(rt))
+			httbl_create(rt);
 	}
 	if (rt->tp.params)
 		free_split_vec(rt->tp.params);
-	return (rt->tp.ret);
+	return (rt->tp.ret && !free_tp(rt->tp));
 }
 
 void	parse_line_cont(t_rt *rt)

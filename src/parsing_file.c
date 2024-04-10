@@ -6,31 +6,11 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:09:03 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/03/27 11:55:52 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 11:03:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
-
-bool	is_rt_file(char *file_path)
-{
-	size_t	path_length;
-
-	path_length = ft_strlen(file_path) - 3;
-	if (path_length)
-		return (ft_strncmp(file_path + path_length, ".rt", 3) == 0);
-	return (0);
-}
-
-bool	is_xpm_file(char *file_path)
-{
-	size_t	path_length;
-
-	path_length = ft_strlen(file_path) - 4;
-	if (path_length)
-		return (ft_strncmp(file_path + path_length, ".xpm", 4) == 0);
-	return (0);
-}
 
 int	read_file(t_rt *rt, int fd)
 {

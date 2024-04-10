@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 23:22:10 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 11:04:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,25 @@ int	parse_pat(char *str, int *num)
 	if (!is_long(str) || str2dbl(str) < 0 || str2dbl(str) >= LEN_PAT_TYPES)
 		return (display_error_plus(ERR_PAT, str));
 	*num = str2dbl(str);
+	return (0);
+}
+
+bool	is_rt_file(char *file_path)
+{
+	size_t	path_length;
+
+	path_length = ft_strlen(file_path) - 3;
+	if (path_length)
+		return (ft_strncmp(file_path + path_length, ".rt", 3) == 0);
+	return (0);
+}
+
+bool	is_xpm_file(char *file_path)
+{
+	size_t	path_length;
+
+	path_length = ft_strlen(file_path) - 4;
+	if (path_length)
+		return (ft_strncmp(file_path + path_length, ".xpm", 4) == 0);
 	return (0);
 }

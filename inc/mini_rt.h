@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 01:07:31 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 11:26:50 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ ROTATION_ANGLE(double[DEG])"
 # define ERR_OUT_OF_N1_1\
 	"Vector must have its components in the range [-1,1]"
 # define ERR_OUT_OF_VIEW_ANGLE\
-	"Horizontal view angle should be positive and less than 180 deg"
+	"Horizontal view angle should be >=0 and less than 180 deg"
 # define ERR_NB_PARAMS				"Wrong number of parameters for"
 # define ERR_TL_PARAMS				"Less parameters than expected for"
 # define ERR_TM_PARAMS				"More parameters than expected for"
@@ -523,9 +523,15 @@ typedef struct s_ambient
 
 typedef struct s_light
 {
-	t_vec3	pos;
-	double	ratio;
-	t_vec3	color;
+	t_vec3		pos;
+	double		ratio;
+	t_vec3		color;
+	t_vec3		intensity;
+	t_hit_rec	rec;
+	t_ray		shad_r;
+	t_vec3		o;
+	t_vec3		o_diff;
+	t_vec3		o_spec;
 }	t_light;
 
 typedef struct s_temp
@@ -579,8 +585,6 @@ typedef struct s_rt
 }	t_rt;
 
 //parsing_file.c
-bool			is_rt_file(char *file_path);
-bool			is_xpm_file(char *file_path);
 int				read_file(t_rt *rt, int fd);
 char			*clean_line(char *line);
 bool			is_incomplete_file(t_rt *rt);
@@ -609,6 +613,8 @@ int				parse_dbl_vec3_n1_1_norm_cont(char *str, t_vec3 *vec, int ret);
 //parsing_types_3.c
 int				parse_color(char *str, t_vec3 *color);
 int				parse_pat(char *str, int *num);
+bool			is_rt_file(char *file_path);
+bool			is_xpm_file(char *file_path);
 
 //parsing_geom.c
 int				parse_sphere(t_rt *rt);
@@ -748,7 +754,7 @@ bool			hit_plane(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 t_quad			quad(t_vec3 point, t_vec3 vec1, t_vec3 vec2);
 t_geometry		*geom_quad(t_quad qud);
 bool			hit_quad(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
-bool			is_interior(double a, double b);
+bool			is_interior(t_quad qud, t_vec3 p_temp);
 
 //httbl_box.c
 t_box			box(t_vec3 ctr, t_vec3 u, t_vec3 v, t_vec3 w);
@@ -877,8 +883,8 @@ bool			solve_h_pol(t_h_pol *h_pol);
 
 //utils_memory.c
 void			free_httbls(t_rt *rt, t_world *world);
-void			free_split_vec(char **vec);
-void			free_tp(t_temp tp);
+int				free_split_vec(char **vec);
+int	 			free_tp(t_temp tp);
 
 //utils_parsing.c
 int				check_nb_params(t_rt *rt, int expect, char *err_msg);
@@ -888,12 +894,14 @@ void			get_end_idx(t_rt *rt);
 t_vec3			hit_pt(t_ray r, double t);
 t_ray			new_ray(t_vec3 orig, t_vec3 dir);
 
-//utils_colors.c
+//utils_colors_1.c
 t_vec3			vec2rgb(t_vec3 col);
 t_vec3			vec2hsv(t_vec3 col);
 t_vec3			rgb2vec(t_vec3 col);
 t_vec3			lin2gam_vec(t_vec3 lin);
 double			rgb2val(t_vec3 col);
+
+//utils_colors_2.c
 t_vec3			val2rgb(int rgb);
 t_vec3			compl_color(t_vec3 col);
 t_vec3			hsv2rgb(t_vec3 hsv);
@@ -928,11 +936,15 @@ t_diff_light	diff_light(double ratio, t_vec3 color);
 t_material		*mat_diff_light(t_temp tp, t_diff_light diff_light);
 
 //mat_create.c
-void			mat_finalize(t_rt *rt);
+bool			mat_finalize(t_rt *rt);
 void 			mat_rot_choice(t_rt *rt);
 t_material		*duplicate_mat(t_material *src);
+
+//mat_txm_bmp.c
 int				handle_textures(t_rt *rt);
 int				handle_bumps(t_rt *rt);
+int				create_txm_image(t_rt *rt, t_material *mat);
+int				create_bmp_image(t_rt *rt, t_material *mat);
 
 //mat_scatter.c
 bool			lambertian_scatter(t_hit_rec *rec);

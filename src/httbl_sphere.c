@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/09 14:11:05 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 11:06:56 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ t_geometry	*geom_sphere(t_sphere sph)
 	geom = ft_calloc(1, sizeof(t_geometry));
 	geom->type = SPHERE;
 	geom->sph = sph;
-
 	geom->trsf.tra = sph.ctr;
 	geom->trsf.rot_an = acos(vec3_dot(sph.ax, new_vec3(0, 0, 1)));
 	geom->trsf_i.rot_an = acos(vec3_dot(new_vec3(0, 0, 1), sph.ax));
@@ -46,7 +45,6 @@ t_geometry	*geom_sphere(t_sphere sph)
 	geom->sph = sph;
 	geom->sph.ctr = new_vec3(0, 0, 0);
 	geom->sph.ax = new_vec3(0, 0, 1.0);
-
 	return (geom);
 }
 

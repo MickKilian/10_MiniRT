@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:32:41 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/08 02:29:41 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 10:15:52 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ t_vec3	pixel_sample_square(t_camera *cam)
 		px = -0.5;
 		py = -0.5;
 	}
-
 	return (vec3_add2(vec3_scale(px, cam->pixel_delta_u),
 			vec3_scale(py, cam->pixel_delta_v)));
 }

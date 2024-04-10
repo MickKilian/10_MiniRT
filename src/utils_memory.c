@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:24:57 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 03:17:16 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 11:35:08 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	free_httbls(t_rt *rt, t_world *world)
 	}
 }
 
-void	free_split_vec(char **vec)
+int	free_split_vec(char **vec)
 {
 	int	i;
 
@@ -47,26 +47,14 @@ void	free_split_vec(char **vec)
 		i++;
 	}
 	free(vec);
+	return (0);
 }
 
-void	free_tp(t_temp tp)
+int	free_tp(t_temp tp)
 {
 	if (tp.geom)
 		free(tp.geom);
-//	if (tp.mat->txm.is_present)
-//	{
-//		printf("freeing_tp_txm %s(%p)\n", tp.mat->txm.path, tp.mat->txm.path);
-//		free(tp.mat->txm.path);
-//	}
-//	if (tp.mat->bmp.is_present)
-//	{
-//		printf("freeing_tp_bmp %s(%p)\n", tp.mat->bmp.path, tp.mat->bmp.path);
-//		free(tp.mat->bmp.path);
-//	}
 	if (tp.mat)
 		free(tp.mat);
-	//if (tp.txm_path)
-	//	free(tp.txm_path);
-	//if (tp.bmp_path)
-	//	free(tp.bmp_path);
+	return (0);
 }

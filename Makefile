@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/04/09 19:40:28 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/10 11:11:48 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ PRIM_SRCS	=	main.c \
 				httbl_dice.c httbl_disc.c httbl_pencil.c \
 				httbl_plane.c httbl_point.c httbl_quad.c httbl_safe_cone.c \
 				httbl_sphere.c \
-				mat_create.c mat_diff_light.c mat_dielectric.c \
+				mat_create.c mat_txm_bmp.c mat_diff_light.c mat_dielectric.c \
 				mat_lambertian.c mat_metal.c mat_scatter.c \
 				parsing_env.c \
 				parsing_extra.c parsing_tranformation.c parsing_material.c\
@@ -37,7 +37,8 @@ PRIM_SRCS	=	main.c \
 				utils_array.c utils_convert_1.c utils_convert_2.c \
 				utils_interval.c utils_math_1.c utils_math_2.c \
 				utils_memory.c \
-				utils_numbers_1.c utils_numbers_2.c utils_colors.c \
+				utils_numbers_1.c utils_numbers_2.c utils_colors_1.c \
+				utils_colors_2.c \
 				utils_quadratic_solve.c utils_parsing.c \
 				utils_random_1.c utils_random_2.c utils_ray.c \
 				utils_vec3_1.c utils_vec3_2.c utils_vec3_3.c utils_vec3_4.c \
