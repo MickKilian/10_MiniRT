@@ -1,4 +1,4 @@
-R	1200
+R	100
 P	1				10
 A	0				255,255,255
 C	0,-25,10			0,0,4			70
@@ -9,7 +9,7 @@ L	40,-20,24	1		255,255,255
 #sp	-600,2000,100		15			255,255,255 txm ./images/plutomap1k.xpm -40 bmp ./images/plutobump1k.xpm -40
 #sp	40,350,0		15			255,255,255 txm ./images/mercurymap.xpm 270 bmp ./images/mercurybump.xpm 2700
 sp	40,350,0		15			255,255,255 txm ./images/venusmap.xpm 270 bmp ./images/venusbump.xpm 270
-#sp	-10,20,-1		10			255,255,255 txm ./images/marsmap1k.xpm 180 bmp ./images/marsbumpwk.xpm 180
+sp	-10,20,-1		10			255,255,255 txm ./images/marsmap1k.xpm 180 bmp ./images/marsbumpwk.xpm 180
 #sp	0,0,0		10			255,255,0 txm ./images/earthmap1k.xpm 90 bmp ./images/earthbump1k.xpm 90
 #co	3,0,-5	0,0,1	10	5	10	255,255,0	txm ./images/earthmap1k.xpm 120 bmp ./images/earthbump1k.xpm 0
 #cy	0,0,0		0,0,1	10	10			255,0,0 pat 0 1 120 txm ./images/earthmap1k.xpm 120 bmp ./images/earthbump1k.xpm 0

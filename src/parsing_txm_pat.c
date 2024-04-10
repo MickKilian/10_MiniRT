@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:40:44 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 03:17:41 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 12:42:22 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ int	parse_texture(t_rt *rt)
 	if (check_nb_params(rt, NB_PARAMS_TXM, ERR_PARAMS_TXM))
 		return (1);
 	xpm_file_path = rt->tp.params[++rt->tp.count];
-	fd = open(xpm_file_path, O_RDONLY);
 	if (!is_xpm_file(xpm_file_path))
 		return (display_error_plus(ERR_IS_NOT_XPM_FILE, xpm_file_path));
-	else if (fd == -1)
+	fd = open(xpm_file_path, O_RDONLY);
+	if (fd == -1)
 		return (display_error_plus(ERR_OPEN_XPM_FILE, xpm_file_path));
-	else if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
+	close(fd);
+	if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
 		return (1);
 	rt->tp.has_txm = true;
 	rt->tp.txm_path = xpm_file_path;
@@ -43,12 +44,13 @@ int	parse_bump(t_rt *rt)
 	if (check_nb_params(rt, NB_PARAMS_BUMP, ERR_PARAMS_BUMP))
 		return (1);
 	xpm_file_path = rt->tp.params[++rt->tp.count];
-	fd = open(xpm_file_path, O_RDONLY);
 	if (!is_xpm_file(xpm_file_path))
 		return (display_error_plus(ERR_IS_NOT_XPM_FILE, xpm_file_path));
-	else if (fd == -1)
+	fd = open(xpm_file_path, O_RDONLY);
+	if (fd == -1)
 		return (display_error_plus(ERR_OPEN_XPM_FILE, xpm_file_path));
-	else if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
+	close(fd);
+	if (parse_dbl(rt->tp.params[++rt->tp.count], &rot_an))
 		return (1);
 	rt->tp.has_bmp = true;
 	rt->tp.bmp_path = xpm_file_path;

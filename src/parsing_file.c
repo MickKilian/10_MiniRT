@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 07:09:03 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 11:03:33 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 12:31:39 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ int	open_and_read_file(t_rt *rt, char *file_path)
 	if (fd == -1)
 		return (display_error(ERR_OPEN_RT_FILE));
 	else if (!is_rt_file(file_path))
+	{
+		close(fd);
 		return (display_error(ERR_IS_NOT_RT_FILE));
+	}
 	else if (read_file(rt, fd) || is_incomplete_file(rt))
 	{
 		close(fd);
