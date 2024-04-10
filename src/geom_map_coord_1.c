@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 11:31:58 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:15:10 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,26 @@ void	set_map_coord_pln(t_hit_rec *rec)
 	t_plane	*pln;
 	t_vec3	w;
 	double	phi;
+	t_vec3	vec;
 
 	pln = &rec->httbl->geom->pln;
 	if (vec3_dot(pln->d, new_vec3(1, 0, 0)) != 0)
 		w = vec3_unit(vec3_cross(pln->d, new_vec3(1, 0, 0)));
 	else
 		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 1, 0)));
-	rec->uv = vec3_scale(0.1, new_vec3(vec3_dot(rec->p, w),
+	rec->uv = new_vec3(0, 0, 0);
+	rec->uv.x = ft_modulo(0.5 * vec3_dot(rec->p, w) + rec->mat_rot_an / (2 * PI), 1);
+	if (rec->uv.x > 0)
+		rec->uv.x = rec->uv.x - 1;
+	rec->uv.y = ft_modulo(0.5 * vec3_dot(rec->p, vec3_unit(vec3_cross(pln->d, w))), 1);
+	if (rec->uv.y > 0)
+		rec->uv.y = rec->uv.y - 1;
+	rec->uv = vec3_scale(-1, rec->uv);
+	vec = vec3_scale(0.1, new_vec3(vec3_dot(rec->p, w),
 				vec3_dot(rec->p, vec3_unit(vec3_cross(pln->d, w))), 0));
-	phi = atan2(-vec3_unit(rec->uv).y, vec3_unit(rec->uv).x) + PI;
+	phi = atan2(-vec3_unit(vec).y, vec3_unit(vec).x) + PI;
 	phi = ft_modulo(phi + rec->mat_rot_an, 2 * PI);
-	rec->uv_cyl = new_vec3(phi / (2 * PI), vec3_len(rec->uv), 0);
+	rec->uv_cyl = new_vec3(phi / (2 * PI), vec3_len(vec), 0);
 }
 
 void	set_map_coord_qud(t_hit_rec *rec)
