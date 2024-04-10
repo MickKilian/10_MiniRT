@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 18:10:22 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 22:25:24 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ ROTATION_ANGLE(double[DEG])"
 # define NORMAL_MODE 0
 # define SHADOW_BIAS 0.01
 # define CLOSE_VOLUMES 1
-# define MULTI_LIGHTS 1
+# define MULTI_LIGHTS 0
 
 typedef struct s_httbl	t_httbl;
 
