@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 14:00:37 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:29:15 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,27 +51,27 @@ void	add_dice_dots(t_world *world, t_box *box)
 	add_dice_face(world, box, dice_dots(box->w, box->v, 365));
 }
 
-void	add_dice_face(t_world *world, t_box *box, t_dice_dots dice_dots)
+void	add_dice_face(t_world *world, t_box *box, t_dice_dots d)
 {
 	int		i;
 	t_disc	new_disc;
 
 	i = 0;
-	while (dice_dots.code)
+	while (d.code)
 	{
-		if (dice_dots.code % 2)
+		if (d.code % 2)
 		{
-			new_disc = disc(vec3_add2(box->ctr,
-						vec3_add2(vec3_add2(
-								vec3_scale(0.66 * (i % 3 - 1), dice_dots.u),
-								vec3_scale(0.66 * (i / 3 - 1), dice_dots.v)),
-							vec3_scale(1.01 * vec3_len(dice_dots.u), vec3_unit(vec3_cross(dice_dots.u, dice_dots.v))))),
-					vec3_unit(vec3_cross(dice_dots.u, dice_dots.v)),
-					vec3_len(dice_dots.u) / 5);
+			new_disc = disc(vec3_add2(box->ctr, vec3_add2(vec3_add2(
+								vec3_scale(0.66 * (i % 3 - 1), d.u),
+								vec3_scale(0.66 * (i / 3 - 1), d.v)),
+							vec3_scale(1.01 * vec3_len(d.u),
+								vec3_unit(vec3_cross(d.u, d.v))))),
+					vec3_unit(vec3_cross(d.u, d.v)),
+					vec3_len(d.u) / 5);
 			httbl_addback(world, new_httbl(geom_disc(new_disc),
 					mat_lamber(lamber(new_vec3(1, 1, 1)))));
 		}
-		dice_dots.code /= 2;
+		d.code /= 2;
 		i++;
 	}
 }

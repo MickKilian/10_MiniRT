@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 15:15:10 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:18:59 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ void	set_map_coord_pln(t_hit_rec *rec)
 	else
 		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 1, 0)));
 	rec->uv = new_vec3(0, 0, 0);
-	rec->uv.x = ft_modulo(0.5 * vec3_dot(rec->p, w) + rec->mat_rot_an / (2 * PI), 1);
+	rec->uv.x = ft_modulo(0.5 * vec3_dot(rec->p, w) + rec->mat_rot_an
+			/ (2 * PI), 1);
 	if (rec->uv.x > 0)
 		rec->uv.x = rec->uv.x - 1;
-	rec->uv.y = ft_modulo(0.5 * vec3_dot(rec->p, vec3_unit(vec3_cross(pln->d, w))), 1);
+	rec->uv.y = ft_modulo(0.5 * vec3_dot(rec->p,
+				vec3_unit(vec3_cross(pln->d, w))), 1);
 	if (rec->uv.y > 0)
 		rec->uv.y = rec->uv.y - 1;
 	rec->uv = vec3_scale(-1, rec->uv);

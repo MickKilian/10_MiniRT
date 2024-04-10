@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:08:45 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 03:46:58 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:49:42 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,19 @@ void	reverse_geom_cone(t_geometry *geom)
 bool	hit_cone_finite(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec)
 {
 	t_h_pol		h_pol;
-	double		root_1;
-	double		root_2;
+	double		rts[2];
 
 	set_poly_cone(rt, r, &h_pol);
-	if (!search_poly_root_2(&h_pol, tray, &root_1, &root_2))
+	if (!search_poly_root_2(&h_pol, tray, &rts[0], &rts[1]))
 		return (0);
-	if (root_1 && srs(rt->world.httbl->geom->con.itv_z, (hit_pt(r, root_1)).z))
-		rec->p = hit_pt(r, root_1);
-	else if (root_2 && srs(rt->world.httbl->geom->con.itv_z,
-			(hit_pt(r, root_2)).z))
-		rec->p = hit_pt(r, rec->t);
+	if (rts[0] && srs(rt->world.httbl->geom->con.itv_z, (hit_pt(r, rts[0])).z))
+		rec->t = rts[0];
+	else if (rts[1] && srs(rt->world.httbl->geom->con.itv_z,
+			(hit_pt(r, rts[1])).z))
+		rec->t = rts[1];
 	else
 		return (0);
+	rec->p = hit_pt(r, rec->t);
 	rec->httbl = rt->world.httbl;
 	rec->mat_rot_an = rt->world.httbl->mat->rot_an;
 	set_map_coord_con(rec, rt->world.httbl->geom->con.b_ctr,

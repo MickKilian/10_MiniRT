@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 02:50:35 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 11:52:25 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:21:05 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_vec3	ray_color(t_rt *rt, int depth, t_ray r)
 	if (!world_hit(rt, r, itv(0.001, INFINITY), &rec))
 		return (vec3_scale(rt->ambient.ratio, rt->ambient.color));
 	else if (rec.mat_type == DIFF_LIGHT)
-	return (vec3_scale(rec.diff_light.ratio, rec.diff_light.color));
+		return (vec3_scale(rec.diff_light.ratio, rec.diff_light.color));
 	else
 	{
 		if (rec.mat_type == LAMBERTIAN)
@@ -35,7 +35,8 @@ t_vec3	ray_color(t_rt *rt, int depth, t_ray r)
 			dielectric_scatter(r, &rec);
 		lighting_color = point_lights(rt, &rec);
 		if (!NORMAL_MODE)
-			return (vec3_add2(lighting_color, vec3_prd(rec.att, ray_color(rt, depth - 1, rec.sctt))));
+			return (vec3_add2(lighting_color, vec3_prd(rec.att,
+						ray_color(rt, depth - 1, rec.sctt))));
 		return (vec3_scale(0.5, vec3_add2(rec.nrm, new_vec3(1, 1, 1))));
 	}
 }

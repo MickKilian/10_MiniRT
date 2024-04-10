@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/04/10 11:11:48 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/10 15:37:40 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,8 +35,8 @@ PRIM_SRCS	=	main.c \
 				rt_render.c rt_mlx.c rt_image.c \
 				rt_patterns_1.c rt_patterns_2.c rt_bumps.c \
 				utils_array.c utils_convert_1.c utils_convert_2.c \
-				utils_interval.c utils_math_1.c utils_math_2.c \
-				utils_memory.c \
+				utils_interval_1.c utils_interval_2.c utils_math_1.c \
+				utils_math_2.c utils_memory.c \
 				utils_numbers_1.c utils_numbers_2.c utils_colors_1.c \
 				utils_colors_2.c \
 				utils_quadratic_solve.c utils_parsing.c \

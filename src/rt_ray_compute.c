@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:56:22 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/02 05:02:51 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:19:33 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_ray	get_ray(t_camera *cam, int i, int j)
 			vec3_scale(1.0 * i, cam->pixel_delta_u),
 			vec3_scale(1.0 * j, cam->pixel_delta_v));
 	pixel_sample = vec3_add2(pixel_ctr, pixel_sample_square(cam));
-	//pixel_sample = pixel_ctr;
 	if (cam->defocus_angle <= 0)
 		ray_origin = cam->ctr;
 	else

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_interval.c                                   :+:      :+:    :+:   */
+/*   utils_interval_1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 01:29:53 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/07 16:05:53 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:32:43 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,4 @@ int	sts(t_itv itv, double x)
 	if (x > itv.max)
 		return (1);
 	return (0);
-}
-
-double	clamp(t_itv itv, double x)
-{
-	if (x < itv.min)
-		return (itv.min);
-	else if (x > itv.max)
-		return (itv.max);
-	return (x);
 }

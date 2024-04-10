@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 12:46:34 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:51:15 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -911,12 +911,14 @@ t_vec3			limit_color_vec(t_vec3 col);
 //utils_debug.c
 void			debug(char *msg);
 
-//utils_interval.c
+//utils_interval_1.c
 t_itv			itv(double min, double max);
 t_itv			itv_span(double min, double max, double span);
 bool			cts(t_itv itv, double x);
 bool			srs(t_itv itv, double x);
 int				sts(t_itv itv, double x);
+
+//utils_interval_2.c
 double			clamp(t_itv itv, double x);
 
 //mat_lambertian.c
