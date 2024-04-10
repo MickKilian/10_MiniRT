@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 17:30:42 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:37:38 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	set_map_coord_qud(t_hit_rec *rec)
 
 	qud = &rec->httbl->geom->qud;
 	q = vec3_sub2(rec->p, vec3_sub2(qud->ctr, vec3_add2(qud->u, qud->v)));
-	rec->uv = new_vec3(vec3_dot(q, vec3_unit(qud->u)) / 2 /vec3_len(qud->u),
+	rec->uv = new_vec3(vec3_dot(q, vec3_unit(qud->u)) / 2 / vec3_len(qud->u),
 			vec3_dot(q, vec3_unit(qud->v)) / 2 / vec3_len(qud->v), 0);
 	phi = atan2(-vec3_unit(rec->uv).y, vec3_unit(rec->uv).x) + PI;
 	phi = ft_modulo(phi + rec->mat_rot_an, 2 * PI);

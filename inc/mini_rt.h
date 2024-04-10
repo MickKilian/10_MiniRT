@@ -6,7 +6,7 @@
 /*   By: aumarin <aumarin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 18:08:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 15:51:15 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 18:10:22 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -681,6 +681,10 @@ t_vec3			ray_color(t_rt *rt, int depth, t_ray r);
 
 //rt_lights.c
 t_vec3			point_lights(t_rt *rt, t_hit_rec *rec);
+void			point_lights_comp(t_rt *rt, t_hit_rec *rec, t_httbl *httbl, \
+		t_light *light);
+void			p_lights_inside(t_rt *rt, t_hit_rec *rec, t_httbl *httbl, \
+		t_light *light);
 
 //rt_ray_compute.c
 t_vec3			reflect(t_vec3 v, t_vec3 n);
@@ -714,13 +718,16 @@ bool			check_hit_httbl(t_rt *rt, t_ray *r, t_itv *tray, \
 	t_hit_rec *rec);
 bool			world_hit(t_rt *rt, t_ray r, t_itv tray, t_hit_rec *rec);
 
-//geom_special_build.c
+//geom_special_build_other.c
+void			build_dice(t_world *world, t_geometry *geom, t_material *mat);
 void			add_box_quads(t_world *world, t_box *box, t_material *mat);
 void			add_dice_dots(t_world *world, t_box *box);
 void			add_dice_face(t_world *world, t_box *box, \
 	t_dice_dots dice_dots);
 void			add_cyl_discs(t_world *world, t_geometry *geom, \
 	t_material *mat);
+
+//geom_special_build_con.c
 void			add_con_discs(t_world *world, t_geometry *geom, \
 	t_material *mat);
 void			create_safe_cone(t_world *world, t_safe_cone *sfc);
@@ -884,7 +891,7 @@ bool			solve_h_pol(t_h_pol *h_pol);
 //utils_memory.c
 void			free_httbls(t_rt *rt, t_world *world);
 int				free_split_vec(char **vec);
-int	 			free_tp(t_temp tp);
+int				free_tp(t_temp tp);
 
 //utils_parsing.c
 int				check_nb_params(t_rt *rt, int expect, char *err_msg);
@@ -939,7 +946,7 @@ t_material		*mat_diff_light(t_temp tp, t_diff_light diff_light);
 
 //mat_create.c
 bool			mat_finalize(t_rt *rt);
-void 			mat_rot_choice(t_rt *rt);
+void			mat_rot_choice(t_rt *rt);
 t_material		*duplicate_mat(t_material *src);
 
 //mat_txm_bmp.c

@@ -6,11 +6,18 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:39 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 15:29:15 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:45:32 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini_rt.h"
+
+void	build_dice(t_world *world, t_geometry *geom, t_material *mat)
+{
+	add_box_quads(world, &geom->box, mat);
+	add_dice_dots(world, &geom->box);
+	free(geom);
+}
 
 void	add_box_quads(t_world *world, t_box *box, t_material *mat)
 {

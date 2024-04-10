@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 19:21:16 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 15:41:02 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:45:18 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ void	httbl_record(t_world *world, t_geometry *geom, t_material *mat)
 	}
 	else if (geom->type == DICE)
 	{
-		add_box_quads(world, &geom->box, mat);
-		add_dice_dots(world, &geom->box);
-		free(geom);
+		build_dice(world, geom, mat);
 		return ;
 	}
 	else if (geom->type == CYLINDER && CLOSE_VOLUMES)
