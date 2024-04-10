@@ -29,9 +29,6 @@ void	geom_translate(t_rt *rt)
 	else if (rt->tp.geom->type == SAFE_CONE)
 		rt->tp.geom->con.b_ctr = tra_v(rt->tp.geom->con.b_ctr,
 				rt->tp.trsf.tra);
-	else if (rt->tp.geom->type == PENCIL)
-		rt->tp.geom->con.b_ctr = tra_v(rt->tp.geom->con.b_ctr,
-				rt->tp.trsf.tra);
 }
 
 void	geom_rotate(t_rt *rt)
@@ -53,8 +50,6 @@ void	geom_rotate(t_rt *rt)
 		cone_rotate(rt);
 	else if (rt->tp.geom->type == SAFE_CONE)
 		rot_1v(rt->tp.trsf, &rt->tp.geom->sfc.gen);
-	else if (rt->tp.geom->type == PENCIL)
-		rot_1v(rt->tp.trsf, &rt->tp.geom->pnc.gen);
 }
 
 void	cylinder_rotate(t_rt *rt)

@@ -6,7 +6,7 @@
 #    By: mbourgeo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/06 18:34:29 by mbourgeo          #+#    #+#              #
-#    Updated: 2024/04/10 15:37:40 by mbourgeo         ###   ########.fr        #
+#    Updated: 2024/04/10 19:04:39 by mbourgeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ PRIM_SRCS	=	main.c \
 				geom_object_transform.c geom_map_coord_1.c geom_map_coord_2.c \
 				geom_special_build_con.c geom_special_build_other.c\
 				httbl_box.c httbl_cone.c httbl_create.c httbl_cylinder.c \
-				httbl_dice.c httbl_disc.c httbl_pencil.c \
+				httbl_dice.c httbl_disc.c \
 				httbl_plane.c httbl_point.c httbl_quad.c httbl_safe_cone.c \
 				httbl_sphere.c \
 				mat_create.c mat_txm_bmp.c mat_diff_light.c mat_dielectric.c \
@@ -27,7 +27,7 @@ PRIM_SRCS	=	main.c \
 				parsing_env.c \
 				parsing_extra.c parsing_tranformation.c parsing_material.c\
 				parsing_file.c parsing_general.c \
-				parsing_geom_1.c parsing_geom_2.c parsing_geom_3.c \
+				parsing_geom_1.c parsing_geom_2.c \
 				parsing_types_1.c parsing_types_2.c parsing_types_3.c \
 				parsing_txm_pat.c \
 				rt_ray_color.c rt_ray_compute.c rt_lights.c \

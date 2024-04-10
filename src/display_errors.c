@@ -68,7 +68,5 @@ char	*get_error_message(char *geom)
 		return (ERR_PARAMS_DICE);
 	else if (!ft_strcmp(geom, "sc"))
 		return (ERR_PARAMS_SAFE_CONE);
-	else if (!ft_strcmp(geom, "pn"))
-		return (ERR_PARAMS_PENCIL);
 	return (NULL);
 }

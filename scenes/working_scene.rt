@@ -1,16 +1,16 @@
 R	1000
 P	2	2
 A	1	180,180,180
-C	2,-6,5		0,0,2	70
+C	0,-10,0		0,0,0	70
 L	-40,0,30	0		255,255,255
 
-#pl	0,0,0	0,0,1		180,180,180	txm ./images/earthmap1k.xpm 360
+pl	0,0,0	0,1,0		180,180,180	txm ./images/earthmap1k.xpm 360
 #pl	0,0,0	0,0,1		255,0,0	pat 3 10 0
 #sp	0,0,-1000	2000	0,255,0
 #sp	0,0,0	2		255,25,150	txm	./images/earthmap1k.xpm 0
 #sp	1,0,1		2		255,255,255	dif	1
 #cy 0.0,0.0,0.0 0,0,1.0 1 2 10,0,255 txm ./images/earthmap1k.xpm 0
-co 0.0,0.0,0.0 0,0,1.0 2 1 3 10,0,255 txm ./images/earthmap1k.xpm 0
+#co 0.0,0.0,0.0 0,0,1.0 2 1 3 10,0,255 txm ./images/earthmap1k.xpm 0
 #di	0,0,0	1,1,1	2,2,2	22	255,255,225	tra 1,1,1 rot 1,1,1 1.1
 #bx	6,-1,1	1,0,0 0,1,0 0,0,1	255,150,0 txm ./images/earthmap1k.xpm 0 rot 0,0,1	45
 #qd 0,0,0 1,0,0 0,1,0 255,0,0

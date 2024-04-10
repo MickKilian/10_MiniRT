@@ -6,7 +6,7 @@
 /*   By: mbourgeo <mbourgeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 09:42:04 by mbourgeo          #+#    #+#             */
-/*   Updated: 2024/04/10 17:37:38 by mbourgeo         ###   ########.fr       */
+/*   Updated: 2024/04/10 19:43:34 by mbourgeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	set_map_coord_pln(t_hit_rec *rec)
 	t_vec3	vec;
 
 	pln = &rec->httbl->geom->pln;
-	if (vec3_dot(pln->d, new_vec3(1, 0, 0)) != 0)
-		w = vec3_unit(vec3_cross(pln->d, new_vec3(1, 0, 0)));
+	if (vec3_dot(pln->d, new_vec3(1, 0, 0)) != 0 || vec3_dot(pln->d, new_vec3(0, 1, 0)) != 0)
+		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 0, 1)));
 	else
 		w = vec3_unit(vec3_cross(pln->d, new_vec3(0, 1, 0)));
 	rec->uv = new_vec3(0, 0, 0);

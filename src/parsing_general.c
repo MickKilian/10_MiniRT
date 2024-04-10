@@ -96,8 +96,6 @@ void	parse_httbl_cont(t_rt *rt, t_geom_types geom_type)
 		rt->tp.ret = parse_dce(rt);
 	else if (geom_type == SAFE_CONE)
 		rt->tp.ret = parse_safe_cone(rt);
-	else if (geom_type == PENCIL)
-		rt->tp.ret = parse_pencil(rt);
 	else
 		rt->tp.ret = display_error_plus(ERR_GEOM_TYPE,
 				ft_itoa(geom_type));
